@@ -1,0 +1,9 @@
+[
+  {"symptoms": ["fever","headache","fatigue"], "disease": "Viral Fever"},
+  {"symptoms": ["fever","abdominal pain","constipation","headache"], "disease": "Typhoid"},
+  {"symptoms": ["fever","joint_pain","headache"], "disease": "Dengue"},
+  {"symptoms": ["fever","sweating","shivering","muscle pain"], "disease": "Malaria"},
+  {"symptoms": ["thirst","urination","fatigue"], "disease": "Diabetes"},
+  {"symptoms": ["fatigue","swelling_legs","reduced_urine"], "disease": "Kidney"},
+  {"symptoms": ["chest pain","palpitations","fatigue"], "disease": "Heart"}
+]

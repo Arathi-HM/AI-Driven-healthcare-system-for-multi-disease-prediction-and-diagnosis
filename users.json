@@ -1,0 +1,27 @@
+{
+  "d900327@gmail.com": {
+    "email": "d900327@gmail.com",
+    "password_hash": "scrypt:32768:8:1$45utuFg2p629xc0n$f06361a7d1a47990d9ac015e35638a8e17042ce8d46285f4d2cadd643ae9460e37044a706c1d1fdddadcf8935ac35dbdb6543aec3b863f2b08270faf0af2095b",
+    "username": "D sanjana",
+    "phone": "8296903055",
+    "address": "Kurugodu",
+    "created_at": "2025-11-14T14:56:09.512784",
+    "verified": true
+  },
+  "arathihm6@gmail.com": {
+    "email": "arathihm6@gmail.com",
+    "password_hash": "scrypt:32768:8:1$BaYhmX9VyGE01T1d$c6709f45b6625f39b4bd9979e700d7dce71d7445da87e12eb0243c458156cab8b501f7f839e553d1a95655b070f181a786abd9dc3572301eca7e2cf31bc3a6b8",
+    "username": "Arathi H m",
+    "phone": "7624963289",
+    "address": "GL halli",
+    "created_at": "2025-11-30T06:57:43.446044"
+  },
+  "dsanjana0231@gmail.com": {
+    "email": "dsanjana0231@gmail.com",
+    "password_hash": "scrypt:32768:8:1$lJg39DibkVGmLjiY$534bc1f175adb0ce5db8b7eab83ce720e32ea890f7f6696e772b2c8371738a0fb2b73fb3c3cd2462bc97dece6f4aa99e4552eff2833f9ce819acac6b78d4958e",
+    "username": "Sanjana D",
+    "phone": "8296902055",
+    "address": "kurugodu",
+    "created_at": "2025-12-08T04:01:13.591611"
+  }
+}

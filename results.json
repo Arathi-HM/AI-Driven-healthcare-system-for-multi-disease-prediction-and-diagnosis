@@ -1,0 +1,1988 @@
+{
+  "d900327@gmail.com": [
+    {
+      "timestamp": "13/11/2025, 06:40:06",
+      "client_key": "13/11/2025, 06:40:06|Recommendations Only|Low",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Recommendations Only",
+      "risk": "Low",
+      "recommendations": [
+        "Rest and hydrate well.",
+        "Paracetamol for fever/pain if needed.",
+        "Monitor symptoms for any worsening.",
+        "If symptoms persist or worsen, consult a doctor."
+      ],
+      "report_scores": {},
+      "patient_id": "d101"
+    },
+    {
+      "timestamp": "13/11/2025, 06:40:58",
+      "client_key": "13/11/2025, 06:40:58|Typhoid|High",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Typhoid",
+      "risk": "High",
+      "recommendations": [
+        "Take prescribed antibiotics.",
+        "Stay hydrated.",
+        "Avoid outside food; rest."
+      ],
+      "report_scores": {
+        "widal": {
+          "score": 85,
+          "details": "Widal ≥1:160"
+        }
+      },
+      "patient_id": "d102"
+    },
+    {
+      "timestamp": "13/11/2025, 06:49:52",
+      "client_key": "13/11/2025, 06:49:52|Viral Fever|Low",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Viral Fever",
+      "risk": "Low",
+      "recommendations": [
+        "Rest, warm fluids, steam inhalation.",
+        "Paracetamol for fever.",
+        "If >3 days or worsening, see doctor."
+      ],
+      "report_scores": {},
+      "patient_id": "d103"
+    },
+    {
+      "timestamp": "13/11/2025, 08:34:54",
+      "client_key": "13/11/2025, 08:34:54|Viral Fever|Low",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Viral Fever",
+      "risk": "Low",
+      "recommendations": [
+        "Rest, warm fluids, steam inhalation.",
+        "Paracetamol for fever.",
+        "If >3 days or worsening, see doctor."
+      ],
+      "report_scores": {},
+      "patient_id": "d104"
+    },
+    {
+      "timestamp": "14/11/2025, 20:27:08",
+      "client_key": "14/11/2025, 20:27:08|Typhoid|High",
+      "patient_name": "D Sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Typhoid",
+      "risk": "High",
+      "recommendations": [
+        "Take prescribed antibiotics.",
+        "Stay hydrated.",
+        "Avoid outside food; rest."
+      ],
+      "report_scores": {
+        "widal": {
+          "score": 85,
+          "details": "Widal ≥1:160"
+        }
+      },
+      "patient_id": "d105"
+    },
+    {
+      "timestamp": "14/11/2025, 22:45:39",
+      "client_key": "14/11/2025, 22:45:39|Recommendations Only|Low",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Recommendations Only",
+      "risk": "Low",
+      "recommendations": [
+        "Rest and hydrate well.",
+        "Paracetamol for fever/pain if needed.",
+        "Monitor symptoms for any worsening.",
+        "If symptoms persist or worsen, consult a doctor."
+      ],
+      "report_scores": {},
+      "patient_id": "d106"
+    },
+    {
+      "timestamp": "14/11/2025, 22:46:37",
+      "client_key": "14/11/2025, 22:46:37|Typhoid|High",
+      "patient_name": "sanjana",
+      "patient_age": 20,
+      "patient_gender": "Female",
+      "disease": "Typhoid",
+      "risk": "High",
+      "recommendations": [
+        "Take prescribed antibiotics.",
+        "Stay hydrated.",
+        "Avoid outside food; rest."
+      ],
+      "report_scores": {
+        "widal": {
+          "score": 85,
+          "details": "Widal ≥1:160"
+        }
+      },
+      "patient_id": "d107"
+    },
+    {
+      "timestamp": "14/11/2025, 23:13:30",
+      "client_key": "14/11/2025, 23:13:30|Typhoid|High",
+      "patient_name": "D Sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Typhoid",
+      "risk": "High",
+      "recommendations": [
+        "Take prescribed antibiotics.",
+        "Stay hydrated.",
+        "Avoid outside food; rest."
+      ],
+      "report_scores": {
+        "widal": {
+          "score": 85,
+          "details": "Widal ≥1:160"
+        }
+      },
+      "patient_id": "d108"
+    },
+    {
+      "timestamp": "14/11/2025, 23:22:25",
+      "client_key": "14/11/2025, 23:22:25|Viral Fever|Moderate",
+      "patient_name": "D Sanjana",
+      "patient_age": 4,
+      "patient_gender": "Female",
+      "disease": "Viral Fever",
+      "risk": "Moderate",
+      "recommendations": [
+        "Rest, warm fluids, steam inhalation.",
+        "Paracetamol for fever.",
+        "If >3 days or worsening, see doctor."
+      ],
+      "report_scores": {
+        "cbc": {
+          "score": 40,
+          "details": "Very low platelets"
+        }
+      },
+      "patient_id": "d109"
+    },
+    {
+      "timestamp": "14/11/2025, 23:52:51",
+      "client_key": "14/11/2025, 23:52:51|Viral Fever|Moderate",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Viral Fever",
+      "risk": "Moderate",
+      "recommendations": [
+        "Rest, warm fluids, steam inhalation.",
+        "Paracetamol for fever.",
+        "If >3 days or worsening, see doctor."
+      ],
+      "report_scores": {
+        "cbc": {
+          "score": 40,
+          "details": "Very low platelets"
+        }
+      },
+      "patient_id": "d110"
+    },
+    {
+      "timestamp": "14/11/2025, 23:58:26",
+      "client_key": "14/11/2025, 23:58:26|Viral Fever|Moderate",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Viral Fever",
+      "risk": "Moderate",
+      "recommendations": [
+        "Rest, warm fluids, steam inhalation.",
+        "Paracetamol for fever.",
+        "If >3 days or worsening, see doctor."
+      ],
+      "report_scores": {
+        "cbc": {
+          "score": 40,
+          "details": "Very low platelets"
+        }
+      },
+      "patient_id": "d111"
+    },
+    {
+      "timestamp": "15/11/2025, 14:01:52",
+      "client_key": "15/11/2025, 14:01:52|Viral Fever|Moderate",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Viral Fever",
+      "risk": "Moderate",
+      "recommendations": [
+        "Rest, warm fluids, steam inhalation.",
+        "Paracetamol for fever.",
+        "If >3 days or worsening, see doctor."
+      ],
+      "report_scores": {
+        "cbc": {
+          "score": 40,
+          "details": "Very low platelets"
+        }
+      },
+      "patient_id": "d112"
+    },
+    {
+      "timestamp": "15/11/2025, 14:37:29",
+      "client_key": "15/11/2025, 14:37:29|Viral Fever|Low",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Viral Fever",
+      "risk": "Low",
+      "recommendations": [
+        "Rest, warm fluids, steam inhalation.",
+        "Paracetamol for fever.",
+        "If >3 days or worsening, see doctor."
+      ],
+      "report_scores": {
+        "cbc": {
+          "score": 0,
+          "details": "CBC normal"
+        }
+      },
+      "patient_id": "d113"
+    },
+    {
+      "timestamp": "15/11/2025, 14:38:13",
+      "client_key": "15/11/2025, 14:38:13|Viral Fever|Low",
+      "patient_name": "sanjana",
+      "patient_age": 31,
+      "patient_gender": "Female",
+      "disease": "Viral Fever",
+      "risk": "Low",
+      "recommendations": [
+        "Rest, warm fluids, steam inhalation.",
+        "Paracetamol for fever.",
+        "If >3 days or worsening, see doctor."
+      ],
+      "report_scores": {
+        "cbc": {
+          "score": 20,
+          "details": "Low hemoglobin"
+        }
+      },
+      "patient_id": "d114"
+    },
+    {
+      "timestamp": "15/11/2025, 14:50:07",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Recommendations Only",
+      "risk_level": "",
+      "risk_score": "",
+      "confidence": "",
+      "recommendations": [
+        "Rest and hydrate well.",
+        "Paracetamol for fever/pain if needed.",
+        "Monitor symptoms for any worsening.",
+        "If symptoms persist or worsen, consult a doctor."
+      ],
+      "patient_id": "d115"
+    },
+    {
+      "timestamp": "15/11/2025, 15:01:33",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Typhoid",
+      "risk_level": "",
+      "risk_score": "",
+      "confidence": 85,
+      "recommendations": [
+        "Take prescribed antibiotics.",
+        "Stay hydrated.",
+        "Avoid outside food; rest."
+      ],
+      "patient_id": "d116"
+    },
+    {
+      "timestamp": "15/11/2025, 15:06:18",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Viral Fever",
+      "risk_level": "",
+      "risk_score": "",
+      "confidence": 55,
+      "recommendations": [
+        "Rest, warm fluids, steam inhalation.",
+        "Paracetamol for fever.",
+        "If >3 days or worsening, see doctor."
+      ],
+      "patient_id": "d117"
+    },
+    {
+      "timestamp": "15/11/2025, 15:06:51",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Viral Fever",
+      "risk_level": "",
+      "risk_score": "",
+      "confidence": 70,
+      "recommendations": [
+        "Rest, warm fluids, steam inhalation.",
+        "Paracetamol for fever.",
+        "If >3 days or worsening, see doctor."
+      ],
+      "patient_id": "d118"
+    },
+    {
+      "timestamp": "15/11/2025, 14:50:35",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Viral Fever",
+      "risk_level": "",
+      "risk_score": "",
+      "confidence": "",
+      "recommendations": [
+        "Rest, warm fluids, steam inhalation.",
+        "Paracetamol for fever.",
+        "If >3 days or worsening, see doctor."
+      ],
+      "patient_id": "d119"
+    },
+    {
+      "timestamp": "15/11/2025, 16:29:32",
+      "patient_name": "sanjana",
+      "patient_age": 4,
+      "disease": "Recommendations Only",
+      "risk_level": "",
+      "risk_score": "",
+      "confidence": "",
+      "recommendations": [
+        "Rest and hydrate well.",
+        "Paracetamol for fever/pain if needed.",
+        "Monitor symptoms for any worsening.",
+        "If symptoms persist or worsen, consult a doctor."
+      ],
+      "patient_id": "d120"
+    },
+    {
+      "timestamp": "15/11/2025, 18:06:07",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Typhoid",
+      "risk_level": "High",
+      "risk_score": 85,
+      "confidence": 85,
+      "recommendations": [
+        "Advice: URGENT: Seek immediate hospital admission. Risk of perforation and sepsis.",
+        "Medicines:",
+        " • {\"description\":\"Ceftriaxone 1g IV (12-hourly)\"}",
+        " • {\"description\":\"Fluids IV\"}",
+        " • {\"description\":\"Anti-emetics\"}",
+        "Medicine timing: Every 12 hours IV; 5-14 days course",
+        "Diet: Bland broths, Warm milk, Rice water, Banana, NO solid food for 2-3 days",
+        "Lifestyle: Complete bed rest, No work for 2 weeks minimum",
+        "Emergency signs: Severe abdominal pain, Bloody stool, Confusion, Sudden temp drop",
+        "Follow-up: Hospital admission 7-14 days; post-discharge follow-up 1 week",
+        "Recommended tests: widal, cbc, blood_culture",
+        "Notes: Medical leave 2-3 weeks"
+      ],
+      "patient_id": "d121"
+    },
+    {
+      "timestamp": "15/11/2025, 18:11:34",
+      "patient_name": "sanjana",
+      "patient_age": 5,
+      "disease": "Recommendations Only",
+      "risk_level": "",
+      "risk_score": "",
+      "confidence": "",
+      "recommendations": [
+        "Rest and hydrate well.",
+        "Paracetamol for fever/pain if needed.",
+        "Monitor symptoms for any worsening.",
+        "If symptoms persist or worsen, consult a doctor."
+      ],
+      "patient_id": "d122"
+    },
+    {
+      "timestamp": "15/11/2025, 18:12:27",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Kidney",
+      "risk_level": "High",
+      "risk_score": 70,
+      "confidence": 70,
+      "recommendations": [
+        "Advice: Likely CKD. Slow progression possible with treatment. Lifestyle critical.",
+        "Medicines:",
+        " • {\"description\":\"ACE inhibitor/ARB (main)\"}",
+        " • {\"description\":\"BP control drugs\"}",
+        " • {\"description\":\"Diuretics if edema\"}",
+        "Medicine timing: Daily; monitor kidney function every 3 months",
+        "Diet: Sodium <2g/day, Protein 0.6-0.8g/kg, Potassium restricted, Low phosphorus",
+        "Lifestyle: Regular moderate exercise, Weight management, Stress reduction",
+        "Emergency signs: Reduced urine output, Leg swelling, Shortness of breath, Nausea",
+        "Follow-up: Every 3 months; GFR/Creatinine trend; prepare for possible dialysis",
+        "Recommended tests: kidney_function, cbc, electrolytes"
+      ],
+      "patient_id": "d123"
+    },
+    {
+      "timestamp": "15/11/2025, 18:26:42",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Viral Fever",
+      "risk_level": "Low",
+      "risk_score": 25,
+      "confidence": 25,
+      "recommendations": [
+        "Advice: Rest 3-5 days. If symptoms persist, consult physician. Safe to work from home.",
+        "Medicines:",
+        " • {\"description\":\"Paracetamol 500mg (1-2 tablets every 6 hours)\"}",
+        " • {\"description\":\"Ibuprofen 400mg (if fever >38.5°C)\"}",
+        "Medicine timing: Every 6 hours; do not exceed 4g/day",
+        "Diet: Warm liquids, Vegetable soups, Herbal tea, Fresh fruits",
+        "Lifestyle: Rest 2-3 hours daily, Adequate sleep, Light exercise if energy permits",
+        "Emergency signs: Difficulty breathing, Severe chest pain, Persistent high fever >39°C",
+        "Follow-up: If symptoms persist >5 days, seek medical advice"
+      ],
+      "patient_id": "d124"
+    },
+    {
+      "timestamp": "15/11/2025, 18:30:29",
+      "patient_name": "sanjana",
+      "patient_age": 2,
+      "disease": "Recommendations Only",
+      "risk_level": "",
+      "risk_score": "",
+      "confidence": "",
+      "recommendations": [
+        "Rest and hydrate well.",
+        "Paracetamol for fever/pain if needed.",
+        "Monitor symptoms for any worsening.",
+        "If symptoms persist or worsen, consult a doctor."
+      ],
+      "patient_id": "d125"
+    },
+    {
+      "timestamp": "15/11/2025, 18:31:04",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Recommendations Only",
+      "risk_level": "",
+      "risk_score": "",
+      "confidence": "",
+      "recommendations": [
+        "Rest and hydrate well.",
+        "Paracetamol for fever/pain if needed.",
+        "Monitor symptoms for any worsening.",
+        "If symptoms persist or worsen, consult a doctor."
+      ],
+      "patient_id": "d126"
+    },
+    {
+      "timestamp": "15/11/2025, 18:32:52",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Kidney",
+      "risk_level": "High",
+      "risk_score": 70,
+      "confidence": 70,
+      "recommendations": [
+        "Advice: Likely CKD. Slow progression possible with treatment. Lifestyle critical.",
+        "Medicines:",
+        " • {\"description\":\"ACE inhibitor/ARB (main)\"}",
+        " • {\"description\":\"BP control drugs\"}",
+        " • {\"description\":\"Diuretics if edema\"}",
+        "Medicine timing: Daily; monitor kidney function every 3 months",
+        "Diet: Sodium <2g/day, Protein 0.6-0.8g/kg, Potassium restricted, Low phosphorus",
+        "Lifestyle: Regular moderate exercise, Weight management, Stress reduction",
+        "Emergency signs: Reduced urine output, Leg swelling, Shortness of breath, Nausea",
+        "Follow-up: Every 3 months; GFR/Creatinine trend; prepare for possible dialysis"
+      ],
+      "patient_id": "d127"
+    },
+    {
+      "timestamp": "15/11/2025, 19:33:31",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Viral Fever",
+      "risk_level": "",
+      "risk_score": 29,
+      "confidence": "",
+      "recommendations": [
+        "Advice: Rest 3-5 days. If symptoms persist, consult physician. Safe to work from home.",
+        "Medicines:",
+        " • {\"description\":\"Paracetamol 500mg (1-2 tablets every 6 hours)\"}",
+        " • {\"description\":\"Ibuprofen 400mg (if fever >38.5°C)\"}",
+        "Medicine timing: Every 6 hours; do not exceed 4g/day",
+        "Diet: Warm liquids, Vegetable soups, Herbal tea, Fresh fruits",
+        "Lifestyle: Rest 2-3 hours daily, Adequate sleep, Light exercise if energy permits",
+        "Emergency signs: Difficulty breathing, Severe chest pain, Persistent high fever >39°C",
+        "Follow-up: If symptoms persist >5 days, seek medical advice"
+      ],
+      "patient_id": "d128"
+    },
+    {
+      "timestamp": "15/11/2025, 19:46:55",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Typhoid",
+      "risk_level": "",
+      "risk_score": 85,
+      "confidence": "",
+      "recommendations": [
+        "Advice: URGENT: Seek immediate hospital admission. Risk of perforation and sepsis.",
+        "Medicines:",
+        " • {\"description\":\"Ceftriaxone 1g IV (12-hourly)\"}",
+        " • {\"description\":\"Fluids IV\"}",
+        " • {\"description\":\"Anti-emetics\"}",
+        "Medicine timing: Every 12 hours IV; 5-14 days course",
+        "Diet: Bland broths, Warm milk, Rice water, Banana, NO solid food for 2-3 days",
+        "Lifestyle: Complete bed rest, No work for 2 weeks minimum",
+        "Emergency signs: Severe abdominal pain, Bloody stool, Confusion, Sudden temp drop",
+        "Follow-up: Hospital admission 7-14 days; post-discharge follow-up 1 week"
+      ],
+      "patient_id": "d129"
+    },
+    {
+      "timestamp": "15/11/2025, 19:48:32",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Typhoid",
+      "risk_level": "",
+      "risk_score": 40,
+      "confidence": "",
+      "recommendations": [
+        "Advice: URGENT: Seek immediate hospital admission. Risk of perforation and sepsis.",
+        "Medicines:",
+        " • {\"description\":\"Ceftriaxone 1g IV (12-hourly)\"}",
+        " • {\"description\":\"Fluids IV\"}",
+        " • {\"description\":\"Anti-emetics\"}",
+        "Medicine timing: Every 12 hours IV; 5-14 days course",
+        "Diet: Bland broths, Warm milk, Rice water, Banana, NO solid food for 2-3 days",
+        "Lifestyle: Complete bed rest, No work for 2 weeks minimum",
+        "Emergency signs: Severe abdominal pain, Bloody stool, Confusion, Sudden temp drop",
+        "Follow-up: Hospital admission 7-14 days; post-discharge follow-up 1 week"
+      ],
+      "patient_id": "d130"
+    },
+    {
+      "timestamp": "15/11/2025, 19:51:25",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Typhoid",
+      "risk_level": "",
+      "risk_score": 85,
+      "confidence": "",
+      "recommendations": [
+        "Advice: URGENT: Seek immediate hospital admission. Risk of perforation and sepsis.",
+        "Medicines:",
+        " • {\"description\":\"Ceftriaxone 1g IV (12-hourly)\"}",
+        " • {\"description\":\"Fluids IV\"}",
+        " • {\"description\":\"Anti-emetics\"}",
+        "Medicine timing: Every 12 hours IV; 5-14 days course",
+        "Diet: Bland broths, Warm milk, Rice water, Banana, NO solid food for 2-3 days",
+        "Lifestyle: Complete bed rest, No work for 2 weeks minimum",
+        "Emergency signs: Severe abdominal pain, Bloody stool, Confusion, Sudden temp drop",
+        "Follow-up: Hospital admission 7-14 days; post-discharge follow-up 1 week"
+      ],
+      "patient_id": "d131"
+    },
+    {
+      "timestamp": "15/11/2025, 19:56:59",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Typhoid",
+      "risk_level": "",
+      "risk_score": 85,
+      "confidence": "",
+      "recommendations": [
+        "Advice: URGENT: Seek immediate hospital admission. Risk of perforation and sepsis.",
+        "Medicines:",
+        " • {\"description\":\"Ceftriaxone 1g IV (12-hourly)\"}",
+        " • {\"description\":\"Fluids IV\"}",
+        " • {\"description\":\"Anti-emetics\"}",
+        "Medicine timing: Every 12 hours IV; 5-14 days course",
+        "Diet: Bland broths, Warm milk, Rice water, Banana, NO solid food for 2-3 days",
+        "Lifestyle: Complete bed rest, No work for 2 weeks minimum",
+        "Emergency signs: Severe abdominal pain, Bloody stool, Confusion, Sudden temp drop",
+        "Follow-up: Hospital admission 7-14 days; post-discharge follow-up 1 week"
+      ],
+      "patient_id": "d132"
+    },
+    {
+      "timestamp": "15/11/2025, 22:41:05",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Viral Fever",
+      "risk_level": "",
+      "risk_score": 70,
+      "confidence": "",
+      "recommendations": [
+        "Advice: Rest 3-5 days. If symptoms persist, consult physician. Safe to work from home.",
+        "Medicines:",
+        " • {\"description\":\"Paracetamol 500mg (1-2 tablets every 6 hours)\"}",
+        " • {\"description\":\"Ibuprofen 400mg (if fever >38.5°C)\"}",
+        "Medicine timing: Every 6 hours; do not exceed 4g/day",
+        "Diet: Warm liquids, Vegetable soups, Herbal tea, Fresh fruits",
+        "Lifestyle: Rest 2-3 hours daily, Adequate sleep, Light exercise if energy permits",
+        "Emergency signs: Difficulty breathing, Severe chest pain, Persistent high fever >39°C",
+        "Follow-up: If symptoms persist >5 days, seek medical advice"
+      ],
+      "patient_id": "d133"
+    },
+    {
+      "timestamp": "15/11/2025, 22:41:47",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Kidney",
+      "risk_level": "",
+      "risk_score": 70,
+      "confidence": "",
+      "recommendations": [
+        "Advice: Likely CKD. Slow progression possible with treatment. Lifestyle critical.",
+        "Medicines:",
+        " • {\"description\":\"ACE inhibitor/ARB (main)\"}",
+        " • {\"description\":\"BP control drugs\"}",
+        " • {\"description\":\"Diuretics if edema\"}",
+        "Medicine timing: Daily; monitor kidney function every 3 months",
+        "Diet: Sodium <2g/day, Protein 0.6-0.8g/kg, Potassium restricted, Low phosphorus",
+        "Lifestyle: Regular moderate exercise, Weight management, Stress reduction",
+        "Emergency signs: Reduced urine output, Leg swelling, Shortness of breath, Nausea",
+        "Follow-up: Every 3 months; GFR/Creatinine trend; prepare for possible dialysis"
+      ],
+      "patient_id": "d134"
+    },
+    {
+      "timestamp": "29/11/2025, 2:00:51 pm",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Viral Fever",
+      "risk_level": "",
+      "risk_score": 70,
+      "confidence": "",
+      "recommendations": [
+        "Advice: Rest 3-5 days. If symptoms persist, consult physician. Safe to work from home.",
+        "Medicines:",
+        " • {\"description\":\"Paracetamol 500mg (1-2 tablets every 6 hours)\"}",
+        " • {\"description\":\"Ibuprofen 400mg (if fever >38.5°C)\"}",
+        "Medicine timing: Every 6 hours; do not exceed 4g/day",
+        "Diet: Warm liquids, Vegetable soups, Herbal tea, Fresh fruits",
+        "Lifestyle: Rest 2-3 hours daily, Adequate sleep, Light exercise if energy permits",
+        "Emergency signs: Difficulty breathing, Severe chest pain, Persistent high fever >39°C",
+        "Follow-up: If symptoms persist >5 days, seek medical advice"
+      ],
+      "patient_id": "d135"
+    },
+    {
+      "timestamp": "29/11/2025, 2:03:14 pm",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Recommendations Only",
+      "risk_level": "",
+      "risk_score": "",
+      "confidence": "",
+      "recommendations": [
+        "<b>Headache:</b> Hydration, analgesia; medical review if severe or recurrent.",
+        "<b>Joint Pain:</b> NSAIDs if appropriate; rest."
+      ],
+      "patient_id": "d136"
+    },
+    {
+      "timestamp": "29/11/2025, 19:24:47",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Recommendations Only",
+      "risk_level": "",
+      "risk_score": "",
+      "confidence": "",
+      "recommendations": [
+        "Symptom-specific advice: rest and seek care if worsening."
+      ],
+      "patient_id": "d137"
+    },
+    {
+      "timestamp": "29/11/2025, 7:30:56 pm",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Recommendations Only",
+      "risk_level": "",
+      "risk_score": "",
+      "confidence": "",
+      "recommendations": [
+        "<b>Fever:</b> Rest, fluids, paracetamol as needed. Seek care if fever >39°C or persists >3 days."
+      ],
+      "patient_id": "d138"
+    },
+    {
+      "timestamp": "29/11/2025, 7:35:36 pm",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Recommendations Only",
+      "risk_level": "",
+      "risk_score": "",
+      "confidence": "",
+      "recommendations": [
+        "Symptom-specific advice: rest and seek care if worsening."
+      ],
+      "patient_id": "d139"
+    },
+    {
+      "timestamp": "29/11/2025, 7:40:52 pm",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Recommendations Only",
+      "risk_level": "",
+      "risk_score": "",
+      "confidence": "",
+      "recommendations": [
+        "<b>Fever:</b> Rest, fluids, paracetamol as needed. Seek care if fever >39°C or persists >3 days."
+      ],
+      "patient_id": "d140"
+    },
+    {
+      "timestamp": "29/11/2025, 7:41:14 pm",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Recommendations Only",
+      "risk_level": "",
+      "risk_score": "",
+      "confidence": "",
+      "recommendations": [
+        "<b>Headache:</b> Hydration, analgesia; medical review if severe or recurrent."
+      ],
+      "patient_id": "d141"
+    },
+    {
+      "timestamp": "29/11/2025, 7:44:16 pm",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Recommendations Only",
+      "risk_level": "",
+      "risk_score": "",
+      "confidence": "",
+      "recommendations": [
+        "Symptom-specific advice: rest and seek care if worsening."
+      ],
+      "patient_id": "d142"
+    },
+    {
+      "timestamp": "29/11/2025, 7:47:50 pm",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Viral Fever",
+      "risk_level": "",
+      "risk_score": "",
+      "confidence": "",
+      "recommendations": [
+        "Advice: Rest 3-5 days. If symptoms persist, consult physician. Safe to work from home.",
+        "Medicines:",
+        " • Paracetamol 500mg (1-2 tablets every 6 hours)",
+        " • Ibuprofen 400mg (if fever >38.5°C)",
+        "Medicine timing: Every 6 hours; do not exceed 4g/day",
+        "Diet: Warm liquids, Vegetable soups, Herbal tea, Fresh fruits",
+        "Lifestyle: Rest 2-3 hours daily, Adequate sleep, Light exercise if energy permits",
+        "Emergency signs: Difficulty breathing, Severe chest pain, Persistent high fever >39°C",
+        "Follow-up: If symptoms persist >5 days, seek medical advice"
+      ],
+      "patient_id": "d143"
+    },
+    {
+      "timestamp": "29/11/2025, 7:55:55 pm",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Recommendations Only",
+      "risk_level": "",
+      "risk_score": "",
+      "confidence": "",
+      "recommendations": [
+        "Symptom-specific advice: rest and seek care if worsening."
+      ],
+      "patient_id": "d144"
+    },
+    {
+      "timestamp": "29/11/2025, 8:01:42 pm",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Recommendations Only",
+      "risk_level": "",
+      "risk_score": "",
+      "confidence": "",
+      "recommendations": [
+        "Symptom-specific advice: rest and seek care if worsening."
+      ],
+      "patient_id": "d145"
+    },
+    {
+      "timestamp": "30/11/2025, 10:50:46 am",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Undetermined",
+      "risk_level": "",
+      "risk_score": 30,
+      "confidence": 20,
+      "recommendations": [
+        "Advice: Stay hydrated, avoid air pollution and smoke. Elevate head while sleeping. (Details: ['Moderate']) [Duration: 3 days]",
+        "Medicines:",
+        " • Benadryl cough syrup — 1-2 tsp (5ml) every 6 hours (antihistamine+expectorant)",
+        " • OR Ascoril cough syrup — 2 tsp every 6 hours (salbutamol+guaifenesin)",
+        " • For dry cough: Strepsils lozenges — 1 lozenge every 4 hours"
+      ],
+      "patient_id": "d146"
+    },
+    {
+      "timestamp": "30/11/2025, 10:51:23 am",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Wellness",
+      "risk_level": "Low",
+      "risk_score": "",
+      "confidence": "",
+      "recommendations": [
+        "Advice: No specific symptoms reported. Focus on preventive health and general wellness.",
+        "Medicines: Take regular multivitamins daily for overall immunity and nutrition",
+        "Diet: Maintain balanced diet with vegetables, fruits, proteins, and whole grains daily",
+        "Lifestyle: Sleep 7-8 hours daily, Exercise 30 minutes daily, Stay hydrated with 8-10 glasses water",
+        "Follow-up: Visit specialist for annual health checkup and preventive screening"
+      ],
+      "patient_id": "d147"
+    },
+    {
+      "timestamp": "30/11/2025, 10:52:43 am",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "disease": "Typhoid",
+      "risk_level": "",
+      "risk_score": 85,
+      "confidence": "",
+      "recommendations": [
+        "Advice: URGENT: Seek immediate hospital admission. Risk of perforation and sepsis.",
+        "Medicines:",
+        " • Ceftriaxone 1g IV (12-hourly)",
+        " • Fluids IV",
+        " • Anti-emetics",
+        "Medicine timing: Every 12 hours IV; 5-14 days course",
+        "Diet: Bland broths, Warm milk, Rice water, Banana, NO solid food for 2-3 days",
+        "Lifestyle: Complete bed rest, No work for 2 weeks minimum",
+        "Emergency signs: Severe abdominal pain, Bloody stool, Confusion, Sudden temp drop",
+        "Follow-up: Hospital admission 7-14 days; post-discharge follow-up 1 week"
+      ],
+      "patient_id": "d148"
+    },
+    {
+      "timestamp": "30/11/2025, 10:53:54 am",
+      "patient_name": "arathi",
+      "patient_age": 20,
+      "disease": "Diabetes",
+      "risk_level": "",
+      "risk_score": 50,
+      "confidence": 99,
+      "recommendations": [
+        "Immediate: ⚠️ Schedule doctor appointment within 24-48 hours",
+        "Medicines:",
+        " • Metformin 500mg — Twice daily with meals",
+        " • Insulin injections — As per blood glucose",
+        "Diet: low glycemic foods, whole grains, leafy greens"
+      ],
+      "patient_id": "d149"
+    },
+    {
+      "timestamp": "30/11/2025, 10:56:26 am",
+      "patient_name": "arathi",
+      "patient_age": 20,
+      "disease": "Dengue",
+      "risk_level": "",
+      "risk_score": 85,
+      "confidence": "",
+      "recommendations": [
+        "Advice: Monitor platelet count. Hospital admission if <50,000 or hemorrhagic signs.",
+        "Medicines:",
+        " • Paracetamol 500mg (6-hourly)",
+        " • AVOID NSAIDs completely",
+        "Medicine timing: Every 6 hours; max 4g/day",
+        "Diet: Papaya leaf juice, Tender coconut water, Fruits, Broths",
+        "Lifestyle: Rest 7-10 days, Gradual activity resumption",
+        "Emergency signs: Bleeding from any site, Severe pain, Shock symptoms, Sudden platelet drop",
+        "Follow-up: Platelet count on day 3,5,7; hospital if trends downward"
+      ],
+      "patient_id": "d150"
+    },
+    {
+      "timestamp": "30/11/2025, 11:07:18 am",
+      "client_key": "30/11/2025, 11:07:18 am|Typhoid|10",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Typhoid",
+      "risk": "",
+      "recommendations": [
+        "Take prescribed antibiotics.",
+        "Stay hydrated.",
+        "Avoid outside food; rest."
+      ],
+      "report_scores": {
+        "widal": {
+          "score": 10,
+          "details": "Low baseline"
+        }
+      },
+      "patient_id": "d151"
+    },
+    {
+      "timestamp": "30/11/2025, 11:08:27 am",
+      "client_key": "30/11/2025, 11:08:27 am|Typhoid|10",
+      "patient_name": "sanjana",
+      "patient_age": 4,
+      "patient_gender": "Female",
+      "disease": "Typhoid",
+      "risk": "",
+      "recommendations": [
+        "Take prescribed antibiotics.",
+        "Stay hydrated.",
+        "Avoid outside food; rest."
+      ],
+      "report_scores": {
+        "widal": {
+          "score": 10,
+          "details": "Low baseline"
+        }
+      },
+      "patient_id": "d152"
+    },
+    {
+      "timestamp": "30/11/2025, 11:09:33 am",
+      "client_key": "30/11/2025, 11:09:33 am|Typhoid|10",
+      "patient_name": "sanjana",
+      "patient_age": 4,
+      "patient_gender": "Female",
+      "disease": "Typhoid",
+      "risk": "",
+      "recommendations": [
+        "Take prescribed antibiotics.",
+        "Stay hydrated.",
+        "Avoid outside food; rest."
+      ],
+      "report_scores": {
+        "widal": {
+          "score": 10,
+          "details": "Low baseline"
+        }
+      },
+      "patient_id": "d153"
+    },
+    {
+      "timestamp": "30/11/2025, 11:11:42 am",
+      "client_key": "30/11/2025, 11:11:42 am|Typhoid|85",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Typhoid",
+      "risk": "",
+      "recommendations": [
+        "Take prescribed antibiotics.",
+        "Stay hydrated.",
+        "Avoid outside food; rest."
+      ],
+      "report_scores": {
+        "widal": {
+          "score": 85,
+          "details": "Widal ≥1:160"
+        }
+      },
+      "patient_id": "d154"
+    },
+    {
+      "timestamp": "30/11/2025, 11:27:11 am",
+      "client_key": "30/11/2025, 11:27:11 am|Viral Fever|",
+      "patient_name": "arathi",
+      "patient_age": 8,
+      "patient_gender": "Female",
+      "disease": "Viral Fever",
+      "risk": "",
+      "recommendations": [
+        "✓ PRIMARY ADVICE: Monitor temperature closely, keep well hydrated. Give age-appropriate medicines only.",
+        "\n━━━ MEDICINES (Specific for CHILD) ━━━",
+        "  1. Paracetamol syrup 250mg/5ml — 10ml every 6 hours",
+        "  2. OR Nimesulide suspension 50mg/5ml — 5ml every 8 hours",
+        "  3. Cool water sponging if fever >38.5°C",
+        "  ⚠️  WARNING: Do not mix medicines. Take one at a time.",
+        "  ⚠️  WARNING: Stop if any allergic reaction occurs.",
+        "\n⏰ MEDICINE TIMING: Every 6-8 hours; max 4 doses/day; with food"
+      ],
+      "report_scores": {},
+      "patient_id": "d155"
+    },
+    {
+      "timestamp": "30/11/2025, 11:33:50 am",
+      "client_key": "30/11/2025, 11:33:50 am|Typhoid|85",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Typhoid",
+      "risk": "",
+      "recommendations": [
+        "✓ PRIMARY ADVICE: Monitor temperature closely, keep hydrated, avoid NSAIDs until dengue excluded.",
+        "\n━━━ MEDICINES (Specific for ADULT) ━━━",
+        "  1. Crocin 650mg — 1-2 tablets every 6 hours",
+        "  2. OR Dolo 500mg — 1-2 tablets every 6 hours with food",
+        "  3. Nimesulide 100mg — 1 tablet every 8 hours if fever >101°F",
+        "  ⚠️  WARNING: Do not mix medicines. Take one at a time.",
+        "  ⚠️  WARNING: Stop if any allergic reaction occurs.",
+        "\n⏰ MEDICINE TIMING: Every 6 hours after meals; max 3g/day",
+        "\n🍎 RECOMMENDED FOODS (Specific for adult):",
+        "  ✓ INCLUDE: Khichdi, Moong dal soup, Chicken broth, Boiled rice with curd",
+        "  ✗ AVOID: Spicy, fried, oily, processed, and hard-to-digest foods",
+        "  • Eat 5-6 small meals instead of 3 large ones",
+        "  • All food should be warm, not cold from refrigerator",
+        "  • Maintain proper nutrition for immune system",
+        "\n🚫 STRICTLY AVOID These Foods:",
+        "  • Chili, peppers, spices - irritates stomach",
+        "  • Deep fried items - hard to digest",
+        "  • Chocolates, ice cream - worsens throat",
+        "  • Dairy (milk, cheese) if lactose intolerant - causes bloating",
+        "  • Nuts, seeds - difficult digestion",
+        "\n💧 HYDRATION & DRINKS:",
+        "  Drink: Warm water with honey + lemon, Ginger-turmeric tea, Coconut water",
+        "  • Frequency: Every 30-60 minutes (small sips, not large gulps)",
+        "  • Total daily: Minimum 3-4 liters of fluids",
+        "  ✗ AVOID: Cold water, cold drinks, alcohol, caffeine, carbonated drinks",
+        "\n🏥 LIFESTYLE MODIFICATIONS:",
+        "  1. Complete bed rest",
+        "  2. Cold compress every 2 hours",
+        "  3. Cotton clothes",
+        "\n😴 REST & SLEEP (CRITICAL):",
+        "  • Adults: Minimum 8 hours nightly",
+        "  • Power naps of 20-30 mins during day acceptable",
+        "  • Sleep deprivation delays recovery by 30%",
+        "\n🌡️ FEVER MANAGEMENT:",
+        "  • Check temperature every 4-6 hours",
+        "  • Use digital thermometer for accuracy",
+        "  • Record readings to show doctor if needed",
+        "  • Use cool water sponging for fever >101°F",
+        "  • Cool compress on forehead and armpits",
+        "  • Maintain room temperature 68-72°F",
+        "\n🧼 HYGIENE & INFECTION PREVENTION:",
+        "  • Wash hands frequently with soap for 20 seconds",
+        "  • Use separate towels for yourself",
+        "  • Use separate utensils and dishes",
+        "  • Disinfect frequently touched surfaces (door handles, remote)",
+        "  • Cover nose/mouth when sneezing or coughing",
+        "  • Use handkerchief or tissue, not hands",
+        "\n🏠 ROOM ENVIRONMENT & SETUP:",
+        "  • Room temperature: 68-72°F",
+        "  • Good air circulation - open windows",
+        "  • Quiet, calm environment for rest",
+        "  • Use comfortable bedding",
+        "\n🚴 ACTIVITY PROGRESSION PLAN:",
+        "  Days 1-3: Complete bed rest",
+        "  Days 4-5: Light movement around house",
+        "  Days 6-7: Gentle walking",
+        "  Week 2: Return to work if recovered",
+        "\n🚨 EMERGENCY SIGNS - SEEK IMMEDIATE MEDICAL CARE:",
+        "  🔴 Fever >104°F (40°C) unresponsive to medication",
+        "  🔴 Severe difficulty breathing",
+        "  🔴 Chest pain or pressure",
+        "  🔴 Severe headache with neck stiffness",
+        "  🔴 Confusion or loss of consciousness",
+        "  🔴 Uncontrolled bleeding",
+        "\n📋 DAILY MONITORING & TRACKING:",
+        "  ✓ Record temperature twice daily (morning and evening)",
+        "  ✓ Track overall energy levels",
+        "  ✓ Monitor fluid intake (should be 3-4 liters)",
+        "  ✓ Note symptom progression daily",
+        "  ✓ Contact doctor if symptoms persist >5-7 days",
+        "\n📅 FOLLOW-UP & CONSULTATION SCHEDULE:",
+        "  • Phone consultation within 24 hours",
+        "  • In-person visit if symptoms worsening by day 3",
+        "  • Follow-up check by day 7",
+        "  • Return to work when symptom-free (typically day 5-7)",
+        "\n⚠️ MEDICATION INTERACTIONS & WARNINGS:",
+        "  • Do NOT mix multiple fever medicines (can be toxic)",
+        "  • Do NOT take multiple brand names of same medicine",
+        "  • If taking other chronic medicines, inform doctor",
+        "  • Do NOT take alcohol with any medication",
+        "  • Wait at least 4-6 hours between different medicines",
+        "\n✅ WHEN SAFE TO RESUME NORMAL ACTIVITIES:",
+        "  • Work: After 5-7 days when strength returns",
+        "  • Exercise: After 1 week recovery minimum",
+        "  • Normal diet: After 3-4 days when symptoms improve",
+        "  • Social activities: After symptoms completely resolve",
+        "\n📊 DIET PROGRESSION OVER RECOVERY PERIOD:",
+        "  Day 1-2: Liquids only (water, juices, soup)",
+        "  Day 3-4: Soft foods (rice, dal, bread, banana)",
+        "  Day 5-7: Normal diet with restrictions (no spicy/fried)",
+        "  Week 2+: Gradual return to full normal diet",
+        "\n👥 PROTECT FAMILY & CLOSE CONTACTS:",
+        "  • Isolate from family members if possible",
+        "  • Use separate bedroom if available",
+        "  • Minimize contact with elderly & young children",
+        "  • Family members: Wash hands frequently",
+        "  • Family members: Maintain good nutrition & sleep",
+        "  • Inform close contacts about your condition",
+        "\n🧠 MENTAL & EMOTIONAL WELL-BEING:",
+        "  • Maintain positive outlook - helps immune system",
+        "  • Avoid stress and excessive worrying",
+        "  • Stay connected with support system",
+        "  • Light entertainment during recovery (reading, music)",
+        "\n🛡️ SPECIAL PRECAUTIONS & DO's:",
+        "  ✓ DO keep updated on recovery progress",
+        "  ✓ DO follow doctor's advice strictly",
+        "  ✓ DO rest when tired - don't push yourself",
+        "  ✓ DO maintain good hygiene",
+        "  ✓ DO stay hydrated constantly",
+        "  ✓ DO inform doctor of any new symptoms",
+        "  ✗ DON'T ignore warning signs",
+        "  ✗ DON'T return to activities too early",
+        "  ✗ DON'T take unnecessary medications",
+        "  ✗ DON'T ignore complications"
+      ],
+      "report_scores": {
+        "widal": {
+          "score": 85,
+          "details": "Widal ≥1:160"
+        }
+      },
+      "patient_id": "d156"
+    },
+    {
+      "timestamp": "30/11/2025, 11:38:15 am",
+      "client_key": "30/11/2025, 11:38:15 am|Typhoid|85",
+      "patient_name": "arathi",
+      "patient_age": 8,
+      "patient_gender": "Female",
+      "disease": "Typhoid",
+      "risk": "",
+      "recommendations": [
+        "✓ PRIMARY ADVICE: Monitor temperature closely, keep well hydrated. Give age-appropriate medicines only.",
+        "\n━━━ MEDICINES (Specific for CHILD) ━━━",
+        "  1. Paracetamol syrup 250mg/5ml — 10ml every 6 hours",
+        "  2. OR Nimesulide suspension 50mg/5ml — 5ml every 8 hours",
+        "  3. Cool water sponging if fever >38.5°C",
+        "  ⚠️  WARNING: Do not mix medicines. Take one at a time.",
+        "  ⚠️  WARNING: Stop if any allergic reaction occurs.",
+        "\n⏰ MEDICINE TIMING: Every 6-8 hours; max 4 doses/day; with food",
+        "\n🍎 RECOMMENDED FOODS (Specific for child):",
+        "  ✓ INCLUDE: Soft rice with dal, Mashed potato with ghee, Banana, Papaya",
+        "  ✗ AVOID: Spicy, fried, oily, processed, and hard-to-digest foods",
+        "  • Eat 5-6 small meals instead of 3 large ones",
+        "  • All food should be warm, not cold from refrigerator",
+        "  • Maintain proper nutrition for immune system",
+        "\n🚫 STRICTLY AVOID These Foods:",
+        "  • Chili, peppers, spices - irritates stomach",
+        "  • Deep fried items - hard to digest",
+        "  • Chocolates, ice cream - worsens throat",
+        "  • Dairy (milk, cheese) if lactose intolerant - causes bloating",
+        "  • Nuts, seeds - difficult digestion",
+        "\n💧 HYDRATION & DRINKS:",
+        "  Drink: Warm water with honey, Fresh juice (diluted 50%), Milk with turmeric",
+        "  • Frequency: Every 30-60 minutes (small sips, not large gulps)",
+        "  • Total daily: Minimum 3-4 liters of fluids",
+        "  ✗ AVOID: Cold water, cold drinks, alcohol, caffeine, carbonated drinks",
+        "\n🏥 LIFESTYLE MODIFICATIONS:",
+        "  1. Rest 2-3 hours daily",
+        "  2. Loose cotton clothes",
+        "  3. Cool room",
+        "\n😴 REST & SLEEP (CRITICAL):",
+        "  • Children: Minimum 10-12 hours daily",
+        "  • Daytime naps of 1-2 hours recommended",
+        "  • Early bedtime, late wake time",
+        "\n🌡️ FEVER MANAGEMENT:",
+        "  • Check temperature every 4-6 hours",
+        "  • Use digital thermometer for accuracy",
+        "  • Record readings to show doctor if needed",
+        "  • Use cool water sponging for fever >101°F",
+        "  • Cool compress on forehead and armpits",
+        "  • Maintain room temperature 68-72°F",
+        "\n🧼 HYGIENE & INFECTION PREVENTION:",
+        "  • Wash hands frequently with soap for 20 seconds",
+        "  • Use separate towels for yourself",
+        "  • Use separate utensils and dishes",
+        "  • Disinfect frequently touched surfaces (door handles, remote)",
+        "  • Cover nose/mouth when sneezing or coughing",
+        "  • Use handkerchief or tissue, not hands",
+        "\n🏠 ROOM ENVIRONMENT & SETUP:",
+        "  • Room temperature: 68-72°F (comfortable)",
+        "  • Good ventilation - window open in morning",
+        "  • Dim lighting promotes recovery",
+        "  • Avoid dust and air pollution",
+        "\n🚴 ACTIVITY PROGRESSION PLAN:",
+        "  Days 1-3: Bed rest, inside room activities only",
+        "  Days 4-5: Light indoor play, no running",
+        "  Days 6+: Gradual outdoor play, no sports",
+        "\n🚨 EMERGENCY SIGNS - SEEK IMMEDIATE MEDICAL CARE:",
+        "  🔴 Fever >104°F (40°C) despite medication",
+        "  🔴 Severe difficulty breathing or rapid breathing",
+        "  🔴 Severe headache with stiff neck",
+        "  🔴 Extreme weakness, confusion, disorientation",
+        "  🔴 Persistent vomiting, inability to hold fluids",
+        "  🔴 Severe abdominal pain, unusual rash",
+        "\n📋 DAILY MONITORING & TRACKING:",
+        "  ✓ Record temperature 3-4 times daily (morning, noon, evening, night)",
+        "  ✓ Track fluid intake (water, juice, soup consumed)",
+        "  ✓ Note urine output (should be normal)",
+        "  ✓ Check for symptom improvement each day",
+        "  ✓ Call doctor if symptoms persist >3 days",
+        "\n📅 FOLLOW-UP & CONSULTATION SCHEDULE:",
+        "  • Phone check-in daily for first 3 days",
+        "  • In-person visit if worsening after 3 days",
+        "  • Follow-up appointment on day 7",
+        "  • Return to school only after full recovery (usually day 7-10)",
+        "\n⚠️ MEDICATION INTERACTIONS & WARNINGS:",
+        "  • Do NOT mix multiple fever medicines (can be toxic)",
+        "  • Do NOT take multiple brand names of same medicine",
+        "  • If taking other chronic medicines, inform doctor",
+        "  • Do NOT take alcohol with any medication",
+        "  • Wait at least 4-6 hours between different medicines",
+        "\n✅ WHEN SAFE TO RESUME NORMAL ACTIVITIES:",
+        "  • School: Only after 48 hours fever-free AND fully recovered",
+        "  • Sports: After 1 week of complete recovery minimum",
+        "  • Eating normal food: When appetite returns (usually day 3)",
+        "  • Playing outdoors: After 1 week fever-free",
+        "\n📊 DIET PROGRESSION OVER RECOVERY PERIOD:",
+        "  Day 1-2: Liquids only (water, juices, soup)",
+        "  Day 3-4: Soft foods (rice, dal, bread, banana)",
+        "  Day 5-7: Normal diet with restrictions (no spicy/fried)",
+        "  Week 2+: Gradual return to full normal diet",
+        "\n👥 PROTECT FAMILY & CLOSE CONTACTS:",
+        "  • Isolate from family members if possible",
+        "  • Use separate bedroom if available",
+        "  • Minimize contact with elderly & young children",
+        "  • Family members: Wash hands frequently",
+        "  • Family members: Maintain good nutrition & sleep",
+        "  • Inform close contacts about your condition",
+        "\n🧠 MENTAL & EMOTIONAL WELL-BEING:",
+        "  • Reassure child that they will recover",
+        "  • Provide comfort and emotional support",
+        "  • Engage in light entertainment during recovery",
+        "  • Avoid unnecessary stress and worry",
+        "\n🛡️ SPECIAL PRECAUTIONS & DO's:",
+        "  ✓ DO keep updated on recovery progress",
+        "  ✓ DO follow doctor's advice strictly",
+        "  ✓ DO rest when tired - don't push yourself",
+        "  ✓ DO maintain good hygiene",
+        "  ✓ DO stay hydrated constantly",
+        "  ✓ DO inform doctor of any new symptoms",
+        "  ✗ DON'T ignore warning signs",
+        "  ✗ DON'T return to activities too early",
+        "  ✗ DON'T take unnecessary medications",
+        "  ✗ DON'T ignore complications"
+      ],
+      "report_scores": {
+        "widal": {
+          "score": 85,
+          "details": "Widal ≥1:160"
+        }
+      },
+      "patient_id": "d157"
+    },
+    {
+      "timestamp": "30/11/2025, 11:55:05 am",
+      "client_key": "30/11/2025, 11:55:05 am|Typhoid|85",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Typhoid",
+      "risk": "",
+      "recommendations": [
+        "Advice: Monitor temperature closely, keep hydrated, avoid NSAIDs until dengue excluded.",
+        "Medicines (for adult):",
+        "  • Crocin 650mg — 1-2 tablets every 6 hours",
+        "  • OR Dolo 500mg — 1-2 tablets every 6 hours with food",
+        "Timing: Every 6 hours after meals; max 3g/day",
+        "Diet: Khichdi, Moong dal soup - Avoid spicy, fried, oily foods",
+        "Drinks: Warm water with honey + lemon - Drink every 30-60 minutes",
+        "Rest: 8 hours sleep minimum. Light walking only when better.",
+        "EMERGENCY: If fever >104°F, severe symptoms, or chest pain - SEEK IMMEDIATE CARE",
+        "Follow-up: Contact doctor if symptoms persist >5-7 days."
+      ],
+      "report_scores": {
+        "widal": {
+          "score": 85,
+          "details": "Widal ≥1:160"
+        }
+      },
+      "patient_id": "d158"
+    },
+    {
+      "timestamp": "30/11/2025, 11:59:52 am",
+      "client_key": "30/11/2025, 11:59:52 am|Dengue|90",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Dengue",
+      "risk": "",
+      "recommendations": [
+        "Advice: Monitor temperature closely, keep hydrated, avoid NSAIDs until dengue excluded.",
+        "Medicines (for adult):",
+        "  • Crocin 650mg — 1-2 tablets every 6 hours",
+        "  • OR Dolo 500mg — 1-2 tablets every 6 hours with food",
+        "Timing: Every 6 hours after meals; max 3g/day",
+        "Diet: Khichdi, Moong dal soup - Avoid spicy, fried, oily foods",
+        "Drinks: Warm water with honey + lemon - Drink every 30-60 minutes",
+        "Rest: 8 hours sleep minimum. Light walking only when better.",
+        "EMERGENCY: If fever >104°F, severe symptoms, or chest pain - SEEK IMMEDIATE CARE",
+        "Follow-up: Contact doctor if symptoms persist >5-7 days."
+      ],
+      "report_scores": {
+        "dengue_ns1": {
+          "score": 90,
+          "details": "NS1 positive"
+        }
+      },
+      "patient_id": "d159"
+    },
+    {
+      "timestamp": "30/11/2025, 12:00:28 pm",
+      "client_key": "30/11/2025, 12:00:28 pm|Wellness|",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Wellness",
+      "risk": "",
+      "recommendations": [
+        "Advice: No specific symptoms reported. Focus on preventive health and general wellness.",
+        "Medicines: Take regular multivitamins daily for overall immunity and nutrition",
+        "Diet: Maintain balanced diet with vegetables, fruits, proteins, and whole grains daily",
+        "Lifestyle: Sleep 7-8 hours daily, Exercise 30 minutes daily, Stay hydrated with 8-10 glasses water",
+        "Follow-up: Visit specialist for annual health checkup and preventive screening"
+      ],
+      "report_scores": {},
+      "patient_id": "d160"
+    },
+    {
+      "timestamp": "30/11/2025, 12:01:08 pm",
+      "client_key": "30/11/2025, 12:01:08 pm|Viral Fever|",
+      "patient_name": "sanjana",
+      "patient_age": 150,
+      "patient_gender": "Female",
+      "disease": "Viral Fever",
+      "risk": "",
+      "recommendations": [
+        "Advice: Cough in elderly needs close monitoring. May indicate serious conditions.",
+        "Medicines (for elderly):",
+        "  • Benadryl cough syrup — 1-2 tsp every 6 hours (lower dose)",
+        "  • Honey — 1 tsp (natural, safe)",
+        "Timing: Every 6-8 hours; gentle formulations only",
+        "Diet: Warm chicken broth, Soft rice - Avoid spicy, fried, oily foods",
+        "Drinks: Warm turmeric milk (limited) - Drink every 30-60 minutes",
+        "Rest: 7-9 hours sleep. Monitor blood pressure. Prevent falls.",
+        "EMERGENCY: If fever >103°F, chest pain, breathing difficulty, or confusion - SEEK IMMEDIATE CARE",
+        "Follow-up: Contact doctor immediately if any worsening. Follow-up within 3 days."
+      ],
+      "report_scores": {
+        "cbc": {
+          "score": 0,
+          "details": "CBC normal"
+        }
+      },
+      "patient_id": "d161"
+    },
+    {
+      "timestamp": "30/11/2025, 12:02:09 pm",
+      "client_key": "30/11/2025, 12:02:09 pm|Typhoid|85",
+      "patient_name": "sanjana",
+      "patient_age": "",
+      "patient_gender": "Female",
+      "disease": "Typhoid",
+      "risk": "",
+      "recommendations": [
+        "Advice: Monitor temperature closely, keep hydrated, avoid NSAIDs until dengue excluded.",
+        "Medicines (for adult):",
+        "  • Crocin 650mg — 1-2 tablets every 6 hours",
+        "  • OR Dolo 500mg — 1-2 tablets every 6 hours with food",
+        "Timing: Every 6 hours after meals; max 3g/day",
+        "Diet: Khichdi, Moong dal soup - Avoid spicy, fried, oily foods",
+        "Drinks: Warm water with honey + lemon - Drink every 30-60 minutes"
+      ],
+      "report_scores": {
+        "widal": {
+          "score": 85,
+          "details": "Widal ≥1:160"
+        }
+      },
+      "patient_id": "d162"
+    },
+    {
+      "timestamp": "30/11/2025, 12:02:47 pm",
+      "client_key": "30/11/2025, 12:02:47 pm|Typhoid|85",
+      "patient_name": "sanjana",
+      "patient_age": 2,
+      "patient_gender": "Female",
+      "disease": "Typhoid",
+      "risk": "",
+      "recommendations": [
+        "Advice: Fever in infants needs careful monitoring. Keep hydrated, avoid medications without doctor approval.",
+        "Medicines (for infant):",
+        "  • Paracetamol syrup 125mg/5ml — 5ml every 4-6 hours (pediatrician approval)",
+        "  • Cool sponging every 15 mins if >38.5°C",
+        "Timing: Only under doctor supervision; max 4 doses/day",
+        "Diet: Breast milk (if nursing), Warm water - Avoid spicy, fried, oily foods",
+        "Drinks: Breast milk only - Drink every 30-60 minutes",
+        "Rest: 16-20 hours sleep. Keep environment calm and cool.",
+        "EMERGENCY: If temperature >39°C, difficulty breathing, or no wet diapers >8 hours - SEEK IMMEDIATE CARE",
+        "Follow-up: If not improving in 24 hours, contact pediatrician immediately."
+      ],
+      "report_scores": {
+        "widal": {
+          "score": 85,
+          "details": "Widal ≥1:160"
+        }
+      },
+      "patient_id": "d163"
+    },
+    {
+      "email": "d900327@gmail.com",
+      "timestamp": "30/11/2025, 12:40:34 pm",
+      "client_key": "30/11/2025, 12:40:34 pm|Wellness|",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Wellness",
+      "risk": "",
+      "recommendations": [
+        "Advice: No specific symptoms reported. Focus on preventive health and general wellness.",
+        "Medicines: Take regular multivitamins daily for overall immunity and nutrition",
+        "Diet: Maintain balanced diet with vegetables, fruits, proteins, and whole grains daily",
+        "Lifestyle: Sleep 7-8 hours daily, Exercise 30 minutes daily, Stay hydrated with 8-10 glasses water",
+        "Follow-up: Visit specialist for annual health checkup and preventive screening"
+      ],
+      "report_scores": {},
+      "patient_id": "d164"
+    },
+    {
+      "email": "d900327@gmail.com",
+      "timestamp": "1/12/2025, 10:15:36 am",
+      "client_key": "1/12/2025, 10:15:36 am|Typhoid|85",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Typhoid",
+      "risk": "",
+      "recommendations": [
+        "Advice: Monitor temperature closely, keep hydrated, avoid NSAIDs until dengue excluded.",
+        "Medicines (for adult):",
+        "  • Crocin 650mg — 1-2 tablets every 6 hours",
+        "  • OR Dolo 500mg — 1-2 tablets every 6 hours with food",
+        "Timing: Every 6 hours after meals; max 3g/day",
+        "Diet: Khichdi, Moong dal soup - Avoid spicy, fried, oily foods",
+        "Drinks: Warm water with honey + lemon - Drink every 30-60 minutes",
+        "Rest: 8 hours sleep minimum. Light walking only when better.",
+        "EMERGENCY: If fever >104°F, severe symptoms, or chest pain - SEEK IMMEDIATE CARE",
+        "Follow-up: Contact doctor if symptoms persist >5-7 days."
+      ],
+      "report_scores": {
+        "widal": {
+          "score": 85,
+          "details": "Widal ≥1:160"
+        }
+      },
+      "patient_id": "d165"
+    },
+    {
+      "email": "d900327@gmail.com",
+      "timestamp": "7/12/2025, 6:35:33 pm",
+      "client_key": "7/12/2025, 6:35:33 pm|Viral Fever|60",
+      "patient_name": "sanjana",
+      "patient_age": 1,
+      "patient_gender": "Female",
+      "disease": "Viral Fever",
+      "risk": "",
+      "recommendations": [
+        "Advice: Cough in infants needs monitoring. NO cough syrups without doctor approval.",
+        "Medicines (for infant):",
+        "  • Honey — 1 tsp (for infants >1 year only)",
+        "  • Vicks VapoRub on chest (limited)",
+        "Timing: Consult pediatrician",
+        "Diet: Breast milk, Warm water - Avoid spicy, fried, oily foods",
+        "Drinks: Breast milk - Drink every 30-60 minutes",
+        "Rest: 16-20 hours sleep. Keep environment calm and cool.",
+        "EMERGENCY: If temperature >39°C, difficulty breathing, or no wet diapers >8 hours - SEEK IMMEDIATE CARE",
+        "Follow-up: If not improving in 24 hours, contact pediatrician immediately."
+      ],
+      "report_scores": {
+        "cbc": {
+          "score": 60,
+          "details": "Very low platelets, Low hemoglobin"
+        }
+      },
+      "patient_id": "d166"
+    },
+    {
+      "email": "d900327@gmail.com",
+      "timestamp": "7/12/2025, 6:40:08 pm",
+      "client_key": "7/12/2025, 6:40:08 pm|Typhoid|10",
+      "patient_name": "sanjana",
+      "patient_age": 1,
+      "patient_gender": "Female",
+      "disease": "Typhoid",
+      "risk": "",
+      "recommendations": [
+        "Advice: Fever in infants needs careful monitoring. Keep hydrated, avoid medications without doctor approval.",
+        "Medicines (for infant):",
+        "  • Paracetamol syrup 125mg/5ml — 5ml every 4-6 hours (pediatrician approval)",
+        "  • Cool sponging every 15 mins if >38.5°C",
+        "Timing: Only under doctor supervision; max 4 doses/day",
+        "Diet: Breast milk (if nursing), Warm water - Avoid spicy, fried, oily foods",
+        "Drinks: Breast milk only - Drink every 30-60 minutes",
+        "Rest: 16-20 hours sleep. Keep environment calm and cool.",
+        "EMERGENCY: If temperature >39°C, difficulty breathing, or no wet diapers >8 hours - SEEK IMMEDIATE CARE",
+        "Follow-up: If not improving in 24 hours, contact pediatrician immediately."
+      ],
+      "report_scores": {
+        "widal": {
+          "score": 10,
+          "details": "Low baseline"
+        }
+      },
+      "patient_id": "d167"
+    },
+    {
+      "email": "d900327@gmail.com",
+      "timestamp": "7/12/2025, 8:52:52 pm",
+      "client_key": "7/12/2025, 8:52:52 pm|Wellness|",
+      "patient_name": "sanjana",
+      "patient_age": 1,
+      "patient_gender": "Female",
+      "disease": "Wellness",
+      "risk": "",
+      "recommendations": [
+        "Advice: No specific symptoms reported. Focus on preventive health and general wellness.",
+        "Medicines: Take regular multivitamins daily for overall immunity and nutrition",
+        "Diet: Maintain balanced diet with vegetables, fruits, proteins, and whole grains daily",
+        "Lifestyle: Sleep 7-8 hours daily, Exercise 30 minutes daily, Stay hydrated with 8-10 glasses water",
+        "Follow-up: Visit specialist for annual health checkup and preventive screening"
+      ],
+      "report_scores": {},
+      "patient_id": "d168"
+    },
+    {
+      "email": "d900327@gmail.com",
+      "timestamp": "7/12/2025, 9:05:50 pm",
+      "client_key": "7/12/2025, 9:05:50 pm|Viral Fever|40",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Viral Fever",
+      "risk": "",
+      "recommendations": [
+        "Advice: Stay hydrated, avoid pollution and smoke. Elevate head while sleeping.",
+        "Medicines (for adult):",
+        "  • Benadryl cough syrup — 2 tsp every 6 hours",
+        "  • Ascoril syrup — 2 tsp every 6 hours",
+        "Timing: Every 6 hours after meals; complete course even if better",
+        "Diet: Chicken soup with garlic/ginger, Khichdi - Avoid spicy, fried, oily foods",
+        "Drinks: Warm turmeric milk (Haldi doodh) 2-3x daily - Drink every 30-60 minutes",
+        "Rest: 8 hours sleep minimum. Light walking only when better.",
+        "EMERGENCY: If fever >104°F, severe symptoms, or chest pain - SEEK IMMEDIATE CARE",
+        "Follow-up: Contact doctor if symptoms persist >5-7 days."
+      ],
+      "report_scores": {
+        "cbc": {
+          "score": 40,
+          "details": "Very low platelets"
+        }
+      },
+      "patient_id": "d169"
+    },
+    {
+      "email": "d900327@gmail.com",
+      "timestamp": "7/12/2025, 9:12:34 pm",
+      "client_key": "7/12/2025, 9:12:34 pm|Viral Fever|Low",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Viral Fever",
+      "risk": "Low",
+      "recommendations": [
+        "Advice: Monitor temperature closely, keep hydrated, avoid NSAIDs until dengue excluded.",
+        "Medicines (for adult):",
+        "  • Crocin 650mg — 1-2 tablets every 6 hours",
+        "  • OR Dolo 500mg — 1-2 tablets every 6 hours with food",
+        "Timing: Every 6 hours after meals; max 3g/day",
+        "Diet: Khichdi, Moong dal soup - Avoid spicy, fried, oily foods",
+        "Drinks: Warm water with honey + lemon - Drink every 30-60 minutes",
+        "Rest: 8 hours sleep minimum. Light walking only when better.",
+        "EMERGENCY: If fever >104°F, severe symptoms, or chest pain - SEEK IMMEDIATE CARE",
+        "Follow-up: Contact doctor if symptoms persist >5-7 days."
+      ],
+      "report_scores": {},
+      "patient_id": "d170"
+    },
+    {
+      "email": "d900327@gmail.com",
+      "timestamp": "7/12/2025, 9:17:10 pm",
+      "client_key": "7/12/2025, 9:17:10 pm|Viral Fever|Low",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Viral Fever",
+      "risk": "Low",
+      "recommendations": [
+        "Advice: Monitor temperature closely, keep hydrated, avoid NSAIDs until dengue excluded.",
+        "Medicines (for adult):",
+        "  • Paracetamol 500mg — 1-2 tablets every 6 hours",
+        "  • OR Dolo 500mg — 1-2 tablets every 6 hours with food",
+        "Timing: Every 6 hours after meals; max 3g/day",
+        "Diet: Khichdi, Moong dal soup - Avoid spicy, fried, oily foods",
+        "Drinks: Warm water with honey + lemon - Drink every 30-60 minutes",
+        "Rest: 8 hours sleep minimum. Light walking only when better.",
+        "EMERGENCY: If fever >104°F, severe symptoms, or chest pain - SEEK IMMEDIATE CARE",
+        "Follow-up: Contact doctor if symptoms persist >5-7 days."
+      ],
+      "report_scores": {},
+      "patient_id": "d171"
+    },
+    {
+      "email": "d900327@gmail.com",
+      "timestamp": "7/12/2025, 9:35:00 pm",
+      "client_key": "7/12/2025, 9:35:00 pm|Viral Fever|Low",
+      "patient_name": "sanjana",
+      "patient_age": 1,
+      "patient_gender": "Female",
+      "disease": "Viral Fever",
+      "risk": "Low",
+      "recommendations": [
+        "Advice: Fever in infants needs careful monitoring. Keep hydrated, avoid medications without doctor approval.",
+        "Medicines (for infant):",
+        "  • Paracetamol syrup 125mg/5ml — 5ml every 4-6 hours (pediatrician approval)",
+        "  • Cool sponging every 15 mins if >38.5°C",
+        "Timing: Only under doctor supervision; max 4 doses/day",
+        "Diet: Breast milk (if nursing), Warm water - Avoid spicy, fried, oily foods",
+        "Drinks: Breast milk only - Drink every 30-60 minutes",
+        "Rest: 16-20 hours sleep. Keep environment calm and cool.",
+        "EMERGENCY: If temperature >39°C, difficulty breathing, or no wet diapers >8 hours - SEEK IMMEDIATE CARE",
+        "Follow-up: If not improving in 24 hours, contact pediatrician immediately."
+      ],
+      "report_scores": {},
+      "patient_id": "d172"
+    },
+    {
+      "email": "d900327@gmail.com",
+      "timestamp": "8/12/2025, 12:50:14 am",
+      "client_key": "8/12/2025, 12:50:14 am|Viral Fever|Low",
+      "patient_name": "sanjana",
+      "patient_age": 1,
+      "patient_gender": "Female",
+      "disease": "Viral Fever",
+      "risk": "Low",
+      "recommendations": [
+        "Advice: Fever in infants needs careful monitoring. Keep hydrated, avoid medications without doctor approval.",
+        "Medicines (for infant):",
+        "  • Paracetamol syrup 125mg/5ml — 5ml every 4-6 hours (pediatrician approval)",
+        "  • Cool sponging every 15 mins if >38.5°C",
+        "Timing: Only under doctor supervision; max 4 doses/day",
+        "Diet: Breast milk (if nursing), Warm water - Avoid spicy, fried, oily foods",
+        "Drinks: Breast milk only - Drink every 30-60 minutes",
+        "Rest: 16-20 hours sleep. Keep environment calm and cool.",
+        "EMERGENCY: If temperature >39°C, difficulty breathing, or no wet diapers >8 hours - SEEK IMMEDIATE CARE",
+        "Follow-up: If not improving in 24 hours, contact pediatrician immediately."
+      ],
+      "report_scores": {},
+      "patient_id": "d173"
+    },
+    {
+      "email": "d900327@gmail.com",
+      "timestamp": "8/12/2025, 12:51:36 am",
+      "client_key": "8/12/2025, 12:51:36 am|Viral Fever|Low",
+      "patient_name": "sanjana",
+      "patient_age": 1,
+      "patient_gender": "Female",
+      "disease": "Viral Fever",
+      "risk": "Low",
+      "recommendations": [
+        "Advice: Fever in infants needs careful monitoring. Keep hydrated, avoid medications without doctor approval.",
+        "Medicines (for infant):",
+        "  • Paracetamol syrup 125mg/5ml — 5ml every 4-6 hours (pediatrician approval)",
+        "  • Cool sponging every 15 mins if >38.5°C",
+        "Timing: Only under doctor supervision; max 4 doses/day",
+        "Diet: Breast milk (if nursing), Warm water - Avoid spicy, fried, oily foods",
+        "Drinks: Breast milk only - Drink every 30-60 minutes",
+        "Rest: 16-20 hours sleep. Keep environment calm and cool.",
+        "EMERGENCY: If temperature >39°C, difficulty breathing, or no wet diapers >8 hours - SEEK IMMEDIATE CARE",
+        "Follow-up: If not improving in 24 hours, contact pediatrician immediately."
+      ],
+      "report_scores": {},
+      "patient_id": "d174"
+    },
+    {
+      "email": "d900327@gmail.com",
+      "timestamp": "8/12/2025, 9:23:34 am",
+      "client_key": "8/12/2025, 9:23:34 am|Viral Fever|Low",
+      "patient_name": "sanjana",
+      "patient_age": 1,
+      "patient_gender": "Female",
+      "disease": "Viral Fever",
+      "risk": "Low",
+      "recommendations": [
+        "Advice: Fever in infants needs careful monitoring. Keep hydrated, avoid medications without doctor approval.",
+        "Medicines (for infant):",
+        "  • Paracetamol syrup 125mg/5ml — 5ml every 4-6 hours (pediatrician approval)",
+        "  • Cool sponging every 15 mins if >38.5°C",
+        "Timing: Only under doctor supervision; max 4 doses/day",
+        "Diet: Breast milk (if nursing), Warm water - Avoid spicy, fried, oily foods",
+        "Drinks: Breast milk only - Drink every 30-60 minutes",
+        "Rest: 16-20 hours sleep. Keep environment calm and cool.",
+        "EMERGENCY: If temperature >39°C, difficulty breathing, or no wet diapers >8 hours - SEEK IMMEDIATE CARE",
+        "Follow-up: If not improving in 24 hours, contact pediatrician immediately."
+      ],
+      "report_scores": {},
+      "patient_id": "d175"
+    },
+    {
+      "email": "d900327@gmail.com",
+      "timestamp": "8/12/2025, 9:38:09 am",
+      "client_key": "8/12/2025, 9:38:09 am|Wellness|",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Wellness",
+      "risk": "",
+      "recommendations": [
+        "Advice: No specific symptoms reported. Focus on preventive health and general wellness.",
+        "Medicines: Take regular multivitamins daily for overall immunity and nutrition",
+        "Diet: Maintain balanced diet with vegetables, fruits, proteins, and whole grains daily",
+        "Lifestyle: Sleep 7-8 hours daily, Exercise 30 minutes daily, Stay hydrated with 8-10 glasses water",
+        "Follow-up: Visit specialist for annual health checkup and preventive screening"
+      ],
+      "report_scores": {},
+      "patient_id": "d176"
+    },
+    {
+      "email": "d900327@gmail.com",
+      "timestamp": "8/12/2025, 11:19:40 am",
+      "client_key": "8/12/2025, 11:19:40 am|Typhoid|85",
+      "patient_name": "sanjana",
+      "patient_age": 2,
+      "patient_gender": "Female",
+      "disease": "Typhoid",
+      "risk": "",
+      "recommendations": [
+        "Advice: Fever in infants needs careful monitoring. Keep hydrated, avoid medications without doctor approval.",
+        "Medicines (for infant):",
+        "  • Paracetamol syrup 125mg/5ml — 5ml every 4-6 hours (pediatrician approval)",
+        "  • Cool sponging every 15 mins if >38.5°C",
+        "Timing: Only under doctor supervision; max 4 doses/day",
+        "Diet: Breast milk (if nursing), Warm water - Avoid spicy, fried, oily foods",
+        "Drinks: Breast milk only - Drink every 30-60 minutes",
+        "Rest: 16-20 hours sleep. Keep environment calm and cool.",
+        "EMERGENCY: If temperature >39°C, difficulty breathing, or no wet diapers >8 hours - SEEK IMMEDIATE CARE",
+        "Follow-up: If not improving in 24 hours, contact pediatrician immediately."
+      ],
+      "report_scores": {
+        "widal": {
+          "score": 85,
+          "details": "Widal ≥1:160"
+        }
+      },
+      "patient_id": "d177"
+    },
+    {
+      "email": "d900327@gmail.com",
+      "timestamp": "8/12/2025, 11:28:49 am",
+      "client_key": "8/12/2025, 11:28:49 am|Typhoid|85",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Typhoid",
+      "risk": "",
+      "recommendations": [
+        "Advice: Monitor temperature closely, keep hydrated, avoid NSAIDs until dengue excluded.",
+        "Medicines (for adult):",
+        "  • Paracetamol 500mg — 1-2 tablets every 6 hours",
+        "  • OR Dolo 500mg — 1-2 tablets every 6 hours with food",
+        "Timing: Every 6 hours after meals; max 3g/day",
+        "Diet: Khichdi, Moong dal soup - Avoid spicy, fried, oily foods",
+        "Drinks: Warm water with honey + lemon - Drink every 30-60 minutes",
+        "Rest: 8 hours sleep minimum. Light walking only when better.",
+        "EMERGENCY: If fever >104°F, severe symptoms, or chest pain - SEEK IMMEDIATE CARE",
+        "Follow-up: Contact doctor if symptoms persist >5-7 days."
+      ],
+      "report_scores": {
+        "widal": {
+          "score": 85,
+          "details": "Widal ≥1:160"
+        }
+      },
+      "patient_id": "d178"
+    },
+    {
+      "email": "d900327@gmail.com",
+      "timestamp": "8/12/2025, 11:39:34 am",
+      "client_key": "8/12/2025, 11:39:34 am|Typhoid|85",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Typhoid",
+      "risk": "",
+      "recommendations": [
+        "Advice: Monitor temperature closely, keep hydrated, avoid NSAIDs until dengue excluded.",
+        "Medicines (for adult):",
+        "  • Paracetamol 500mg — 1-2 tablets every 6 hours",
+        "  • OR Dolo 500mg — 1-2 tablets every 6 hours with food",
+        "Timing: Every 6 hours after meals; max 3g/day",
+        "Diet: Khichdi, Moong dal soup - Avoid spicy, fried, oily foods",
+        "Drinks: Warm water with honey + lemon - Drink every 30-60 minutes",
+        "Rest: 8 hours sleep minimum. Light walking only when better.",
+        "EMERGENCY: If fever >104°F, severe symptoms, or chest pain - SEEK IMMEDIATE CARE",
+        "Follow-up: Contact doctor if symptoms persist >5-7 days."
+      ],
+      "report_scores": {
+        "widal": {
+          "score": 85,
+          "details": "Widal ≥1:160"
+        }
+      },
+      "patient_id": "d179"
+    },
+    {
+      "email": "d900327@gmail.com",
+      "timestamp": "8/12/2025, 11:51:08 am",
+      "client_key": "8/12/2025, 11:51:08 am|Viral Fever|Low",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Viral Fever",
+      "risk": "Low",
+      "recommendations": [
+        "Advice: Monitor temperature closely, keep hydrated, avoid NSAIDs until dengue excluded.",
+        "Medicines (for adult):",
+        "  • Paracetamol 500mg — 1-2 tablets every 6 hours",
+        "  • OR Dolo 500mg — 1-2 tablets every 6 hours with food",
+        "Timing: Every 6 hours after meals; max 3g/day",
+        "Diet: Khichdi, Moong dal soup - Avoid spicy, fried, oily foods",
+        "Drinks: Warm water with honey + lemon - Drink every 30-60 minutes",
+        "Rest: 8 hours sleep minimum. Light walking only when better.",
+        "EMERGENCY: If fever >104°F, severe symptoms, or chest pain - SEEK IMMEDIATE CARE",
+        "Follow-up: Contact doctor if symptoms persist >5-7 days."
+      ],
+      "report_scores": {},
+      "patient_id": "d180"
+    },
+    {
+      "email": "d900327@gmail.com",
+      "timestamp": "8/12/2025, 12:01:57 pm",
+      "client_key": "8/12/2025, 12:01:57 pm|Typhoid|85",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Typhoid",
+      "risk": "",
+      "recommendations": [
+        "Advice: Monitor temperature closely, keep hydrated, avoid NSAIDs until dengue excluded.",
+        "Medicines (for adult):",
+        "  • Paracetamol 500mg — 1-2 tablets every 6 hours",
+        "  • OR Dolo 500mg — 1-2 tablets every 6 hours with food",
+        "Timing: Every 6 hours after meals; max 3g/day",
+        "Diet: Khichdi, Moong dal soup - Avoid spicy, fried, oily foods",
+        "Drinks: Warm water with honey + lemon - Drink every 30-60 minutes",
+        "Rest: 8 hours sleep minimum. Light walking only when better.",
+        "EMERGENCY: If fever >104°F, severe symptoms, or chest pain - SEEK IMMEDIATE CARE",
+        "Follow-up: Contact doctor if symptoms persist >5-7 days."
+      ],
+      "report_scores": {
+        "widal": {
+          "score": 85,
+          "details": "Widal ≥1:160"
+        }
+      },
+      "patient_id": "d181"
+    },
+    {
+      "email": "d900327@gmail.com",
+      "timestamp": "8/12/2025, 12:04:04 pm",
+      "client_key": "8/12/2025, 12:04:04 pm|Dengue|45",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Dengue",
+      "risk": "",
+      "recommendations": [
+        "Advice: Monitor temperature closely, keep hydrated, avoid NSAIDs until dengue excluded.",
+        "Medicines (for adult):",
+        "  • Paracetamol 500mg — 1-2 tablets every 6 hours",
+        "  • OR Dolo 500mg — 1-2 tablets every 6 hours with food",
+        "Timing: Every 6 hours after meals; max 3g/day",
+        "Diet: Khichdi, Moong dal soup - Avoid spicy, fried, oily foods",
+        "Drinks: Warm water with honey + lemon - Drink every 30-60 minutes",
+        "Rest: 8 hours sleep minimum. Light walking only when better.",
+        "EMERGENCY: If fever >104°F, severe symptoms, or chest pain - SEEK IMMEDIATE CARE",
+        "Follow-up: Contact doctor if symptoms persist >5-7 days."
+      ],
+      "report_scores": {
+        "dengue_ns1": {
+          "score": 90,
+          "details": "NS1 positive"
+        },
+        "blood_sugar": {
+          "score": 0,
+          "details": "Glucose normal"
+        }
+      },
+      "patient_id": "d182"
+    },
+    {
+      "email": "d900327@gmail.com",
+      "timestamp": "8/12/2025, 12:27:23 pm",
+      "client_key": "8/12/2025, 12:27:23 pm|Typhoid|85",
+      "patient_name": "sanjana",
+      "patient_age": 21,
+      "patient_gender": "Female",
+      "disease": "Typhoid",
+      "risk": "",
+      "recommendations": [
+        "Advice: Monitor temperature closely, keep hydrated, avoid NSAIDs until dengue excluded.",
+        "Medicines (for adult):",
+        "  • Paracetamol 500mg — 1-2 tablets every 6 hours",
+        "  • OR Dolo 500mg — 1-2 tablets every 6 hours with food",
+        "Timing: Every 6 hours after meals; max 3g/day",
+        "Diet: Khichdi, Moong dal soup - Avoid spicy, fried, oily foods",
+        "Drinks: Warm water with honey + lemon - Drink every 30-60 minutes",
+        "Rest: 8 hours sleep minimum. Light walking only when better.",
+        "EMERGENCY: If fever >104°F, severe symptoms, or chest pain - SEEK IMMEDIATE CARE",
+        "Follow-up: Contact doctor if symptoms persist >5-7 days."
+      ],
+      "report_scores": {
+        "widal": {
+          "score": 85,
+          "details": "Widal ≥1:160"
+        }
+      },
+      "patient_id": "d183"
+    }
+  ],
+  "arathihm6@gmail.com": [
+    {
+      "email": "arathihm6@gmail.com",
+      "timestamp": "7/12/2025, 7:15:18 pm",
+      "client_key": "7/12/2025, 7:15:18 pm|Viral Fever|40",
+      "patient_name": "sanjana",
+      "patient_age": 2,
+      "patient_gender": "Female",
+      "disease": "Viral Fever",
+      "risk": "",
+      "recommendations": [
+        "Advice: Cough in infants needs monitoring. NO cough syrups without doctor approval.",
+        "Medicines (for infant):",
+        "  • Honey — 1 tsp (for infants >1 year only)",
+        "  • Vicks VapoRub on chest (limited)",
+        "Timing: Consult pediatrician",
+        "Diet: Breast milk, Warm water - Avoid spicy, fried, oily foods",
+        "Drinks: Breast milk - Drink every 30-60 minutes",
+        "Rest: 16-20 hours sleep. Keep environment calm and cool.",
+        "EMERGENCY: If temperature >39°C, difficulty breathing, or no wet diapers >8 hours - SEEK IMMEDIATE CARE",
+        "Follow-up: If not improving in 24 hours, contact pediatrician immediately."
+      ],
+      "report_scores": {
+        "cbc": {
+          "score": 40,
+          "details": "Very low platelets"
+        }
+      }
+    }
+  ]
+}

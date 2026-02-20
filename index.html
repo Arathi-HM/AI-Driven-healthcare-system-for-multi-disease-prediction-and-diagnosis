@@ -1,0 +1,2784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>AI Multi-Disease Prediction</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+  :root{
+    --rb-700:#2f54d4; --rb-600:#4169E1; --rb-500:#5c7cf0;
+    --bg:#ffffff; --subtle:#f6f8ff; --card:#ffffff; --text:#0f172a; --muted:#64748b; --border:#e5e7eb; --shadow:0 18px 40px rgba(2,6,23,.10);
+    --accent:var(--rb-600); --accent-strong:var(--rb-700); --accent-hover:#6b86f5; --table-head:#eef2ff; --link:var(--rb-700);
+    --pill-ok-bg:#eafff1; --pill-ok-fg:#065f46; --pill-ok-bd:#bbf7d0;
+    --pill-mod-bg:#fff7e6; --pill-mod-fg:#92400e; --pill-mod-bd:#fde68a;
+    --pill-bad-bg:#ffecec; --pill-bad-fg:#991b1b; --pill-bad-bd:#fecaca;
+  }
+  [data-theme="dark"]{
+    --bg:#0b1220; --subtle:#0f1a33; --card:#0e1730; --text:#e7ebf3; --muted:#a6b3c8; --border:#1f2a40; --shadow:none; --table-head:#152653;
+    --pill-ok-bg:#09381f; --pill-ok-fg:#9ef0c0; --pill-ok-bd:#14532d;
+    --pill-mod-bg:#3a2a08; --pill-mod-fg:#ffd58a; --pill-mod-bd:#4d3409;
+    --pill-bad-bg:#3b0a0a; --pill-bad-fg:#ffb4b4; --pill-bad-bd:#4a0f0f;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0; font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:var(--bg); color:var(--text)}
+  a{color:var(--link); text-decoration:none}
+  .btn{border:none; border-radius:999px; height:42px; padding:0 16px; font-weight:700; cursor:pointer; color:#fff; background:var(--accent-strong); box-shadow:0 10px 24px rgba(65,105,225,.22); transition:.12s background,.06s transform}
+  .btn:hover{background:var(--accent-hover)} .btn:active{transform:translateY(1px)}
+  .btn-ghost{background:transparent; border:1px solid var(--accent-strong); color:var(--accent-strong)}
+  .btn-danger{background:#dc2626}
+  .input, select{width:100%; height:40px; border-radius:10px; border:1px solid var(--border); background:var(--card); color:var(--text); padding:8px 12px; outline:none; font-size:14px; margin:8px 0}
+  .input:focus, select:focus{border-color:#c7d2fe; box-shadow:0 0 0 3px rgba(65,105,225,.18)}
+  .muted{color:var(--muted)} .chip{display:inline-block; padding:4px 10px; border-radius:999px; background:#eef2ff; color:#1d4ed8; font-weight:700; font-size:12px}
+  [data-theme="dark"] .chip{background:#12265c; color:#9bb6ff}
+  .center{min-height:100vh; display:grid; place-items:center; padding:32px 16px}
+  #auth-card{width:100%; max-width:520px; background:var(--card); border:1px solid var(--border); border-radius:14px; box-shadow:0 20px 45px rgba(65,105,225,.18); padding:24px}
+  #auth-title{margin:6px 0 16px; text-align:center; font-weight:900; font-size:24px; color:var(--accent-strong)}
+  .row{display:flex; align-items:center; gap:10px} .row-between{display:flex; align-items:center; justify-content:space-between; gap:10px}
+
+  #app{display:grid; grid-template-columns:240px 1fr; min-height:100vh}
+  .sidebar{background:var(--subtle); border-right:1px solid var(--border); padding:18px 14px; position:sticky; top:0; height:100vh}
+  .brand{font-weight:900; color:var(--accent-strong); font-size:18px; letter-spacing:.3px; margin-bottom:18px}
+  .nav{display:flex; flex-direction:column; gap:6px}
+  .nav button{display:flex; align-items:center; gap:10px; width:100%; padding:10px 12px; border-radius:12px; border:1px solid transparent; background:transparent; color:var(--text); font-weight:700; cursor:pointer}
+  .nav button.active{background:#ecf1ff; border-color:#c7d2fe; color:var(--accent-strong)}
+  [data-theme="dark"] .nav button.active{background:#152653; border-color:#2b3c72}
+  .main{display:flex; flex-direction:column; min-height:100vh}
+  .topbar{display:flex; align-items:center; justify-content:space-between; padding:12px 18px; border-bottom:1px solid var(--border); background:var(--card); position:sticky; top:0; z-index:5}
+  .tools{display:flex; align-items:center; gap:10px}
+  .toggle{font-size:13px; border:1px solid var(--border); background:transparent; color:var(--text); border-radius:999px; padding:8px 12px; cursor:pointer}
+  .avatar{width:40px; height:40px; min-width:40px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:var(--accent-strong); color:#fff; font-weight:800; font-size:16px; box-shadow:0 10px 24px rgba(65,105,225,.28); user-select:none; cursor:pointer}
+  .content{padding:22px; max-width:1100px; margin:0 auto; width:100%}
+  .panel{background:var(--subtle); border:1px solid var(--border); border-radius:20px; box-shadow:var(--shadow); padding:22px}
+  .title{font-weight:900; font-size:26px; color:var(--accent-strong); margin:0 0 10px}
+  .subtitle{font-weight:800; color:var(--accent-strong); margin:0 0 14px}
+  .table-wrap{overflow:auto; background:var(--card); border:1px solid var(--border); border-radius:14px}
+  table{width:100%; border-collapse:collapse; font-size:14px}
+  thead th{position:sticky; top:0; background:var(--table-head); text-align:left; padding:12px; color:var(--text)}
+  tbody td{padding:12px; border-top:1px solid var(--border); vertical-align:top}
+  tbody tr:hover{background:rgba(65,105,225,.06)}
+  [data-theme="dark"] tbody tr:hover{background:#12265c66}
+  .risk{display:inline-block; padding:2px 8px; border-radius:999px; font-size:12px; font-weight:800; margin-left:8px; border:1px solid}
+  .risk.low{background:var(--pill-ok-bg); color:var(--pill-ok-fg); border-color:var(--pill-ok-bd)}
+  .risk.mod{background:var(--pill-mod-bg); color:var(--pill-mod-fg); border-color:var(--pill-mod-bd)}
+  .risk.high{background:var(--pill-bad-bg); color:var(--pill-bad-fg); border-color:var(--pill-bad-bd)}
+  .modal-backdrop{position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; align-items:center; justify-content:center; z-index:50}
+  .modal{background:var(--card); color:var(--text); border:1px solid var(--border); width:min(680px,92vw); border-radius:16px; padding:18px; box-shadow:0 40px 80px rgba(0,0,0,.35)}
+  .stepper{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px}
+  .step{font-size:12px; padding:6px 8px; border-radius:999px; border:1px solid var(--border)}
+  .step.active{background:#eff6ff; border-color:#c7d2fe; color:#1d4ed8; font-weight:700}
+  [data-theme="dark"] .step.active{background:#152653; color:#aecdff; border-color:#2b3c72}
+  .hidden{display:none !important} .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+  .linklike{appearance:none; background:none; border:none; padding:0; color:var(--link); cursor:pointer; font:inherit; text-decoration:underline}
+  @media (max-width:900px){#app{grid-template-columns:1fr}.sidebar{position:relative; height:auto}}
+</style>
+</head>
+<body data-theme="light">
+
+
+<!-- Prelogin intro removed to show auth page directly -->
+
+
+<!-- AUTH -->
+<div id="page-auth" class="center">
+    <div id="auth-card">
+    <h2 id="auth-title">Login to Your Account</h2>
+    <form id="auth-form" autocomplete="on">
+      <!-- Login form with autocomplete enabled for browser password save -->
+      <input type="email" class="input" id="email" placeholder="Email" autocomplete="email" required />
+      <input type="password" class="input" id="password" placeholder="Password" autocomplete="current-password" required />
+      <button type="submit" class="btn" style="width:100%">Login</button>
+    </form>
+    <!-- Fallback script removed. The main app script below handles auth reliably. -->
+    <div class="row-between" style="margin-top:6px">
+      <span></span><a id="forgotPasswordLink" class="muted" href="javascript:void(0)">Forgot Password?</a>
+    </div>
+    <div style="text-align:center; margin-top:12px">
+      <span class="muted">Don't have an account?</span> <a id="switch-auth" href="javascript:void(0)">Sign Up</a>
+    </div>
+    <div style="text-align:center; margin-top:6px">
+      <span class="muted">Admin?</span> <a id="switch-admin" class="muted" href="javascript:void(0)" style="font-weight:700">Admin Login</a>
+    </div>
+  </div>
+</div>
+
+<!-- OTP -->
+<div id="page-otp" class="center hidden">
+  <div style="width:min(520px,95vw); background:var(--card); border:1px solid var(--border); border-radius:14px; box-shadow:0 20px 45px rgba(65,105,225,.18); padding:20px;">
+    <h3 style="margin:6px 0 14px; text-align:center; color:var(--accent-strong)">Password Recovery</h3>
+    <div id="otp-step1">
+      <p class="muted" style="text-align:center; margin:-6px 0 10px">Enter your registered email to receive an OTP.</p>
+      <input type="email" class="input" id="otpEmail" placeholder="Email" />
+      <div class="grid-2" style="margin-top:6px">
+        <button class="btn" id="sendOtpBtn">Send OTP</button>
+        <button class="btn btn-ghost" id="otpCancelBtn">Cancel</button>
+      </div>
+    </div>
+    <div id="otp-step2" class="hidden">
+      <p class="muted" style="text-align:center; margin:-6px 0 10px">Enter the OTP sent to your email.</p>
+      <input type="text" class="input" id="userOtp" placeholder="One-Time Password" />
+      <div class="grid-2" style="margin-top:6px">
+        <button class="btn" id="verifyOtpBtn">Verify OTP</button>
+        <button class="btn btn-ghost" id="otpCancelBtn2">Cancel</button>
+      </div>
+    </div>
+    <div id="otp-step3" class="hidden">
+      <p class="muted" style="text-align:center; margin:-6px 0 10px">Set your new password.</p>
+      <input type="password" class="input" id="newPassword" placeholder="New Password" />
+      <div class="grid-2" style="margin-top:6px">
+        <button class="btn" id="resetPasswordBtn">Reset Password</button>
+        <button class="btn btn-ghost" id="otpCancelBtn3">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN -->
+<div id="page-admin-login" class="center hidden">
+  <div id="admin-card" style="width:100%; max-width:520px; background:var(--card); border:1px solid var(--border); border-radius:14px; box-shadow:0 20px 45px rgba(65,105,225,.18); padding:24px">
+    <h2 style="margin:6px 0 16px; text-align:center; font-weight:900; font-size:24px; color:var(--accent-strong)">Admin Login</h2>
+    <form id="admin-login-form" autocomplete="on">
+      <input type="email" class="input" id="admin-email" placeholder="Admin Email" autocomplete="email" required />
+      <input type="password" class="input" id="admin-password" placeholder="Admin Password" autocomplete="current-password" required />
+      <button type="submit" class="btn" style="width:100%">Admin Login</button>
+    </form>
+    <div style="text-align:center; margin-top:12px">
+      <a id="switch-to-user-login" class="muted" href="javascript:void(0)" style="font-weight:700">← Back to User Login</a>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN DASHBOARD -->
+<div id="page-admin" class="hidden">
+  <div style="background:var(--subtle); min-height:100vh; padding:24px">
+    <div style="max-width:1200px; margin:0 auto">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px">
+        <h1 style="margin:0; color:var(--accent-strong); font-weight:900; font-size:28px">Admin Dashboard</h1>
+        <button id="admin-logout-btn" class="btn btn-danger">Logout</button>
+      </div>
+      
+      <div style="background:var(--card); border:1px solid var(--border); border-radius:14px; padding:20px; margin-bottom:20px">
+        <h2 style="margin-top:0; color:var(--accent-strong)">All Users</h2>
+        <div style="margin-bottom:12px">
+          <input type="text" id="admin-search" class="input" placeholder="Search by email, username, or phone..." />
+        </div>
+        <div style="overflow-x:auto; background:var(--card); border:1px solid var(--border); border-radius:10px">
+          <table style="width:100%; border-collapse:collapse; font-size:14px">
+            <thead>
+              <tr style="background:var(--table-head)">
+                <th style="padding:12px; text-align:left; border-bottom:1px solid var(--border)">Email</th>
+                <th style="padding:12px; text-align:left; border-bottom:1px solid var(--border)">Username</th>
+                <th style="padding:12px; text-align:left; border-bottom:1px solid var(--border)">Phone</th>
+                <th style="padding:12px; text-align:left; border-bottom:1px solid var(--border)">Address</th>
+                <th style="padding:12px; text-align:left; border-bottom:1px solid var(--border)">Created</th>
+                <th style="padding:12px; text-align:left; border-bottom:1px solid var(--border)">Status</th>
+              </tr>
+            </thead>
+            <tbody id="admin-users-body">
+              <tr><td colspan="6" style="padding:20px; text-align:center; color:var(--muted)">Loading users...</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="margin-top:12px; color:var(--muted); font-size:13px">
+          Total Users: <span id="admin-total-users">0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="page-app" class="hidden">
+  <div id="app">
+    <aside class="sidebar">
+      <div class="brand">MedPredict</div>
+      <div class="nav">
+        <button class="active" data-nav="home"><span>🏠</span> Home</button>
+        <button data-nav="workflow"><span>🧭</span> Workflow</button>
+        <button data-nav="history"><span>📄</span> Saved Results</button>
+      </div>
+    </aside>
+
+    <div class="main">
+      <div class="topbar">
+        <div id="breadcrumb" class="muted">Home</div>
+        <div class="tools">
+          <button id="themeToggle" class="toggle">🌙 Dark</button>
+          <div id="avatarBadge" class="avatar">U</div>
+        </div>
+
+        <!-- User menu -->
+        <div id="userMenu" class="modal" style="position:absolute; right:12px; top:56px; display:none; width:320px; padding:14px;">
+          <div class="row" style="gap:10px; margin-bottom:8px">
+            <div id="menuInitial" class="avatar" style="width:36px;height:36px;min-width:36px;font-size:14px">U</div>
+            <div>
+              <div id="menuName" style="font-weight:900"></div>
+              <div id="menuEmail" class="muted" style="font-size:13px"></div>
+            </div>
+          </div>
+          <div><b>Username:</b> <span id="ufUsername">-</span></div>
+          <div><b>Email:</b> <span id="ufEmail">-</span></div>
+          <div><b>Phone:</b> <span id="ufPhone">-</span></div>
+          <div><b>Address:</b> <span id="ufAddress">-</span></div>
+          <div class="row" style="justify-content:space-between; margin-top:10px">
+            <span class="chip">Signed in</span>
+            <button class="btn-danger btn" id="logoutBtn" style="height:36px">Log out</button>
+          </div>
+        </div>
+      </div>
+
+      <main class="content">
+        <!-- HOME -->
+        <section id="view-home" class="panel">
+          <h2 class="title">AI Multi-Disease Prediction</h2>
+          <div id="signedPill" class="chip hidden"></div>
+
+          <h3 class="subtitle">Enter Patient Information</h3>
+          <div class="grid-2">
+            <div><label>Patient Name</label><input id="patientName" class="input" placeholder="Full name" /></div>
+            <div><label>Age (Years)</label><input id="patientAge" class="input" type="number" min="0" placeholder="Age in years" /></div>
+            <div id="monthsContainer" class="hidden">
+              <label>Months (if age is 0)</label>
+              <input id="patientMonths" class="input" type="number" min="0" max="11" placeholder="Months (0-11)" />
+              <small style="color:var(--muted); font-size:11px">Required if age is 0 (for infants)</small>
+            </div>
+            <div>
+              <label>Gender</label>
+              <select id="patientGender" class="input">
+                <option value="">Select gender</option>
+                <option>Male</option><option>Female</option><option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="row" style="margin-top:12px">
+            <button id="startPredictionBtn" class="btn">Start Prediction</button>
+            <button id="goHistoryBtn" class="btn btn-ghost">View Saved Results</button>
+            <button id="quickSymptomBtn" class="btn btn-ghost">Quick Symptom Checker</button>
+          </div>
+        </section>
+
+        <!-- WORKFLOW -->
+        <section id="view-workflow" class="panel hidden">
+          <div class="row-between" style="margin-bottom:8px">
+            <div class="chip" id="patientBadge">Patient: —</div>
+            <div class="chip" id="stepBadge">Step 1 of 7</div>
+          </div>
+          <div class="stepper" id="stepper"></div>
+          <div id="main"></div>
+        </section>
+
+        <!-- HISTORY -->
+        <section id="view-history" class="panel hidden">
+          <div style="margin-bottom:16px">
+            <h3 class="subtitle" style="margin:0 0 12px 0">Saved Results</h3>
+              <!-- ANALYTICS DASHBOARD -->
+              <div id="analyticsDashboard" style="margin-bottom:16px; display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px">
+                <div style="background:rgba(34,197,94,.1); border:1px solid rgba(34,197,94,.3); border-radius:12px; padding:12px">
+                  <div style="font-size:12px; color:var(--muted); font-weight:700">📊 Total Records</div>
+                  <div style="font-size:24px; font-weight:900; color:#22c55e; margin-top:4px" id="statTotal">0</div>
+                </div>
+                <div style="background:rgba(59,130,246,.1); border:1px solid rgba(59,130,246,.3); border-radius:12px; padding:12px">
+                  <div style="font-size:12px; color:var(--muted); font-weight:700">👥 Unique Patients</div>
+                  <div style="font-size:24px; font-weight:900; color:#3b82f6; margin-top:4px" id="statPatients">0</div>
+                </div>
+                <div style="background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.3); border-radius:12px; padding:12px">
+                  <div style="font-size:12px; color:var(--muted); font-weight:700">⚠️ High Risk Cases</div>
+                  <div style="font-size:24px; font-weight:900; color:#ef4444; margin-top:4px" id="statHighRisk">0</div>
+                </div>
+                <div style="background:rgba(168,85,247,.1); border:1px solid rgba(168,85,247,.3); border-radius:12px; padding:12px">
+                  <div style="font-size:12px; color:var(--muted); font-weight:700">🎯 Avg Confidence</div>
+                  <div style="font-size:24px; font-weight:900; color:#a855f7; margin-top:4px" id="statConfidence">0%</div>
+                </div>
+              </div>
+              <!-- TOP DISEASES CHART -->
+              <div id="topDiseasesChart" style="margin-bottom:16px; background:var(--subtle); border:1px solid var(--border); border-radius:12px; padding:12px">
+                <div style="font-weight:700; font-size:14px; margin-bottom:8px">🏥 Top Diseases Reported</div>
+                <div id="diseaseBars" style="display:flex; flex-direction:column; gap:8px"></div>
+              </div>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:10px; margin-bottom:12px">
+              <div>
+                <label style="font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:4px">👤 Search by Name</label>
+                <input id="searchSaved" class="input" style="margin:0" placeholder="Patient name..." />
+              </div>
+              <div>
+                <label style="font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:4px">🩺 Search by Symptoms</label>
+                <input id="searchSymptoms" class="input" style="margin:0" placeholder="e.g., fever, cough..." />
+              </div>
+              <div>
+                <label style="font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:4px">🏥 Disease</label>
+                <select id="filterDisease" class="input" style="margin:0">
+                  <option value="">All Diseases</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:4px">⚠️ Risk Level</label>
+                <select id="filterRisk" class="input" style="margin:0">
+                  <option value="">All Risk Levels</option>
+                  <option value="low">Low Risk</option>
+                  <option value="moderate">Moderate Risk</option>
+                  <option value="high">High Risk</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:4px">🆔 Patient ID</label>
+                <input id="filterPatientId" class="input" style="margin:0" placeholder="ID..." />
+              </div>
+              <div>
+                <label style="font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:4px">📅 Age</label>
+                <input id="filterAge" type="number" class="input" style="margin:0" placeholder="Age..." />
+              </div>
+              <div>
+                <label style="font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:4px">📆 Date From</label>
+                <input id="filterDateFrom" type="date" class="input" style="margin:0" />
+              </div>
+              <div>
+                <label style="font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:4px">📆 Date To</label>
+                <input id="filterDateTo" type="date" class="input" style="margin:0" />
+              </div>
+              <div style="display:flex; gap:8px; align-items:flex-end">
+                <button id="resetFiltersBtn" class="btn btn-ghost" style="flex:1">↺ Reset</button>
+                  <button id="exportPdfBtn" class="btn btn-ghost" style="flex:1">📄 PDF</button>
+                <button id="exportCsvBtn" class="btn btn-ghost" style="flex:1">📥 Download</button>
+                  <button id="compareBtn" class="btn btn-ghost" style="flex:1">📊 Compare</button>
+              </div>
+            </div>
+            <div class="muted" style="font-size:12px; padding:6px 12px; background:rgba(65,105,225,.04); border-radius:6px; margin-bottom:8px" id="dateRangeInfo"></div>
+            <div class="muted" style="font-size:13px; padding:8px 12px; background:rgba(65,105,225,.06); border-radius:8px; border-left:3px solid var(--accent-strong)" id="filterStatus"></div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th style="min-width:100px">Patient ID</th>
+                  <th style="min-width:180px">Patient Name</th>
+                  <th style="min-width:60px">Age</th>
+                  <th style="min-width:200px">Date &amp; Time</th>
+                  <th style="min-width:140px">Disease</th>
+                  <th style="min-width:100px">Risk</th>
+                  <th style="min-width:120px">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="savedBody">
+                <tr><td colspan="7" class="muted" style="padding:16px">No saved prediction results available.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT MODAL -->
+<div id="resultModal" class="modal-backdrop">
+  <div class="modal">
+    <div class="row-between" style="margin-bottom:6px">
+      <h3 style="margin:0">Result Details</h3>
+      <button class="close" id="closeModalBtn">✕</button>
+    </div>
+    <div id="modalBody" class="muted">Loading…</div>
+    <div class="row" style="justify-content:flex-end; margin-top:12px">
+      <button class="btn" id="closeModalBtn2">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- State ---------- */
+let isSignup=false, currentUser=null, patientData=null, currentStep=0;
+let userSelections={}, allResultsCache=[];
+
+/* ---------- Elements ---------- */
+const pageIntro=document.getElementById('page-intro');
+const pageAuth=document.getElementById('page-auth');
+const pageOtp=document.getElementById('page-otp');
+const pageApp=document.getElementById('page-app');
+const breadcrumb=document.getElementById('breadcrumb');
+const authForm=document.getElementById('auth-form');
+const authTitle=document.getElementById('auth-title');
+const switchAuth=document.getElementById('switch-auth');
+const forgotPasswordLink=document.getElementById('forgotPasswordLink');
+const avatarBadge=document.getElementById('avatarBadge');
+const userMenu=document.getElementById('userMenu');
+const logoutBtn=document.getElementById('logoutBtn');
+const themeToggle=document.getElementById('themeToggle');
+const navButtons=document.querySelectorAll('.nav button');
+const viewHome=document.getElementById('view-home');
+const viewWorkflow=document.getElementById('view-workflow');
+const viewHistory=document.getElementById('view-history');
+const stepperEl=document.getElementById('stepper');
+const mainDiv=document.getElementById('main');
+const patientBadge=document.getElementById('patientBadge');
+const stepBadge=document.getElementById('stepBadge');
+const signedPill=document.getElementById('signedPill');
+const savedBody=document.getElementById('savedBody');
+const searchSaved=document.getElementById('searchSaved');
+const modal=document.getElementById('resultModal');
+const modalBody=document.getElementById('modalBody');
+document.getElementById('closeModalBtn').onclick=()=> modal.style.display='none';
+document.getElementById('closeModalBtn2').onclick=()=> modal.style.display='none';
+// continueBtn removed with prelogin; no-op fallback
+
+/* ---------- Theme ---------- */
+(function initTheme(){
+  const saved=localStorage.getItem('theme')||'light';
+  document.body.setAttribute('data-theme', saved);
+  themeToggle.textContent = saved==='dark' ? '☀️ Light' : '🌙 Dark';
+})();
+themeToggle.onclick=()=>{
+  const cur=document.body.getAttribute('data-theme');
+  const next=cur==='dark'?'light':'dark';
+  document.body.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  themeToggle.textContent = next==='dark' ? '☀️ Light' : '🌙 Dark';
+};
+
+/* ---------- Navigation ---------- */
+function showView(name){
+  breadcrumb.textContent=name[0].toUpperCase()+name.slice(1).replace('-',' ');
+  navButtons.forEach(b=> b.classList.toggle('active', b.dataset.nav===name));
+  viewHome.classList.toggle('hidden', name!=='home');
+  viewWorkflow.classList.toggle('hidden', name!=='workflow');
+  viewHistory.classList.toggle('hidden', name!=='history');
+  if(name==='history') loadSavedResults();
+}
+navButtons.forEach(b=> b.onclick=()=> showView(b.dataset.nav));
+
+/* ---------- Auth UI ---------- */
+function renderAuthForm(){
+  authForm.innerHTML='';
+  if(isSignup){
+    authTitle.textContent='Create Your Account';
+    authForm.innerHTML=`
+      <input type="text" class="input" id="username" placeholder="Username" autocomplete="username" required />
+      <input type="email" class="input" id="email" placeholder="Email" autocomplete="email" required />
+      <input type="tel" class="input" id="phone" placeholder="Phone" autocomplete="tel" required />
+      <input type="text" class="input" id="address" placeholder="Address" autocomplete="street-address" required />
+      <input type="password" class="input" id="password" placeholder="Password (min 8 chars, 1 uppercase, 1 special)" autocomplete="new-password" required />
+      <button type="button" class="btn" id="sendSignupOtpBtn" style="width:100%">Send OTP</button>
+      <input type="text" class="input hidden" id="signupOtp" placeholder="Enter OTP" />
+      <button type="submit" class="btn hidden" id="signupSubmitBtn" style="width:100%">Sign Up</button>`;
+    switchAuth.textContent='Login';
+    setTimeout(()=>{setupSignupOtpFlow();},0);
+  }else{
+    authTitle.textContent='Login to Your Account';
+    authForm.innerHTML=`
+      <input type="email" class="input" id="email" placeholder="Email" required />
+      <input type="password" class="input" id="password" placeholder="Password" required />
+      <button type="submit" class="btn" style="width:100%">Login</button>`;
+    switchAuth.textContent='Sign Up';
+  }
+}
+
+function setupSignupOtpFlow(){
+  const sendBtn=document.getElementById('sendSignupOtpBtn');
+  const otpInput=document.getElementById('signupOtp');
+  const submitBtn=document.getElementById('signupSubmitBtn');
+  if(!sendBtn) return;
+  sendBtn.onclick=async()=>{
+    const email=document.getElementById('email').value.trim().toLowerCase();
+    const phone=document.getElementById('phone').value.trim();
+    if(!email||!phone){alert('Enter email and phone');return;}
+    sendBtn.disabled=true;
+    const r=await fetch('/api/send-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,phone})});
+    const d=await r.json();
+    if(d.success){
+      alert('OTP sent to your email.');
+      otpInput.classList.remove('hidden');
+      submitBtn.classList.remove('hidden');
+    }else{alert(d.message||'Failed to send OTP');sendBtn.disabled=false;}
+  };
+  submitBtn.onclick=async(e)=>{
+    e.preventDefault();
+    const username=document.getElementById('username').value.trim();
+    const email=document.getElementById('email').value.trim().toLowerCase();
+    const phone=document.getElementById('phone').value.trim();
+    const address=document.getElementById('address').value.trim();
+    const password=document.getElementById('password').value.trim();
+    const otp=otpInput.value.trim();
+    if(!username||!email||!phone||!address||!password||!otp){alert('All fields required');return;}
+    if(password.length<8||!/[A-Z]/.test(password)||!/[^a-zA-Z0-9]/.test(password)){
+      alert('Password must be 8+ chars, 1 uppercase, 1 special char.');return;
+    }
+    submitBtn.disabled=true;
+    const payload={username,email,phone,address,password,otp};
+    const r=await fetch('/api/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const d=await r.json();
+    alert(d.message);
+    if(d.success){ isSignup=false; renderAuthForm(); }
+    submitBtn.disabled=false;
+  };
+}
+renderAuthForm();
+switchAuth.onclick=()=>{
+  isSignup = !isSignup;
+  renderAuthForm();
+};
+authForm.onsubmit=async (e)=>{
+  e.preventDefault();
+  if(isSignup){
+    // Handled by setupSignupOtpFlow
+    return;
+  }else{
+    const email=document.getElementById('email').value.trim().toLowerCase();
+    const password=document.getElementById('password').value.trim();
+    try{
+      const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})});
+      const d=await r.json();
+      if(d.success){
+        currentUser=d.user; localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        afterLogin();
+      }else alert(d.message||'Login failed');
+    }catch{ alert('Server error.'); }
+  }
+};
+forgotPasswordLink.onclick=()=>{ showOnly('otp'); showOtpStep(1); };
+function showOnly(which){
+  pageIntro?.classList.toggle('hidden', which!=='intro');
+  pageAuth?.classList.toggle('hidden', which!=='auth');
+  pageOtp?.classList.toggle('hidden', which!=='otp');
+  pageApp?.classList.toggle('hidden', which!=='app');
+  document.getElementById('page-admin-login')?.classList.toggle('hidden', which!=='admin-login');
+  document.getElementById('page-admin')?.classList.toggle('hidden', which!=='admin');
+}
+
+/* OTP */
+function showOtpStep(n){
+  document.getElementById('otp-step1').classList.toggle('hidden', n!==1);
+  document.getElementById('otp-step2').classList.toggle('hidden', n!==2);
+  document.getElementById('otp-step3').classList.toggle('hidden', n!==3);
+}
+document.getElementById('otpCancelBtn').onclick=()=>{ 
+  document.getElementById('otpEmail').value=''; 
+  document.getElementById('userOtp').value=''; 
+  document.getElementById('newPassword').value=''; 
+  showOnly('auth'); 
+};
+document.getElementById('otpCancelBtn2').onclick=()=>{ 
+  document.getElementById('otpEmail').value=''; 
+  document.getElementById('userOtp').value=''; 
+  document.getElementById('newPassword').value=''; 
+  showOnly('auth'); 
+};
+document.getElementById('otpCancelBtn3').onclick=()=>{ 
+  document.getElementById('otpEmail').value=''; 
+  document.getElementById('userOtp').value=''; 
+  document.getElementById('newPassword').value=''; 
+  showOnly('auth'); 
+};
+document.getElementById('sendOtpBtn').onclick=async ()=>{
+  const email=document.getElementById('otpEmail').value.trim().toLowerCase();
+  if(!email){alert('Enter your registered email'); return;}
+  document.getElementById('sendOtpBtn').disabled=true;
+  const r=await fetch('/api/send-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
+  const d=await r.json(); 
+  if(d.success){ 
+    alert('OTP sent to your email. Check your inbox.'); 
+    showOtpStep(2); 
+  } else { 
+    alert(d.message||'Failed to send OTP');
+    document.getElementById('sendOtpBtn').disabled=false;
+  }
+};
+document.getElementById('verifyOtpBtn').onclick=async ()=>{
+  const email=document.getElementById('otpEmail').value.trim().toLowerCase();
+  const otp=document.getElementById('userOtp').value.trim();
+  if(!otp){alert('Enter OTP'); return;}
+  const r=await fetch('/api/verify-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,otp})});
+  const d=await r.json(); 
+  if(d.success){ 
+    showOtpStep(3); 
+  } else { 
+    alert(d.message||'Invalid OTP');
+  }
+};
+document.getElementById('resetPasswordBtn').onclick=async ()=>{
+  const email=document.getElementById('otpEmail').value.trim().toLowerCase();
+  const new_password=document.getElementById('newPassword').value.trim();
+  const otp=document.getElementById('userOtp').value.trim();
+  if(!new_password){alert('Enter new password'); return;}
+  if(new_password.length<8||!/[A-Z]/.test(new_password)||!/[^a-zA-Z0-9]/.test(new_password)){
+    alert('Password must be 8+ chars, 1 uppercase, 1 special char.');return;
+  }
+  document.getElementById('resetPasswordBtn').disabled=true;
+  const r=await fetch('/api/reset-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,new_password,otp})});
+  const d=await r.json(); 
+  if(d.success){ 
+    alert('Password reset successful. You can now login with your new password.'); 
+    document.getElementById('otpEmail').value=''; 
+    document.getElementById('userOtp').value=''; 
+    document.getElementById('newPassword').value=''; 
+    showOnly('auth'); 
+    isSignup=false; 
+    renderAuthForm(); 
+  } else { 
+    alert(d.message||'Password reset failed');
+    document.getElementById('resetPasswordBtn').disabled=false;
+  }
+};
+
+/* Boot */
+(function boot(){
+  const saved=localStorage.getItem('currentUser');
+  if(saved){ try{ currentUser=JSON.parse(saved); if(currentUser?.email){ afterLogin(); return; } }catch{} }
+  showOnly('auth');
+})();
+
+/* User menu */
+avatarBadge.onclick=(e)=>{ e.stopPropagation(); userMenu.style.display = userMenu.style.display==='block' ? 'none':'block'; };
+document.addEventListener('click',(e)=>{ if(!userMenu.contains(e.target) && e.target!==avatarBadge) userMenu.style.display='none'; });
+logoutBtn.onclick=()=>{ localStorage.removeItem('currentUser'); currentUser=null; showOnly('auth'); };
+
+/* After login */
+function afterLogin(){
+  showOnly('app'); showView('home');
+  const initial=(currentUser?.username || currentUser?.email || 'U')[0].toUpperCase();
+  avatarBadge.textContent=initial; document.getElementById('menuInitial').textContent=initial;
+  const uname=currentUser?.username||'(no name)', uemail=currentUser?.email||'', uphone=currentUser?.phone||'-', uaddr=currentUser?.address||'-';
+  document.getElementById('menuName').textContent=uname;
+  document.getElementById('menuEmail').textContent=uemail;
+  document.getElementById('ufUsername').textContent=uname;
+  document.getElementById('ufEmail').textContent=uemail;
+  document.getElementById('ufPhone').textContent=uphone;
+  document.getElementById('ufAddress').textContent=uaddr;
+  signedPill.textContent=`Signed in as ${uemail}`; signedPill.classList.remove('hidden');
+  loadSavedResults();
+}
+
+/* Start prediction */
+document.getElementById('startPredictionBtn').onclick=()=>{
+  const name=document.getElementById('patientName').value.trim();
+  const ageStr=document.getElementById('patientAge').value.trim();
+  const monthsStr=document.getElementById('patientMonths').value.trim();
+  const gender=document.getElementById('patientGender').value.trim();
+  if(!name||!ageStr||!gender){ alert('Enter patient name, age, and gender.'); return; }
+  const age=parseInt(ageStr,10); if(isNaN(age)||age<0||age===0){ alert('Please enter a valid age (must be at least 1 year old).'); return; }
+  
+  patientData={ name, age, gender, date:new Date().toLocaleString() };
+  
+  patientBadge.textContent=`Patient: ${patientData.name} (${patientData.age} yrs, ${patientData.gender})`;
+  currentStep=0; renderStepper(); showView('workflow'); renderSymptoms();
+};
+document.getElementById('goHistoryBtn').onclick=()=> showView('history');
+
+// Toggle months field visibility when age changes
+// Months field is hidden by default since age 0 is not accepted
+// Keep monthsContainer hidden always
+document.getElementById('monthsContainer').classList.add('hidden');
+
+// Quick Symptom Checker (brief form without full workflow)
+document.getElementById('quickSymptomBtn').onclick=()=>{
+  const symptom = prompt('Enter a symptom (e.g., fever, cough, headache):','');
+  if(!symptom) return;
+  alert(`Checking "${symptom}..." Common causes include:\n• Viral Fever\n• Common Cold\n• Flu\n\nFor accurate diagnosis, please use the full prediction workflow with test reports.`);
+};
+
+/* ---- Helper functions ---- */
+function renderStepper(){ const stepLabels=["Symptoms","Details","Tests","Test-Symptoms","Upload Reports","Prediction","Recommendations"]; stepperEl.innerHTML=stepLabels.map((t,i)=>`<span class="step ${i===currentStep?'active':''}">${i+1}. ${t}</span>`).join(''); stepBadge.textContent=`Step ${currentStep+1} of ${stepLabels.length}`; }
+
+// Render a Back button for multi-step workflow views
+function renderBackButton(){
+  try{
+    // remove old back button if exists
+    const old = document.getElementById('workflowBackBtn'); if(old) old.remove();
+    if(typeof currentStep === 'undefined' || currentStep<=0) return;
+    const btn = document.createElement('button'); btn.id='workflowBackBtn'; btn.className='btn btn-ghost'; btn.style.marginBottom='12px'; btn.textContent='← Back';
+    btn.onclick = ()=>{
+      currentStep = Math.max(0, currentStep-1);
+      // Restore previous step data
+      switch(currentStep){
+        case 0: renderSymptoms(); break;
+        case 1: renderSymptomDetails(); break;
+        case 2: renderTestSuggestion(); break;
+        case 3: renderTestRelatedSymptomsNoDuplicates(); break;
+        case 4: renderTestReportUploads(); break;
+        case 5: renderPrediction(); break;
+        default: renderSymptoms(); break;
+      }
+    };
+    mainDiv.insertBefore(btn, mainDiv.firstChild);
+  }catch(e){ console.error('renderBackButton error', e); }
+}
+
+function getAgeCategoryJS(age){
+  try{ const a = Number(age); if(isNaN(a)) return 'adult'; if(a<12) return 'pediatric'; if(a<=65) return 'adult'; return 'geriatric'; }catch(e){ return 'adult'; }
+}
+function isLowOrMild(details){ return (details||[]).some(d=>/low|mild/i.test(d)); }
+function isSevereOrHigh(details){ return (details||[]).some(d=>/high|severe|above 38\.3°c|radiating/i.test(d)); }
+function parseCsv(text){ const L=text.split(/\r?\n/).filter(Boolean); if(!L.length) return {}; const H=L[0].split(',').map(s=>s.trim().toLowerCase()); const R=(L[1]||'').split(',').map(s=>s.trim()); const o={}; H.forEach((k,i)=>o[k]=R[i]??""); return o; }
+function number(v){ const n=parseFloat(String(v).replace(/[^\d\.\-]/g,'')); return isNaN(n)?null:n; }
+
+/* Catalog */
+const SYMPTOMS=[{key:"fever",label:"Fever",details:["Low (37.2-37.7°C)","Medium (37.8-38.3°C)","High (Above 38.3°C)","Chills Present","Night Sweats","Cold"]},{key:"cough",label:"Cough",details:["Mild","Moderate","Severe","Dry","Productive (with mucus)","Blood Streaked"]},{key:"fatigue",label:"Fatigue",details:["Mild","Moderate","Severe","Sudden Onset"]},{key:"headache",label:"Headache",details:["Mild","Moderate","Severe","Pulsating"]},{key:"joint_pain",label:"Joint Pain",details:["Mild","Moderate","Severe","With Swelling"]},{key:"thirst",label:"Excessive Thirst",details:["Mild","Moderate","Severe"]},{key:"urination",label:"Frequent Urination",details:["Mild","Moderate","Severe"]},{key:"swelling_legs",label:"Swelling in Legs/Feet",details:["Mild","Moderate","Severe"]}];
+const TEST_CATALOG=[{key:"widal",label:"Typhoid (Widal Test)",trigger:["fever"],relatedDetails:["High","Severe","Above 38.3°C"],testSymptoms:["High Temperature","Abdominal Pain","Constipation"]},{key:"dengue_ns1",label:"Dengue NS1 Antigen",trigger:["fever","joint_pain"],relatedDetails:["High","Severe","Above 38.3°C"],testSymptoms:["Rash","Severe Headache","Bleeding"]},{key:"malaria_test",label:"Malaria Parasite Test",trigger:["fever","headache"],relatedDetails:["High","Severe","Above 38.3°C"],testSymptoms:["Sweating","Shivering","Muscle Pain"]},{key:"blood_sugar",label:"Blood Sugar",trigger:["thirst","urination"],relatedDetails:["Severe"],testSymptoms:["Increased Urination","Extreme Thirst","Blurred Vision"]},{key:"kidney_function",label:"Kidney Function Test (KFT)",trigger:["fatigue","swelling_legs"],relatedDetails:["Severe"],testSymptoms:["Swelling Legs","Fatigue","Reduced Urine Output"]},{key:"ecg",label:"Electrocardiogram (ECG)",trigger:["fatigue"],relatedDetails:["Severe","Radiating"],testSymptoms:["Chest Pain","Palpitations","Shortness of Breath"]},{key:"cbc",label:"Complete Blood Count (CBC)",trigger:["fever","fatigue","headache"],relatedDetails:["Low Platelets","Anemia","Elevated WBC"],testSymptoms:["Fatigue","Weakness","Fever"]}];
+const DISEASE_FROM_TEST={widal:"Typhoid", dengue_ns1:"Dengue", malaria_test:"Malaria", blood_sugar:"Diabetes", kidney_function:"Kidney", ecg:"Heart", cbc:"Viral Fever"};
+const DISEASE_RECOMMENDATIONS={Typhoid:["Take prescribed antibiotics.","Stay hydrated.","Avoid outside food; rest."],Dengue:["Plenty of fluids (ORS).","Paracetamol for fever (no NSAIDs).","Monitor platelets; rest."],Malaria:["Seek antimalarial treatment.","Sleep under mosquito nets.","Hydrate well."],Diabetes:["Limit sugar & refined carbs.","Daily walk 30–45 mins.","Check fasting blood sugar."],Kidney:["Low-salt diet.","Avoid painkillers without advice.","Track urine output & swelling."],Heart:["If chest pain is radiating/severe, seek ER.","Avoid heavy exertion.","ECG if symptoms persist."],"Viral Fever":["Rest, warm fluids, steam inhalation.","Paracetamol for fever.","If >3 days or worsening, see doctor."]};
+
+/* Scoring */
+function scoreFromReport(testKey, d0){
+  const d={}; Object.keys(d0||{}).forEach(k=>d[k.toLowerCase()]=d0[k]);
+  switch(testKey){
+    case 'cbc':{ const p=number(d.platelets), w=number(d.wbc), h=number(d.hemoglobin); let s=0,n=[]; if(p!==null){ if(p<100000){s+=40;n.push('Very low platelets');} else if(p<150000){s+=25;n.push('Low platelets');} } if(w!==null){ if(w>15000){s+=30;n.push('High WBC');} else if(w>11000){s+=15;n.push('Slightly high WBC');} } if(h!==null){ if(h<10){s+=20;n.push('Low hemoglobin');} else if(h<12){s+=10;n.push('Mild anemia');} } return {score:Math.min(100,s), details:n.join(', ')||'CBC normal'}; }
+    case 'blood_sugar':{ const f=number(d.fasting), pp=number(d.pp); let s=0,n=[]; if(f!==null){ if(f>=126){s+=60;n.push('Fasting ≥126');} else if(f>=100){s+=35;n.push('Fasting 100–125');} } if(pp!==null){ if(pp>=200){s+=40;n.push('PP ≥200');} else if(pp>=140){s+=20;n.push('PP 140–199');} } return {score:Math.min(100,s), details:n.join(', ')||'Glucose normal'}; }
+    case 'kidney_function':{ const c=number(d.creatinine), e=number(d.egfr); let s=0,n=[]; if(c!==null){ if(c>1.5){s+=50;n.push('Creatinine >1.5');} else if(c>1.3){s+=30;n.push('Creatinine 1.3–1.5');} } if(e!==null){ if(e<60){s+=50;n.push('eGFR <60');} else if(e<90){s+=20;n.push('eGFR 60–89');} } return {score:Math.min(100,s), details:n.join(', ')||'Renal normal'}; }
+    case 'dengue_ns1':{ const v=String(d.ns1||'').toLowerCase(); const pos=['pos','positive','detected','yes','reactive'].includes(v); return {score:pos?90:10, details:pos?'NS1 positive':'NS1 negative'}; }
+    case 'malaria_test':{ const p=String(d.parasite||'').toLowerCase(); const pos=['pos','positive','detected','yes'].includes(p); return {score:pos?90:10, details:pos?'Parasite detected':'No parasite'}; }
+    case 'widal':{ const t=String(d.titer||'').toLowerCase(); const r=parseFloat((t.split(':')[1]||'').trim()); let s=10,n=['Low baseline']; if(r){ if(r>=160){s=85;n=['Widal ≥1:160'];} else if(r>=80){s=60;n=['Widal 1:80'];} } return {score:s, details:n.join(', ')}; }
+    case 'ecg':{ const a=String(d.abnormal||'').toLowerCase(); const yes=['yes','true','abnormal','y'].includes(a); return {score:yes?80:15, details:yes?'ECG abnormal':'ECG normal'}; }
+    default:return {score:0, details:'No scoring defined'};
+  }
+}
+function riskBucket(s){ if(s>=70) return 'High'; if(s>=40) return 'Moderate'; return 'Low'; }
+function testLabel(k){ const m={widal:"Typhoid (Widal Test)", dengue_ns1:"Dengue NS1 Antigen", malaria_test:"Malaria Parasite Test", blood_sugar:"Blood Sugar", kidney_function:"Kidney Function Test (KFT)", ecg:"Electrocardiogram (ECG)", cbc:"Complete Blood Count (CBC)"}; return m[k]||k; }
+
+/* ---------- Patient ID Generator (Frontend) ---------- */
+function generatePatientID(record){
+  // Patient IDs are generated by backend, this is just a fallback
+  // Returns placeholder that will be replaced by backend value
+  return record.patient_id || '—';
+}
+
+/* ---------- Overrides ---------- */
+function getOverrideStore(){ try{ return JSON.parse(localStorage.getItem('patient_overrides')||'{}'); }catch{ return {}; } }
+function setOverrideStore(obj){ localStorage.setItem('patient_overrides', JSON.stringify(obj||{})); }
+function makeKey(t, d, r){ return `${t||''}|${d||''}|${r||''}`; }
+function closestOverride(row){
+  const store=getOverrideStore(), list=Object.entries(store);
+  if(!list.length) return null;
+  const baseTime=new Date(row.timestamp || row.created_at || row.datetime || '').getTime();
+  const target = (row.disease||'') + '|' + (row.risk||'');
+  let best=null, bestDiff=Number.POSITIVE_INFINITY;
+  for(const [k,val] of list){
+    const [ts, dis, risk] = k.split('|');
+    if((dis||'')+'|'+(risk||'') !== target) continue;
+    const t = new Date(ts).getTime();
+    if(isFinite(t) && isFinite(baseTime)){
+      const diff=Math.abs(t-baseTime);
+      if(diff<=5*60*1000 && diff<bestDiff){ best=val; bestDiff=diff; }
+    }
+  }
+  return best;
+}
+function normalizeRecord(r){
+  const store=getOverrideStore();
+  const t = r.timestamp || r.created_at || r.datetime || '';
+  const kExact = makeKey(t, r.disease, r.risk);
+  const exact = store[kExact];
+  const fuzzy = exact || closestOverride(r) || {};
+  const name   = r.patient_name ?? r.name ?? r?.patient?.name ?? r.patientName ?? fuzzy.name ?? '(not set)';
+  const age    = r.patient_age  ?? r.age  ?? r?.patient?.age  ?? r.patientAge  ?? fuzzy.age  ?? '—';
+  const gender = r.patient_gender??r.gender??r?.patient?.gender??r.patientGender??fuzzy.gender??'—';
+  
+  return {...r, _client_key: kExact, patient_name:String(name), patient_age:String(age), patient_gender:String(gender)};
+}
+
+/* ---------- Workflow screens ---------- */
+function renderStepper(){ const labels=["Symptoms","Details","Tests","Test-Symptoms","Upload Reports","Prediction","Recommendations"]; stepperEl.innerHTML=labels.map((t,i)=>`<span class="step ${i===currentStep?'active':''}">${i+1}. ${t}</span>`).join(''); stepBadge.textContent=`Step ${currentStep+1} of ${labels.length}`; }
+
+function renderSymptoms(){
+  mainDiv.innerHTML=''; renderStepper();
+  renderBackButton();
+  const sec=document.createElement('div'); sec.className='panel'; sec.style.background='var(--card)';
+  sec.innerHTML=`<h3 class="subtitle">Symptoms — <b>${patientData.name}</b></h3>`;
+  SYMPTOMS.forEach(sym=>{
+    sec.innerHTML+=`<label style="display:block;margin:6px 0">
+      <input type="checkbox" name="symptom" value="${sym.key}"> ${sym.label}
+    </label>`;
+  });
+  // Add "None" option at the end (mutually exclusive)
+  sec.innerHTML+=`<label style="display:block;margin:6px 0">
+    <input type="checkbox" name="symptom" value="none"> None (no physical symptoms, feeling low / stressed)
+  </label>`;
+  sec.innerHTML+=`<div style="margin-top:10px"><button class="btn" id="symptomNext" disabled>Next</button></div>`;
+  mainDiv.appendChild(sec);
+
+  const cbs=sec.querySelectorAll('input[name="symptom"]');
+  const next=sec.querySelector('#symptomNext');
+  const noneBox=sec.querySelector('input[name="symptom"][value="none"]');
+
+  const upd=()=>{ next.disabled=![...cbs].some(x=>x.checked); };
+
+  cbs.forEach(cb=>{
+    cb.addEventListener('change',()=>{
+      if(cb===noneBox && noneBox.checked){
+        // Uncheck all other symptoms if None is selected
+        cbs.forEach(x=>{ if(x!==noneBox) x.checked=false; });
+      }else if(cb!==noneBox && cb.checked){
+        // If any other symptom is selected, uncheck None
+        if(noneBox) noneBox.checked=false;
+      }
+      upd();
+    });
+  });
+  upd();
+
+  next.onclick=()=>{
+    const selected=[...cbs].filter(x=>x.checked).map(x=>x.value);
+    if(!selected.length) return;
+
+    if(selected.includes('none')){
+      // If None is selected, show generic wellness recommendations
+      userSelections.baseSymptoms=[];
+      userSelections.symptomDetails={};
+      userSelections.symptomDays={};
+      currentStep=6; // jump to final step in stepper
+      renderGenericRecommendations();
+      return;
+    }
+
+    userSelections.baseSymptoms=selected;
+    currentStep=1;
+    renderSymptomDetails();
+  };
+}
+
+/* >>> UPDATED: includes “None” option per symptom and proper logic */
+function renderSymptomDetails(){
+  mainDiv.innerHTML=''; 
+  renderStepper();
+  renderBackButton();
+  const sec=document.createElement('div'); 
+  sec.className='panel'; 
+  sec.style.background='var(--card)';
+  sec.innerHTML=`<h3 class="subtitle">Symptom Details</h3>`;
+
+  userSelections.symptomDetails={};
+  userSelections.symptomDays={};
+
+  userSelections.baseSymptoms.forEach(key=>{
+    const s=SYMPTOMS.find(z=>z.key===key); 
+    if(!s) return;
+
+    sec.innerHTML+=`<div style="margin-top:6px;font-weight:800">${s.label}</div>`;
+
+    if(key==='fever'){
+      const deg=["Low (37.2-37.7°C)","Medium (37.8-38.3°C)","High (Above 38.3°C)"];
+      deg.forEach(d=> sec.innerHTML+=`<label style="margin-left:8px"><input type="radio" name="detail_fever_degree" value="${d}"> ${d}</label>`);
+      s.details.filter(x=>!deg.includes(x)).forEach(o=> sec.innerHTML+=`<label style="margin-left:8px"><input type="checkbox" name="detail_fever_other" value="${o}"> ${o}</label>`);
+   
+    } else {
+      const sev=s.details.filter(d=>/mild|moderate|severe/i.test(d));
+      const oth=s.details.filter(d=>!sev.includes(d));
+      sev.forEach(d=> sec.innerHTML+=`<label style="margin-left:8px"><input type="radio" name="detail_${key}_severity" value="${d}"> ${d}</label>`);
+      oth.forEach(o=> sec.innerHTML+=`<label style="margin-left:8px"><input type="checkbox" name="detail_${key}_other" value="${o}"> ${o}</label>`);
+      
+    }
+
+    sec.innerHTML+=`<div class="muted" style="margin:6px 0 4px">How many days?</div>
+    <input type="number" min="0" id="days_${key}" class="input" placeholder="Days" style="max-width:140px">`;
+  });
+
+  sec.innerHTML+=`<div style="margin-top:10px"><button class="btn" id="detailsNext" disabled>Next</button></div>`;
+  mainDiv.appendChild(sec);
+
+  // Make “None” mutually exclusive with other items for each symptom
+  userSelections.baseSymptoms.forEach(key=>{
+    const noneBox = sec.querySelector(`input[name="detail_${key}_none"], input[name="detail_fever_none"]`);
+    if(!noneBox) return;
+    noneBox.addEventListener("change",()=>{
+      if(noneBox.checked){
+        sec.querySelectorAll(`input[name^="detail_${key}_severity"], input[name^="detail_${key}_other"], input[name="detail_fever_degree"], input[name="detail_fever_other"]`)
+          .forEach(e=> e.checked=false);
+      }
+    });
+    // If any other option is checked, uncheck None
+    sec.querySelectorAll(`input[name^="detail_${key}_severity"], input[name^="detail_${key}_other"], input[name="detail_fever_degree"], input[name="detail_fever_other"]`)
+      .forEach(e=> e.addEventListener('change',()=>{ if(e.checked) noneBox.checked=false; }));
+  });
+
+  function valid(){
+    let ok=true;
+    userSelections.baseSymptoms.forEach(k=>{
+      const d=sec.querySelector(`#days_${k}`);
+      if(!d||d.value===''||Number(d.value)<0) ok=false;
+
+      const noneChecked = sec.querySelector(`input[name="detail_${k}_none"], input[name="detail_fever_none"]`)?.checked;
+
+      if(!noneChecked){
+        if(k==='fever'){
+          if(!sec.querySelector('input[name="detail_fever_degree"]:checked')) ok=false;
+        } else {
+          const r=sec.querySelectorAll(`input[name="detail_${k}_severity"]`);
+          if(r.length && ![...r].some(x=>x.checked)) ok=false;
+        }
+      }
+    });
+    sec.querySelector('#detailsNext').disabled=!ok;
+  }
+
+  sec.querySelectorAll('input').forEach(i=>i.addEventListener('input',valid));
+  sec.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(i=>i.addEventListener('change',valid));
+  valid();
+
+  sec.querySelector('#detailsNext').onclick=()=>{
+    userSelections.baseSymptoms.forEach(k=>{
+      const noneChecked = sec.querySelector(`input[name="detail_${k}_none"], input[name="detail_fever_none"]`)?.checked;
+
+      if(noneChecked){
+        userSelections.symptomDetails[k]=["None"];
+      } else if(k==="fever"){
+        const deg=sec.querySelector('input[name="detail_fever_degree"]:checked');
+        const other=[...sec.querySelectorAll('input[name="detail_fever_other"]:checked')].map(e=>e.value);
+        userSelections.symptomDetails[k]=(deg?[deg.value]:[]).concat(other);
+      } else {
+        const sev=sec.querySelector(`input[name="detail_${k}_severity"]:checked`);
+        const other=[...sec.querySelectorAll(`input[name="detail_${k}_other"]:checked`)].map(e=>e.value);
+        userSelections.symptomDetails[k]=(sev?[sev.value]:[]).concat(other);
+      }
+
+      const el=sec.querySelector(`#days_${k}`);
+      userSelections.symptomDays[k]=el && el.value? parseInt(el.value,10):0;
+    });
+    currentStep=2;
+    renderTestSuggestion();
+  };
+}
+
+function isLowOrMild(details){ return (details||[]).some(d=>/low|mild/i.test(d)); }
+function isSevereOrHigh(details){ return (details||[]).some(d=>/high|severe|above 38\.3°c|radiating/i.test(d)); }
+
+function renderTestSuggestion(){
+  mainDiv.innerHTML=''; renderStepper();
+  renderBackButton();
+  const vals=Object.values(userSelections.symptomDays); const allLE3=vals.length>0 && vals.every(d=>Number(d)<=3);
+  if(allLE3){ currentStep=6; renderRecommendationsDirectFromAPI(); return; }
+  let need=false;
+  for(const k of userSelections.baseSymptoms){
+    const d=userSelections.symptomDetails[k]||[]; const days=Number(userSelections.symptomDays[k]||0);
+    if(k==='fever'){ if(isSevereOrHigh(d)||days>3){ need=true; break; } }
+    else{ if(isSevereOrHigh(d)||(days>3 && !isLowOrMild(d))){ need=true; break; } }
+  }
+  if(!need){ currentStep=6; renderRecommendationsDirectFromAPI(); return; }
+  const needed=new Set();
+  userSelections.baseSymptoms.forEach(s=>{
+    const d=userSelections.symptomDetails[s]||[]; const days=Number(userSelections.symptomDays[s]||0);
+    if(s==='fever'){ if(isSevereOrHigh(d)||days>3) needed.add(s); }
+    else{ if(isSevereOrHigh(d)||(days>3 && !isLowOrMild(d))) needed.add(s); }
+  });
+  let selected=[]; const covered=new Set();
+  while(covered.size<needed.size){
+    let best=null, bestCov=0;
+    TEST_CATALOG.forEach(t=>{
+      if(selected.includes(t.key)) return;
+      const cov=t.trigger.filter(sym=>needed.has(sym) && !covered.has(sym)).length;
+      if(cov>bestCov){bestCov=cov; best=t;}
+    });
+    if(!best) break;
+    selected.push(best.key); best.trigger.forEach(s=>covered.add(s));
+  }
+  if(!selected.length) selected.push('cbc'); userSelections.recommendedTests=selected;
+  const sec=document.createElement('div'); sec.className='panel'; sec.style.background='var(--card)';
+  sec.innerHTML='<h3 class="subtitle">Suggested Tests</h3>';
+  selected.forEach(k=>{ const t=TEST_CATALOG.find(x=>x.key===k); sec.innerHTML+=`<p>• ${t?t.label:k}</p>`; });
+  sec.innerHTML+=`<div style="margin-top:8px"><button class="btn" id="testNext">Next</button></div>`;
+  mainDiv.appendChild(sec);
+  document.getElementById('testNext').onclick=()=>{ currentStep=3; renderTestRelatedSymptomsNoDuplicates(); };
+}
+
+function renderTestRelatedSymptomsNoDuplicates(){
+  mainDiv.innerHTML=''; renderStepper();
+  renderBackButton();
+  const sec=document.createElement('div'); sec.className='panel'; sec.style.background='var(--card)';
+  sec.innerHTML='<h3 class="subtitle">Symptoms related to tests</h3>';
+  const set=new Set();
+  userSelections.recommendedTests.forEach(k=>{ const t=TEST_CATALOG.find(x=>x.key===k); t?.testSymptoms?.forEach(s=>set.add(s)); });
+  const baseLabels=new Set(userSelections.baseSymptoms.map(k=> (SYMPTOMS.find(s=>s.key===k)?.label || k).toLowerCase() ));
+  const list=[...set].filter(s=>!baseLabels.has(s.toLowerCase()));
+  if(!list.length){
+    sec.innerHTML+='<p class="muted">No additional items.</p><div style="margin-top:8px"><button class="btn" id="nextBtn">Next</button></div>';
+    mainDiv.appendChild(sec); document.getElementById('nextBtn').onclick=()=>{ userSelections.selectedTestSymptoms=[]; currentStep=4; renderTestReportUploads(); }; return;
+  }
+  sec.innerHTML+=`<label style="display:block;margin:6px 0"><input type="checkbox" id="noneTR"> None</label>`;
+  list.forEach(s=> sec.innerHTML+=`<label style="display:block;margin:6px 0"><input type="checkbox" name="trs" value="${s}"> ${s}</label>`);
+  sec.innerHTML+=`<div style="margin-top:8px"><button class="btn" id="nextBtn" disabled>Next</button></div>`;
+  mainDiv.appendChild(sec);
+  const none=sec.querySelector('#noneTR'); const cbs=sec.querySelectorAll('input[name="trs"]'); const btn=sec.querySelector('#nextBtn');
+  const val=()=>{ const any=[...cbs].some(x=>x.checked); btn.disabled=!(none.checked || any); };
+  none.onchange=()=>{ if(none.checked) cbs.forEach(x=>x.checked=false); val(); };
+  cbs.forEach(x=> x.onchange=()=>{ if(x.checked) none.checked=false; val(); }); val();
+  btn.onclick=()=>{ userSelections.selectedTestSymptoms = none.checked? [] : [...cbs].filter(x=>x.checked).map(x=>x.value); currentStep=4; renderTestReportUploads(); };
+}
+
+function renderTestReportUploads(){
+  mainDiv.innerHTML=''; renderStepper();
+  renderBackButton();
+  const sec=document.createElement('div'); sec.className='panel'; sec.style.background='var(--card)';
+  sec.innerHTML=`<h3 class="subtitle">Upload Reports (PDF)</h3><p class="muted" style="margin-top:-6px">Upload PDF lab reports for the suggested tests. The system will read key values (CBC, Sugar, KFT, NS1, Malaria, Widal, ECG) and calculate risk scores automatically.</p><div id="uploadErrorMsg" style="background:#fee;color:#c00;padding:10px;margin:8px 0;border-left:3px solid #c00;display:none;"></div>`;
+  userSelections.testReports={};
+  (userSelections.recommendedTests||[]).forEach(k=>{
+    const t=TEST_CATALOG.find(x=>x.key===k);
+    sec.innerHTML+=`<label style="margin-top:6px"><b>${t?t.label:k}</b></label><input type="file" id="file_${k}" class="input" accept="application/pdf,.pdf">`;
+  });
+  sec.innerHTML+=`<div style="margin-top:12px;display:flex;gap:8px"><button class="btn" id="predictBtn">Predict</button><button class="btn btn-ghost" id="skipReportBtn">Skip Reports</button></div>`;
+  mainDiv.appendChild(sec);
+
+  (userSelections.recommendedTests||[]).forEach(k=>{
+    const el=document.getElementById(`file_${k}`);
+    el?.addEventListener('change',(e)=>{
+      const f=e.target.files?.[0];
+      if(f) userSelections.testReports[k]=f;
+    });
+  });
+
+  document.getElementById('predictBtn').onclick=()=>{ currentStep=5; renderPrediction(); };
+  document.getElementById('skipReportBtn').onclick=()=>{ userSelections.testReports={}; currentStep=5; renderPrediction(); };
+}
+
+async function computeFromReports(){
+  const files = userSelections.testReports || {};
+  const keys  = userSelections.recommendedTests || [];
+
+  if (!keys.length){
+    return {overallScore:0, byTest:{}};
+  }
+
+  const fd = new FormData();
+  fd.append("tests", JSON.stringify(keys));
+
+  // Include entered patient details for validation on server
+  try{ fd.append('patient_data', JSON.stringify(patientData || {})); }catch(e){}
+
+  let any=false;
+  keys.forEach(k=>{
+    const f = files[k];
+    if(f){
+      fd.append(`file_${k}`, f, f.name);
+      any=true;
+    }
+  });
+
+  if(!any){
+    // No report files were uploaded. Offer symptom-based prediction using server dataset.
+    const useSym = confirm("No reports uploaded. Use symptom-based prediction using dataset?");
+    if(!useSym){ alert("Please upload reports."); return null; }
+
+    try{
+      const resp = await fetch('/api/predict', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ symptoms: userSelections.baseSymptoms, symptomDetails: userSelections.symptomDetails, patient: patientData })
+      });
+      const pd = await resp.json();
+      if(!pd || !pd.success){ alert(pd && pd.message ? pd.message : 'Prediction failed'); return null; }
+      const overall = pd.confidence || 0;
+      // return a shape compatible with the report-based flow
+      return { overallScore: overall, byTest: {}, disease: pd.disease, risk: pd.risk, recommendations: [] };
+    }catch(e){ console.error(e); alert('Prediction failed.'); return null; }
+  }
+
+  let payload;
+  try{
+    const resp = await fetch("/api/analyze-reports", {
+      method:"POST",
+      body:fd
+    });
+    payload = await resp.json();
+  }catch(e){
+    alert("Error analyzing report. Try again.");
+    return null;   // stay on same step
+  }
+
+  if(!payload || !payload.success){
+    const errorMsg = document.getElementById('uploadErrorMsg');
+    if(errorMsg){
+      errorMsg.textContent = 'Error analyzing reports. Please check if you uploaded correct PDF reports. You can also enter values manually instead.';
+      errorMsg.style.display = 'block';
+    }
+    alert("Wrong report uploaded or analysis failed. Please upload correct reports or enter values manually.");
+    return null;   // STOP FLOW here
+  }
+
+  const raw = payload.data || {};
+  const byTest = {};
+
+  // Use server-computed test scores (MUCH more accurate than client-side)
+  const serverScores = payload.test_scores || {};
+  
+  // 🛑 CHECK WRONG REPORT FOR EACH TEST
+  for(const k of keys){
+    if(raw[k]){
+
+      // If server flagged the file as a hard error (likely not a report), stop.
+      if(raw[k]._error){
+        const manualEntry = confirm(`❌ Wrong report uploaded for ${testLabel(k)}.\n\nDo you want to:\n✓ OK = Enter values manually\n✗ Cancel = Upload correct report`);
+        if(manualEntry){
+          // Allow manual entry
+          const expected = {
+            cbc: ['platelets','wbc','hemoglobin'],
+            blood_sugar: ['fasting','pp'],
+            kidney_function: ['creatinine','egfr'],
+            dengue_ns1: ['ns1'],
+            malaria_test: ['parasite'],
+            widal: ['titer'],
+            ecg: ['abnormal']
+          };
+          const fields = expected[k] || [];
+          const manual = {};
+          for(const f of fields){
+            const val = prompt(`Enter value for ${f} (leave blank if unknown):`, '');
+            if(val === null) return null;
+            manual[f] = val.trim();
+          }
+          byTest[k] = scoreFromReport(k, manual);
+          continue;
+        }
+        return null;   // STAY on this page, DO NOT go next step
+      }
+
+      // If server parsed text but couldn't extract fields, or all extracted values are empty,
+      // Offer the user a chance to enter values manually or re-upload
+      const parsed = raw[k] || {};
+      const hasAnyField = Object.keys(parsed).some(f=> parsed[f] !== null && String(parsed[f]).trim() !== '');
+      if(!hasAnyField){
+        const wantManual = confirm(`${testLabel(k)} uploaded but values were not auto-extracted.\nWould you like to enter values manually for ${testLabel(k)} now? (Cancel to re-upload)`);
+        if(!wantManual) return null; // let user re-upload
+
+        // Map tests to expected fields for manual entry
+        const expected = {
+          cbc: ['platelets','wbc','hemoglobin'],
+          blood_sugar: ['fasting','pp'],
+          kidney_function: ['creatinine','egfr'],
+          dengue_ns1: ['ns1'],
+          malaria_test: ['parasite'],
+          widal: ['titer'],
+          ecg: ['abnormal']
+        };
+
+        const fields = expected[k] || [];
+        const manual = {};
+        for(const f of fields){
+          const val = prompt(`Enter value for ${f} (leave blank if unknown):`, '');
+          if(val === null) return null; // user cancelled input → abort flow
+          manual[f] = val.trim();
+        }
+        // If server returned some parsed fields (partial), merge them
+        const merged = Object.assign({}, raw[k], manual);
+        byTest[k] = scoreFromReport(k, merged);
+        continue;
+      }
+
+      // Use server score if available, otherwise fallback to client-side calculation
+      // Detect possible wrong-report: if server gave very low score for expected test
+      // but another test has a high score, it's likely the user uploaded the other test report.
+      if(serverScores[k] !== undefined){
+        // find top other test
+        const otherScores = Object.entries(serverScores).filter(([tk])=>tk!==k);
+        let topOther = null;
+        if(otherScores.length){
+          topOther = otherScores.sort((a,b)=>b[1]-a[1])[0]; // [testKey, score]
+        }
+        if(typeof serverScores[k] === 'number' && serverScores[k] <= 15 && topOther && topOther[1] >= 60){
+          const likelyKey = topOther[0];
+          const msgEl = document.getElementById('uploadErrorMsg');
+          if(msgEl){ msgEl.textContent = `The file uploaded for ${testLabel(k)} looks like a ${testLabel(likelyKey)} report. Please upload the correct report or enter values manually.`; msgEl.style.display='block'; }
+          const manualEntry = confirm(`The uploaded file for ${testLabel(k)} appears to be a ${testLabel(likelyKey)} report.\n\nOK = Enter values manually now. Cancel = Re-upload correct report.`);
+          if(manualEntry){
+            const expected = {
+              cbc: ['platelets','wbc','hemoglobin'],
+              blood_sugar: ['fasting','pp'],
+              kidney_function: ['creatinine','egfr'],
+              dengue_ns1: ['ns1'],
+              malaria_test: ['parasite'],
+              widal: ['titer'],
+              ecg: ['abnormal']
+            };
+            const fields = expected[k] || [];
+            const manual = {};
+            for(const f of fields){
+              const val = prompt(`Enter value for ${f} (leave blank if unknown):`, '');
+              if(val === null) return null;
+              manual[f] = val.trim();
+            }
+            byTest[k] = scoreFromReport(k, manual);
+            continue;
+          } else {
+            return null;
+          }
+        }
+
+        byTest[k] = {score: serverScores[k], details: "Score from server analysis"};
+      } else {
+        byTest[k] = scoreFromReport(k, raw[k]);
+      }
+    }
+  }
+
+  const scores = Object.values(byTest).map(x=>x.score);
+  const overall = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : 0;
+
+  // Get inferred disease from server if available
+  const inferredDisease = payload.inferred_disease || null;
+  const inferredConfidence = payload.inferred_confidence || 0;
+
+  return {overallScore:overall, byTest, disease: inferredDisease, confidence: inferredConfidence, serverPayload: payload};
+}
+
+async function displayBabyThinking(symptom, months){
+  // Display real-time thinking process for baby recommendations
+  if(!symptom || !months) return;
+  
+  try{
+    const resp = await fetch('/api/baby-thinking', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({symptom: symptom.toLowerCase(), months: parseInt(months)})
+    });
+    const data = await resp.json();
+    
+    if(!data.success) return;
+    
+    const thinking = data.thinking;
+    if(!thinking) return;
+    
+    let thinkingHtml = '<div style="background:#f0f4ff; border:2px solid #4169E1; border-radius:12px; padding:16px; margin:16px 0">';
+    thinkingHtml += '<h4 style="color:#2f54d4; margin-top:0">AI Thinking Process for Baby</h4>';
+    
+    // Display analysis steps
+    if(thinking.analysis_steps && Array.isArray(thinking.analysis_steps)){
+      thinkingHtml += '<div style="margin:12px 0">';
+      thinking.analysis_steps.forEach(step => {
+        thinkingHtml += `<div style="margin:8px 0; padding:8px; background:#fff; border-left:4px solid #4169E1; border-radius:4px">`;
+        thinkingHtml += `<strong>Step ${step.step}: ${step.title}</strong><br>`;
+        thinkingHtml += `<small style="color:#64748b">${step.content}</small>`;
+        thinkingHtml += `</div>`;
+      });
+      thinkingHtml += '</div>';
+    }
+    
+    // Display reasoning
+    if(thinking.reasoning){
+      thinkingHtml += `<div style="margin:12px 0; padding:10px; background:#e0e7ff; border-radius:8px; color:#1d4ed8">`;
+      thinkingHtml += `<strong>Reasoning:</strong> ${thinking.reasoning}`;
+      thinkingHtml += `</div>`;
+    }
+    
+    thinkingHtml += '</div>';
+    
+    // Return HTML for insertion into results display
+    return thinkingHtml;
+  }catch(err){
+    console.error('Baby thinking error', err);
+    return null;
+  }
+}
+
+function renderPrediction(){
+  mainDiv.innerHTML=''; renderStepper();
+  renderBackButton();
+  const sec=document.createElement('div'); sec.className='panel'; sec.style.background='var(--card)'; sec.innerHTML='<h3 class="subtitle">Prediction</h3><p class="muted">Processing uploaded reports…</p>'; mainDiv.appendChild(sec);
+  (async ()=>{
+    const res = await computeFromReports();
+    if(!res){
+      // stay on upload reports page if computeFromReports returned null (user cancelled / error)
+      currentStep=4; renderTestReportUploads(); return;
+    }
+
+    let overallScore = res.overallScore || 0;
+    let byTest = res.byTest || {};
+    // Prefer server-side inferred disease from reports
+    let disease = res.disease || null;
+    let confidence = res.confidence || overallScore;
+    
+    if(!disease){
+      // Fallback: pick top-scoring test's disease
+      let top=null, topS=-1; Object.entries(byTest).forEach(([k,v])=>{ if(v.score>topS){topS=v.score; top=k;} });
+      disease = top ? (DISEASE_FROM_TEST[top]||'Viral Fever') : 'Viral Fever';
+      confidence = overallScore;
+    }
+    
+    // Determine risk level based on confidence/score
+    // Compute risk score percentage (use confidence if available, else overallScore)
+    const risk_score = (typeof confidence === 'number' && confidence>0) ? confidence : overallScore;
+    
+    const serverPayload = res.serverPayload || {};
+    // Show patient-data validation if available
+    const extracted = serverPayload.extracted_patient_data || {};
+    const validation = serverPayload.patient_data_validation || null;
+
+    // Fetch server recommendations (age-specific) if possible
+    let recs = (DISEASE_RECOMMENDATIONS[disease]||res.recommendations||[]);
+    try{
+      const prefAge = (patientData?.age) || extracted.age || null;
+      const r = await fetch('/api/get-recommendations',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({disease, age: prefAge, test_scores: serverPayload.test_scores || {}, lab_values: serverPayload.data || {}})});
+      const jr = await r.json(); if(jr && jr.success && jr.recommendations){ recs = jr.recommendations; }
+    }catch(e){ /* ignore */ }
+    const now=new Date().toLocaleString();
+    const k = makeKey(now, disease, risk_score);
+    const patientDisplayName = (patientData && patientData.name) ? patientData.name : '(not set)';
+    const patientDisplayAge = (patientData && patientData.age) ? patientData.age : '-';
+    const patientDisplayGender = (patientData && patientData.gender) ? patientData.gender : '-';
+    let html = '<p><b>Patient:</b> ' + patientDisplayName + ' (' + patientDisplayAge + ', ' + patientDisplayGender + ')</p>';
+    html += '<p><b>Disease (inferred):</b> <strong>' + disease + '</strong></p>';
+    html += '<p><b>Risk Score:</b> ' + (risk_score || 0) + '%</p>';
+    sec.innerHTML = html;
+
+    // (Removed patient-data mismatch UI) — we will use age-based recommendations instead.
+    const details=Object.entries(byTest).map(([k,v])=>`<li><b>${testLabel(k)}:</b> ${v.score}/100 <span class="muted">(${v.details})</span></li>`).join('');
+    // Report scores intentionally hidden in final view per request
+    // (details variable available if needed for debugging)
+    // Render recommendations using the server-provided structured object when available
+    function flattenRecommendations(obj){
+      const out = [];
+      if(!obj) return out;
+      if(typeof obj === 'string') { out.push(obj); return out; }
+      
+      // Always use consistent format regardless of disease prediction status
+      
+      // Advice/Primary advice
+      if(obj.advice) out.push('Advice: ' + obj.advice);
+      if(obj.primary_advice) out.push('Advice: ' + obj.primary_advice);
+      
+      // Immediate actions
+      if(obj.immediate_actions && Array.isArray(obj.immediate_actions)) {
+        obj.immediate_actions.forEach(x=> out.push('Immediate: ' + x));
+      }
+      
+      // Medicines - handle both string array and object array with bullet points
+      if(obj.medicines && Array.isArray(obj.medicines) && obj.medicines.length){
+        out.push('Medicines:');
+        obj.medicines.forEach(m=>{
+          if(typeof m === 'string') out.push(' • '+m);
+          else if(m.name) out.push(' • '+(m.name + (m.dosage? (' — '+m.dosage):'')));
+          else out.push(' • ' + JSON.stringify(m));
+        });
+      }
+      
+      // Medicine timing
+      if(obj.medicine_timing) out.push('Medicine timing: ' + obj.medicine_timing);
+      
+      // Diet - comma separated list (matching screenshot style)
+      if(obj.diet_recommendations && obj.diet_recommendations.length) {
+        out.push('Diet: ' + obj.diet_recommendations.join(', '));
+      }
+      if(obj.diet && Array.isArray(obj.diet) && obj.diet.length) {
+        out.push('Diet: ' + obj.diet.join(', '));
+      }
+      
+      // Drinks - comma separated list (matching screenshot style)
+      if(obj.drinks && Array.isArray(obj.drinks) && obj.drinks.length){
+        out.push('Drinks: ' + obj.drinks.join(', '));
+      }
+      
+      // Lifestyle/Lifestyle tips - comma separated list (matching screenshot style)
+      if(obj.lifestyle_tips && obj.lifestyle_tips.length) {
+        out.push('Lifestyle: ' + obj.lifestyle_tips.join(', '));
+      }
+      if(obj.lifestyle && Array.isArray(obj.lifestyle) && obj.lifestyle.length) {
+        out.push('Lifestyle: ' + obj.lifestyle.join(', '));
+      }
+      
+      // Emergency signs - comma separated list (matching screenshot style)
+      if(obj.emergency_signs && obj.emergency_signs.length) {
+        out.push('Emergency signs: ' + obj.emergency_signs.join(', '));
+      }
+      
+      // Follow-up
+      if(obj.follow_up_schedule) out.push('Follow-up: ' + obj.follow_up_schedule);
+      if(obj.follow_up) out.push('Follow-up: ' + obj.follow_up);
+      
+      // Suggested tests (only show if available and not empty)
+      if(obj.suggested_tests && Array.isArray(obj.suggested_tests) && obj.suggested_tests.length){
+        out.push('Suggested tests: ' + obj.suggested_tests.join(', '));
+      }
+      
+      // Note/explanation
+      if(obj.note) out.push('<i style="color:#666; font-size:0.9em">' + obj.note + '</i>');
+      
+      return out;
+    }
+
+    let recItems = [];
+    if(typeof recs === 'object' && !Array.isArray(recs)){
+      recItems = flattenRecommendations(recs);
+    } else if(Array.isArray(recs)){
+      recItems = recs.map(r=> typeof r === 'string' ? r : (r.advice || JSON.stringify(r)) );
+    }
+    if(recItems.length===0) recItems = ['No specific recommendations available.'];
+    
+    // If we don't have comprehensive recommendations yet, fetch from API
+    if(recItems.length < 5){
+      try{
+        const prefAge = (patientData?.age) || extracted.age || null;
+        const prefMonths = (patientData?.months) || null;
+        const symptoms = userSelections?.baseSymptoms || [];
+        const r = await fetch('/api/predict',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({symptoms: symptoms, patient: {age: prefAge, months: prefMonths, name: patientData?.name || '', gender: patientData?.gender || ''}})});
+        const jr = await r.json(); 
+        if(jr && jr.success && jr.recommendations && Array.isArray(jr.recommendations)){ 
+          recItems = jr.recommendations.map(r=> typeof r === 'string' ? r : (r.toString ? r.toString() : JSON.stringify(r)));
+        }
+      }catch(e){ console.log('Could not fetch comprehensive recommendations'); }
+    }
+    
+    // Show real-time thinking ONLY for babies (age 0 with months specified)
+    const prefAge = (patientData?.age) || extracted.age || null;
+    const prefMonths = (patientData?.months) || null;
+    
+    // Strict check: age must be exactly 0 (number), and months must be a valid number
+    if(typeof prefAge === 'number' && prefAge === 0 && typeof prefMonths === 'number' && prefMonths > 0 && prefMonths <= 12 && userSelections?.baseSymptoms){
+      const primarySymptom = (userSelections.baseSymptoms[0] || '').toLowerCase();
+      const thinkingHtml = await displayBabyThinking(primarySymptom, prefMonths);
+      if(thinkingHtml){
+        sec.innerHTML += thinkingHtml;
+      }
+    }
+    
+    sec.innerHTML += '<div class="panel" style="background:var(--subtle); border:1px dashed var(--border)"><b style="color:#4CAF50; font-size:1.1em">Recommendations</b><ul style="margin:6px 0 0 18px; line-height:1.8">' + recItems.map(x=>`<li>${x}</li>`).join('') + '</ul></div>';
+    
+    // Store recList as flat string array for later use in save/PDF
+    const recList = recItems;
+    const btn=document.createElement('button'); btn.className='btn'; btn.textContent='Save & Finish';
+    const pdfBtn=document.createElement('button'); pdfBtn.className='btn btn-ghost'; pdfBtn.textContent='Download PDF';
+    const btnDiv=document.createElement('div'); btnDiv.style.display='flex'; btnDiv.style.gap='10px'; btnDiv.style.marginTop='12px';
+    btnDiv.appendChild(btn);
+    btnDiv.appendChild(pdfBtn);
+    sec.appendChild(btnDiv);
+    // Wire up inline PDF download (preview) before saving
+    pdfBtn.onclick = ()=>{
+      try{
+        const previewPayload = {
+          patient_name: (patientData && patientData.name) || '',
+          patient_age: (patientData && patientData.age) || '',
+          patient_gender: (patientData && patientData.gender) || '',
+          disease: disease || '',
+          confidence: confidence || 0,
+          risk_level: '',
+          report_scores: byTest || {},
+          recommendations: recList || []
+        };
+        const element = document.createElement('div');
+        element.innerHTML = `
+          <div style="padding: 20px; font-family: Arial, sans-serif;">
+            <h1>Patient Medical Report</h1>
+            <hr style="border: 1px solid #ccc;">
+            <h3>Patient Information</h3>
+            <p><b>Name:</b> ${previewPayload.patient_name || '(Not provided)'}</p>
+            <p><b>Age:</b> ${previewPayload.patient_age || '(Not provided)'}</p>
+            <p><b>Gender:</b> ${previewPayload.patient_gender || '(Not provided)'}</p>
+            <p><b>Date:</b> ${now}</p>
+            <hr style="border: 1px solid #ccc;">
+            <h3>Prediction Results</h3>
+            <p><b>Disease:</b> ${previewPayload.disease || 'N/A'}</p>
+            <p><b>Confidence:</b> ${previewPayload.confidence}%</p>
+            <hr style="border: 1px solid #ccc;">
+            <h3>Recommendations</h3>
+            <ul>${(previewPayload.recommendations||[]).map(r=>`<li>${r}</li>`).join('')}</ul>
+            <hr style="border: 1px solid #ccc;">
+            <p style="font-size: 11px; color: #999; text-align: center;">Generated by MedPredict - AI Multi-Disease Prediction System</p>
+          </div>
+        `;
+        if(typeof html2pdf === 'undefined'){
+          const w = window.open('', '_blank'); w.document.write(element.innerHTML); w.document.close(); w.focus(); w.print(); return;
+        }
+        html2pdf().set({margin:10, filename:`patient_report_${now.replace(/[:\\s]/g,'_')}.pdf`, image:{type:'jpeg',quality:0.98}, html2canvas:{scale:2}, jsPDF:{orientation:'portrait',unit:'mm',format:'a4'}}).from(element).save();
+      }catch(err){ console.error('PDF preview error', err); alert('Error generating preview PDF: '+(err.message||err)); }
+    };
+    // wire up the patient data override buttons if present (use rAF to ensure DOM updated)
+    requestAnimationFrame(()=>{
+      try{
+        const useBtn = document.getElementById('usePdf');
+        const keepBtn = document.getElementById('keepEntered');
+        if(useBtn){
+          useBtn.addEventListener('click', ()=>{
+            patientData = {
+              name: extracted.name || (patientData && patientData.name),
+              age: extracted.age || (patientData && patientData.age),
+              gender: extracted.gender || (patientData && patientData.gender)
+            };
+            patientBadge.textContent = `Patient: ${patientData.name || ''} (${patientData.age || ''}, ${patientData.gender || ''})`;
+          });
+        }
+        if(keepBtn){ keepBtn.addEventListener('click', ()=>{/* keep entered */}); }
+      }catch(e){ /* ignore */ }
+    });
+
+    btn.onclick=async ()=>{
+      // Prepare a normalized payload matching backend expectations
+      const payload = {
+        email: currentUser?.email || '',
+        timestamp: now,
+        client_key: k,
+        patient_name: (patientData && patientData.name) || '',
+        patient_age: (patientData && patientData.age) || '',
+        patient_gender: (patientData && patientData.gender) || '',
+        disease: disease || '',
+        risk_level: '',
+        risk_score: risk_score || 0,
+        confidence: 0,
+        recommendations: recList || [],
+        report_scores: byTest || {}
+      };
+
+      let savedLocally = false;
+      // If logged in, save to server; otherwise save locally in overrides store
+      if(currentUser && currentUser.email){
+        try{
+          const resp = await saveResultToServer(payload);
+          if(!(resp && resp.success)){
+            alert('Save failed on server. Data will be stored locally.');
+            savedLocally = true;
+          }
+        }catch(e){ savedLocally = true; }
+      } else {
+        savedLocally = true;
+      }
+
+      if(savedLocally){
+        const store=getOverrideStore();
+        store[k] = { name: payload.patient_name, age: payload.patient_age, gender: payload.patient_gender, disease: payload.disease, risk: payload.risk_level, confidence: payload.confidence, report_scores: payload.report_scores, recommendations: payload.recommendations };
+        setOverrideStore(store);
+      }
+
+      await loadSavedResults();
+
+      // Offer download of a PDF report after saving using html2pdf
+      const downloadBtn = document.createElement('button'); downloadBtn.className='btn'; downloadBtn.style.marginLeft='8px'; downloadBtn.textContent='Download PDF Report';
+      sec.appendChild(downloadBtn);
+      downloadBtn.onclick = ()=>{
+        try{
+          // create element first
+          const element = document.createElement('div');
+          element.innerHTML = `
+            <div style="padding: 20px; font-family: Arial, sans-serif;">
+              <h1>Patient Medical Report</h1>
+              <hr style="border: 1px solid #ccc;">
+              <h3>Patient Information</h3>
+              <p><b>Name:</b> ${payload.patient_name || '(Not provided)'}</p>
+              <p><b>Age:</b> ${payload.patient_age || '(Not provided)'}</p>
+              <p><b>Gender:</b> ${payload.patient_gender || '(Not provided)'}</p>
+              <p><b>Date:</b> ${now}</p>
+              <hr style="border: 1px solid #ccc;">
+              <h3>Prediction Results</h3>
+              <p><b>Disease:</b> ${payload.disease || 'N/A'}</p>
+              <p><b>Confidence:</b> ${payload.confidence}%</p>
+              <p><b>Risk Level:</b> ${payload.risk_level}</p>
+              <hr style="border: 1px solid #ccc;">
+              <h3>Test Scores</h3>
+              <ul>
+                ${Object.entries(payload.report_scores || {}).map(([k, v])=>`<li><b>${testLabel(k)}:</b> ${v.score}/100 (${v.details})</li>`).join('')}
+              </ul>
+              <hr style="border: 1px solid #ccc;">
+              <h3>Recommendations</h3>
+              <ul>
+                ${(recList || []).map(r=>`<li>${r}</li>`).join('')}
+              </ul>
+              <hr style="border: 1px solid #ccc;">
+              <p style="font-size: 11px; color: #999; text-align: center;">Generated by MedPredict - AI Multi-Disease Prediction System</p>
+            </div>
+          `;
+          if(typeof html2pdf === 'undefined'){
+            // Fallback: open printable report in new window for user to print/save as PDF
+            const w = window.open('', '_blank');
+            w.document.write(element.innerHTML);
+            w.document.close();
+            w.focus();
+            w.print();
+            return;
+          }
+          const opt = {
+            margin: 10,
+            filename: `patient_report_${now.replace(/[:\\s]/g, '_')}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+          };
+          html2pdf().set(opt).from(element).save();
+        }catch(err){ console.error('PDF download error:', err); alert('Error generating PDF: ' + err.message); }
+      };
+
+      // Reset patient form
+      showView('home');
+      document.getElementById('patientName').value=''; document.getElementById('patientAge').value=''; document.getElementById('patientGender').value='';
+    };
+  })();
+}
+
+// Generic wellness recommendations when "None" is selected
+function renderGenericRecommendations(){
+  mainDiv.innerHTML=''; renderStepper();
+  renderBackButton();
+  const sec=document.createElement('div'); sec.className='panel'; sec.style.background='var(--card)'; 
+  
+  (async ()=>{
+    try {
+      const now = new Date().toLocaleString();
+      const k = makeKey(now, 'Wellness', 0);
+      
+      // Generic wellness recommendations
+      const genericRecs = [
+        'Advice: No specific symptoms reported. Focus on preventive health and general wellness.',
+        'Medicines: Take regular multivitamins daily for overall immunity and nutrition',
+        'Diet: Maintain balanced diet with vegetables, fruits, proteins, and whole grains daily',
+        'Lifestyle: Sleep 7-8 hours daily, Exercise 30 minutes daily, Stay hydrated with 8-10 glasses water',
+        'Follow-up: Visit specialist for annual health checkup and preventive screening'
+      ];
+      
+      sec.innerHTML = `<h3 class="subtitle">Wellness Recommendations</h3>
+        <div class="panel" style="background:var(--subtle); border:1px dashed var(--border)"><ul style="margin:6px 0 0 18px">${genericRecs.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+        <div style="margin-top:12px;display:flex;gap:10px">
+          <button class="btn" id="finishBtn">Save & Finish</button>
+          <button class="btn btn-ghost" id="pdfBtn">Download PDF</button>
+        </div>`;
+      mainDiv.innerHTML = '';
+      mainDiv.appendChild(sec);
+      
+      // PDF download
+      document.getElementById('pdfBtn').onclick = ()=>{
+        try{
+          const element = document.createElement('div');
+          element.innerHTML = `
+            <div style="padding: 20px; font-family: Arial, sans-serif;">
+              <h1>Wellness Recommendations</h1>
+              <hr style="border: 1px solid #ccc;">
+              <h3>Patient Information</h3>
+              <p><b>Name:</b> ${patientData?.name || '(Not provided)'}</p>
+              <p><b>Age:</b> ${patientData?.age || '(Not provided)'}</p>
+              <p><b>Gender:</b> ${patientData?.gender || '(Not provided)'}</p>
+              <p><b>Date:</b> ${now}</p>
+              <hr style="border: 1px solid #ccc;">
+              <h3>Recommendations</h3>
+              <ul>${genericRecs.map(r=>`<li>${r}</li>`).join('')}</ul>
+              <hr style="border: 1px solid #ccc;">
+              <p style="font-size: 11px; color: #999; text-align: center;">Generated by MedPredict - Wellness Recommendations</p>
+            </div>
+          `;
+          if(typeof html2pdf === 'undefined'){
+            const w = window.open('', '_blank'); w.document.write(element.innerHTML); w.document.close(); w.focus(); w.print(); return;
+          }
+          html2pdf().set({margin:10, filename:`wellness_${now.replace(/[:\\s]/g,'_')}.pdf`, image:{type:'jpeg',quality:0.98}, html2canvas:{scale:2}, jsPDF:{orientation:'portrait',unit:'mm',format:'a4'}}).from(element).save();
+        }catch(err){ console.error('PDF error', err); alert('Error generating PDF'); }
+      };
+      
+      // Save & Finish
+      document.getElementById('finishBtn').onclick = async ()=>{
+        const payload = {
+          email: currentUser?.email || '',
+          timestamp: now,
+          client_key: k,
+          patient_name: patientData?.name || '',
+          patient_age: patientData?.age || '',
+          patient_gender: patientData?.gender || '',
+          disease: 'Wellness',
+          risk_level: 'Low',
+          risk_score: 0,
+          confidence: 0,
+          recommendations: genericRecs,
+          report_scores: {}
+        };
+        await saveResultToServer(payload);
+        const store = getOverrideStore(); store[k] = {name: patientData?.name, age: patientData?.age, gender: patientData?.gender}; 
+        setOverrideStore(store);
+        await loadSavedResults();
+        showView('home');
+        document.getElementById('patientName').value=''; 
+        document.getElementById('patientAge').value=''; 
+        document.getElementById('patientGender').value='';
+      };
+    } catch(e) {
+      console.error('Error generating wellness recommendations:', e);
+      sec.innerHTML = '<p class="error">Error loading recommendations. Please try again.</p>';
+    }
+  })();
+}
+
+// Real-time recommendations from API when no tests are suggested
+function renderRecommendationsDirectFromAPI(){
+  mainDiv.innerHTML=''; renderStepper();
+  renderBackButton();
+  const sec=document.createElement('div'); sec.className='panel'; sec.style.background='var(--card)'; 
+  sec.innerHTML='<h3 class="subtitle">Real-Time Disease Prediction & Recommendations</h3><p class="muted">Generating recommendations…</p>'; 
+  mainDiv.appendChild(sec);
+  
+  (async ()=>{
+    try {
+      const age = patientData?.age || null;
+      const symptoms = userSelections.baseSymptoms || [];
+      const symptomDetails = userSelections.symptomDetails || {};
+      const symptomDays = userSelections.symptomDays || {};
+      
+      // Call API to get real-time symptom-based recommendations
+      const apiResponse = await fetch('/api/predict', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          symptoms: symptoms,
+          symptom_details: symptomDetails,
+          symptom_days: symptomDays,
+          patient: {
+            name: patientData?.name || '',
+            age: age,
+            months: patientData?.months || null,
+            gender: patientData?.gender || ''
+          }
+        })
+      });
+      
+      const result = await apiResponse.json();
+      if(!result.success) throw new Error(result.message || 'Prediction failed');
+      
+      const now = new Date().toLocaleString();
+      const disease = result.disease || 'Undetermined';
+      const confidence = result.confidence || 0;
+      const risk = result.risk || 'Unknown';
+      
+      // Handle recommendations as array
+      let recItems = [];
+      if(Array.isArray(result.recommendations)){
+        recItems = result.recommendations;
+      } else if(result.recommendations){
+        recItems = [result.recommendations.toString()];
+      } else {
+        recItems = ['No recommendations available'];
+      }
+      
+      const k = makeKey(now, disease, risk);
+      
+      sec.innerHTML = `<h3 class="subtitle">💊 Real-Time Medical Recommendations</h3>
+        <div class="panel" style="background:var(--subtle); border:2px solid var(--border); padding:15px">
+          <ul style="margin:6px 0 0 18px; line-height:1.8">${recItems.map(x=>`<li style="margin-bottom:8px">${x}</li>`).join('')}</ul>
+        </div>
+        
+        <div style="background:#fff3cd; border:2px solid #ffc107; padding:12px; margin:15px 0; border-radius:6px">
+          <p style="margin:0; font-size:14px; color:#333">
+            <b>⚕️ Note:</b> These recommendations can help guide your health decisions. For diagnosis and treatment, consult with a licensed healthcare professional.
+          </p>
+        </div>
+        
+        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn" id="finishBtn">Save & Finish</button>
+          <button class="btn btn-ghost" id="pdfBtn">Download PDF</button>
+          <button class="btn btn-ghost" id="newBtn">New Prediction</button>
+        </div>`;
+      mainDiv.innerHTML = '';
+      mainDiv.appendChild(sec);
+      
+      // PDF download
+      document.getElementById('pdfBtn').onclick = ()=>{
+        try{
+          const element = document.createElement('div');
+          element.innerHTML = `
+            <div style="padding: 20px; font-family: Arial, sans-serif;">
+              <h1>🏥 Medical Prediction & Real-Time Recommendations Report</h1>
+              <hr style="border: 1px solid #ccc;">
+              
+              <h2>Patient Information</h2>
+              <p><b>Name:</b> ${patientData?.name || '(Not provided)'}</p>
+              <p><b>Age:</b> ${patientData?.age || '(Not provided)'}</p>
+              <p><b>Gender:</b> ${patientData?.gender || '(Not provided)'}</p>
+              <p><b>Report Date:</b> ${now}</p>
+              
+              <hr style="border: 1px solid #ccc;">
+              
+              <h2>Disease Prediction Results</h2>
+              <p><b>Predicted Disease:</b> <strong style="color:#d9534f">${disease}</strong></p>
+              <p><b>Confidence Level:</b> ${confidence}%</p>
+              <p><b>Risk Assessment:</b> ${risk}</p>
+              <p><b>Symptoms Reported:</b> ${symptoms.join(', ') || 'None'}</p>
+              
+              <hr style="border: 1px solid #ccc;">
+              
+              <h2>Real-Time Medical Recommendations</h2>
+              <ol style="line-height:1.8">
+                ${recItems.map(x=>`<li>${x.replace(/<[^>]*>/g, '')}</li>`).join('')}
+              </ol>
+              
+              <hr style="border: 1px solid #ccc;">
+              <p style="color:#666; font-size:12px; margin-top:20px">
+                <i>This report is generated automatically by MedPredict AI System. 
+                Please consult a healthcare professional for medical diagnosis and treatment.</i>
+              </p>
+            </div>`;
+          
+          const opt = {margin:10, filename:'medical_report.pdf', image:{type:'jpeg', quality:0.98}, 
+                       html2canvas:{scale:2}, jsPDF:{orientation:'portrait', unit:'mm', format:'a4'}};
+          html2pdf().set(opt).from(element).save();
+        } catch(e) { alert('PDF generation error: '+e.message); }
+      };
+      
+      // Save result
+      document.getElementById('finishBtn').onclick = async ()=>{
+        try{
+          // Save the prediction result
+          const payload = {
+            email: currentUser?.email || '',
+            timestamp: now,
+            client_key: k,
+            patient_name: patientData?.name || '',
+            patient_age: patientData?.age || '',
+            patient_gender: patientData?.gender || '',
+            disease: disease || 'Unknown',
+            risk: risk || 'Unknown',
+            recommendations: recItems || [],
+            report_scores: {}
+          };
+          await saveResultToServer(payload);
+          alert('✅ Report saved successfully!');
+          await loadSavedResults();
+          currentStep = 1; showView('home');
+        } catch(e) { alert('Error saving: '+e.message); }
+      };
+      
+      // New prediction
+      document.getElementById('newBtn').onclick = ()=>{
+        currentStep = 1; showView('home');
+      };
+      
+    } catch(e) {
+      sec.innerHTML = '<p style="color:red"><b>Error:</b> '+e.message+'</p><button class="btn" onclick="currentStep=1;renderHome()">Back to Home</button>';
+      mainDiv.innerHTML = '';
+      mainDiv.appendChild(sec);
+    }
+  })();
+}
+
+
+
+function renderRecommendationsOnly(){
+  mainDiv.innerHTML=''; renderStepper();
+  renderBackButton();
+  const sec=document.createElement('div'); sec.className='panel'; sec.style.background='var(--card)';
+  const now=new Date().toLocaleString();
+  const disease="Recommendations Only"; const risk_score=0;
+  const k = makeKey(now, disease, risk_score);
+
+  // Build symptom-specific recommendations based on age
+  const age = patientData?.age || null; const ageCat = getAgeCategoryJS(age);
+  const symptomRecs = [];
+  const SYMPTOM_RECS = {
+    fever: {
+      pediatric: ['Keep child hydrated; monitor temperature every 4 hours.','Avoid aspirin in children.'],
+      adult: ['Rest, fluids, paracetamol as needed.','Seek care if fever >39°C or persists >3 days.'],
+      geriatric: ['Urgent physician review recommended for elderly with fever.','Monitor vitals closely and hydrate.']
+    },
+    cough: {
+      pediatric: ['Keep airway clear; humidified air and pediatrician consult if difficulty breathing.'],
+      adult: ['Lozenges, warm fluids; see doctor if productive/blood in sputum.'],
+      geriatric: ['Early evaluation recommended; consider chest imaging if severe.']
+    },
+    fatigue: { pediatric:['Ensure rest and nutrition.'], adult:['Screen for anemia/dehydration; rest.'], geriatric:['Check for underlying chronic disease; monitor.'] },
+    headache: { pediatric:['Paracetamol dosing per weight; see pediatrician if severe.'], adult:['Hydration, analgesia; medical review if severe or recurrent.'], geriatric:['Evaluate for vascular causes and medication interactions.'] },
+    joint_pain: { pediatric:['Rest and ice; pediatric review if swelling.'], adult:['NSAIDs if appropriate; rest.'], geriatric:['Avoid heavy NSAID use; consider physician review.'] },
+    thirst: { pediatric:['Check blood sugar; urgent if excessive.'], adult:['Check fasting glucose; reduce sugars.'], geriatric:['Evaluate for diabetes; monitor intake and medications.'] },
+    urination: { pediatric:['Check for UTI; pediatric review.'], adult:['Check glucose and urine analysis.'], geriatric:['Assess prostate/UTI and medication side effects.'] },
+    swelling_legs: { pediatric:['Evaluate for nephrotic syndrome or allergy.'], adult:['Check kidney function and salts intake.'], geriatric:['Assess cardiac/renal causes; urgent review if sudden.'] }
+  };
+
+  const list = userSelections?.baseSymptoms && userSelections.baseSymptoms.length ? userSelections.baseSymptoms : ['general'];
+  list.forEach(s=>{
+    if(SYMPTOM_RECS[s]){
+      const r = SYMPTOM_RECS[s][ageCat] || SYMPTOM_RECS[s].adult || [];
+      symptomRecs.push(`<b>${(SYMPTOMS.find(x=>x.key===s)?.label)||s}:</b> ${r.join(' ')}`);
+    } else if(s==='none'){
+      symptomRecs.push('General advice: rest, hydrate, monitor symptoms.');
+    } else {
+      symptomRecs.push('Symptom-specific advice: rest and seek care if worsening.');
+    }
+  });
+
+  if(symptomRecs.length===0) symptomRecs.push('Rest and hydrate well. If symptoms persist, consult a physician.');
+
+  sec.innerHTML=`<h3 class="subtitle">Recommendations</h3><p class="muted">Based on your inputs.</p><div class="panel" style="background:var(--subtle); border:1px dashed var(--border)"><ul style="margin:6px 0 0 18px">${symptomRecs.map(r=>`<li>${r}</li>`).join('')}</ul></div><div><button class="btn" id="finishR">Save & Finish</button></div>`;
+  mainDiv.appendChild(sec);
+  document.getElementById('finishR').onclick=async ()=>{
+    if(currentUser){
+      await saveResultToServer({ email:currentUser.email, timestamp:now, client_key:k, patient_name:patientData?.name||'', patient_age:patientData?.age||0, patient_gender:patientData?.gender||'', disease, risk:'', recommendations:symptomRecs, report_scores:{} });
+    }
+    const store=getOverrideStore(); store[k]={name:patientData?.name, age:patientData?.age, gender:patientData?.gender}; setOverrideStore(store);
+    await loadSavedResults(); showView('home'); document.getElementById('patientName').value=''; document.getElementById('patientAge').value=''; document.getElementById('patientGender').value='';
+  };
+}
+
+/* ---------- Server I/O & History ---------- */
+async function saveResultToServer(payload){
+  try{ 
+    const r=await fetch('/api/save-result',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); 
+    return await r.json(); 
+  }catch{ return {success:false}; }
+}
+async function fetchResults(){
+  try{
+    const r = await fetch('/api/get-results',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email: currentUser.email})});
+    const d = await r.json();
+    if(d.success){ return (d.results || []).map(normalizeRecord); }
+  }catch(e){}
+  return [];
+}
+async function loadSavedResults(){
+  const res=await fetchResults(); 
+  allResultsCache=res.slice(); 
+  
+  // Populate disease filter dropdown with unique diseases
+  const diseases = [...new Set(res.map(r => r.disease).filter(d => d && d !== '—'))];
+  const diseaseSelect = document.getElementById('filterDisease');
+  const currentValue = diseaseSelect.value;
+  diseaseSelect.innerHTML = '<option value="">All Diseases</option>' + 
+    diseases.sort().map(d => `<option value="${d.toLowerCase()}">${d}</option>`).join('');
+  diseaseSelect.value = currentValue;
+  
+  // Calculate and display available date range FIRST
+  const dateRangeInfo = document.getElementById('dateRangeInfo');
+  const filterDateFrom = document.getElementById('filterDateFrom');
+  const filterDateTo = document.getElementById('filterDateTo');
+  
+  if(res.length > 0) {
+    const parseRecordDate = (ts) => {
+      try {
+        const match = ts.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+        if(match) {
+          const day = parseInt(match[1]);
+          const month = parseInt(match[2]) - 1;
+          const year = parseInt(match[3]);
+          return new Date(year, month, day);
+        }
+        return new Date(ts);
+      } catch(e) { return null; }
+    };
+    
+    const dates = res.map(r => parseRecordDate(r.timestamp || r.created_at || r.datetime || '')).filter(d => d && !isNaN(d.getTime()));
+    
+    if(dates.length > 0) {
+      const minDate = new Date(Math.min(...dates.map(d => d.getTime())));
+      const maxDate = new Date(Math.max(...dates.map(d => d.getTime())));
+      
+      const formatDate = (d) => {
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      };
+      const formatDisplay = (d) => d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+      
+      const minDateStr = formatDate(minDate);
+      const maxDateStr = formatDate(maxDate);
+      
+      // Set min/max attributes on date inputs
+      filterDateFrom.min = minDateStr;
+      filterDateFrom.max = maxDateStr;
+      filterDateTo.min = minDateStr;
+      filterDateTo.max = maxDateStr;
+      
+      // FORCE populate with full range (BEFORE rendering)
+      filterDateFrom.value = minDateStr;
+      filterDateTo.value = maxDateStr;
+      
+      // Show date range info
+      dateRangeInfo.innerHTML = `📅 <strong>Available Dates:</strong> ${formatDisplay(minDate)} to ${formatDisplay(maxDate)}`;
+      
+      console.log(`✅ Date range set: ${minDateStr} to ${maxDateStr}`);
+    }
+  } else {
+    dateRangeInfo.innerHTML = '📅 No records available';
+  }
+  
+  // NOW render and apply filters
+  renderResultsTable(res);
+  applyFilters();
+}
+
+// ANALYTICS: Calculate and display dashboard stats
+function updateAnalyticsDashboard(){
+  if(!allResultsCache.length) return;
+  
+  const total = allResultsCache.length;
+  const patients = new Set(allResultsCache.map(r => r.patient_name).filter(n => n)).size;
+  const highRisk = allResultsCache.filter(r => (r.risk || '').toLowerCase() === 'high').length;
+  const confidences = allResultsCache.map(r => parseFloat(r.confidence) || 0).filter(c => c > 0);
+  const avgConfidence = confidences.length > 0 ? Math.round(confidences.reduce((a,b)=>a+b)/confidences.length) : 0;
+  
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statPatients').textContent = patients;
+  document.getElementById('statHighRisk').textContent = highRisk;
+  document.getElementById('statConfidence').textContent = avgConfidence + '%';
+  
+  // Top Diseases Chart
+  const diseaseCounts = {};
+  allResultsCache.forEach(r => {
+    const disease = r.disease || 'Unknown';
+    diseaseCounts[disease] = (diseaseCounts[disease] || 0) + 1;
+  });
+  
+  const sorted = Object.entries(diseaseCounts).sort((a,b) => b[1] - a[1]).slice(0, 8);
+  const maxCount = sorted[0] ? sorted[0][1] : 1;
+  
+  document.getElementById('diseaseBars').innerHTML = sorted.map(([disease, count]) => {
+    const pct = Math.round((count / maxCount) * 100);
+    return `<div style="display:flex; align-items:center; gap:8px">
+      <div style="width:120px; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis">${disease}</div>
+      <div style="flex:1; background:rgba(65,105,225,.2); border-radius:4px; height:20px; position:relative">
+        <div style="height:100%; width:${pct}%; background:linear-gradient(90deg, #4169E1, #2f54d4); border-radius:4px; transition:width .3s"></div>
+        <div style="position:absolute; right:4px; top:50%; transform:translateY(-50%); font-size:11px; font-weight:700; color:var(--text)">${count}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function renderResultsTable(list){
+  if(!list.length){
+    savedBody.innerHTML=`<tr><td colspan="7" class="muted" style="padding:16px">No results matching current filters.</td></tr>`;
+    return;
+  }
+  
+  // Sort by Patient ID in increasing order
+  const sortedList = list.sort((a, b) => {
+    const idA = a.patient_id || '0';
+    const idB = b.patient_id || '0';
+    // Extract numbers from IDs like "d101", "d102"
+    const numA = parseInt(idA.replace(/[^0-9]/g, '')) || 0;
+    const numB = parseInt(idB.replace(/[^0-9]/g, '')) || 0;
+    return numA - numB;
+  });
+  
+  savedBody.innerHTML = sortedList.map((r,idx)=>{
+    const when   = r.timestamp || r.created_at || r.datetime || '';
+    const result = r.disease || '—';
+    const risk = r.risk || '—';
+    const riskClass = (risk || '').toLowerCase() === 'high' ? 'high' : (risk || '').toLowerCase() === 'moderate' ? 'mod' : 'low';
+    // Generate valid Patient ID: Always use generatePatientID for unique 7-digit integer
+    const patientId = r.patient_id || generatePatientID(r);
+    const nameCell = (r.patient_name && r.patient_name!=='(not set)') ? r.patient_name : `<button class="linklike" data-fix-name="${idx}">(not set)</button>`;
+    const ageCell  = (r.patient_age && r.patient_age!=='—') ? r.patient_age : `<button class="linklike" data-fix-age="${idx}">—</button>`;
+    return `
+      <tr>
+        <td style="color:#4169E1; font-weight:600">${patientId}</td>
+        <td>${nameCell}</td>
+        <td style="text-align:center">${ageCell}</td>
+        <td style="font-size:13px">${when}</td>
+        <td style="font-weight:600">${result}</td>
+        <td><span class="risk ${riskClass}">${risk}</span></td>
+        <td>
+          <button class="btn" style="height:32px;padding:0 12px;font-size:12px" data-view="${idx}">View</button>
+          <button class="btn btn-ghost" style="height:32px;padding:0 8px;font-size:12px;margin-left:4px" data-print="${idx}">Print</button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  // View modal
+  savedBody.querySelectorAll('button[data-view]').forEach(btn=>{
+    btn.onclick=()=>{
+      const r=sortedList[Number(btn.dataset.view)];
+      const scoreItems=Object.entries(r.report_scores||{}).map(([k,v])=>{
+        const sc=(v && typeof v.score!=='undefined')? `${v.score}/100`:'-'; const det=(v&&v.details)? v.details:'';
+        return `<li><b>${testLabel(k)}:</b> ${sc} <span class="muted">${det? '('+det+')':''}</span></li>`;
+      }).join('');
+      
+      // Check if recommendations are long (more than 5 items or total length > 500 chars)
+      const recommendations = r.recommendations || [];
+      const totalRecLength = recommendations.reduce((sum, x) => sum + String(x).length, 0);
+      const isLongContent = recommendations.length > 5 || totalRecLength > 500;
+      
+      modalBody.innerHTML=`
+        <p><b>Patient:</b> ${r.patient_name} (${r.patient_age}, ${r.patient_gender})</p>
+        <p><b>Disease:</b> ${r.disease||'—'} <span class="risk ${(r.risk||'').toLowerCase()==='high'?'high':(r.risk||'').toLowerCase()==='moderate'?'mod':'low'}">${r.risk||'—'} risk</span></p>
+        ${scoreItems? `<div class="panel" style="background:var(--subtle); border:1px dashed var(--border)"><b>Report Scores</b><ul style="margin:6px 0 0 18px">${scoreItems}</ul></div>` : '<div class="muted">No report scores attached.</div>'}
+        ${recommendations.length? `<div class="panel" style="background:var(--subtle); border:1px dashed var(--border); margin-top:8px; max-height:${isLongContent ? '300px' : 'none'}; overflow:${isLongContent ? 'auto' : 'visible'}"><b>Recommendations</b><ul style="margin:6px 0 0 18px">${recommendations.map(x=>`<li>${x}</li>`).join('')}</ul></div>`:''}
+      `;
+      
+      // Adjust modal size based on content
+      if(isLongContent) {
+        modal.style.maxHeight = '80vh';
+        modal.style.overflowY = 'auto';
+      } else {
+        modal.style.maxHeight = 'auto';
+        modal.style.overflowY = 'visible';
+      }
+      
+      modal.style.display='flex';
+    };
+  });
+
+  // Attach print handlers for the current table rows (rebound every render)
+  savedBody.querySelectorAll('button[data-print]').forEach(btn=>{
+    btn.onclick = ()=>{
+      const idx = Number(btn.dataset.print);
+      const r = list[idx] || {};
+      const recList = (r.recommendations||[]).map(rec=> typeof rec === 'string' ? `<li>${rec}</li>` : `<li>${rec.advice||rec.primary_advice||JSON.stringify(rec)}</li>`).join('');
+      const printWindow = window.open('', '', 'width=800,height=600');
+      printWindow.document.write(`
+        <html><head><title>Patient Report - ${r.patient_name||''}</title></head><body style="font-family:Arial;padding:20px;">
+          <h1>Patient Medical Report</h1>
+          <hr>
+          <p><b>Patient Name:</b> ${r.patient_name||''}</p>
+          <p><b>Age:</b> ${r.patient_age||''}</p>
+          <p><b>Date:</b> ${r.timestamp||r.created_at||r.datetime||''}</p>
+          <hr>
+          <h3>Prediction Result</h3>
+          <p><b>Disease:</b> ${r.disease||'N/A'}</p>
+          <hr>
+          <h3>Recommendations</h3>
+          <ul>${recList}</ul>
+          <hr>
+          <p style="font-size:12px;color:#999;">Generated by MedPredict</p>
+          <script>window.print();<\/script>
+        </body></html>
+      `);
+      printWindow.document.close();
+    };
+  });
+
+  // Manual fixers — persist override for that row (uses fuzzy key too)
+  savedBody.querySelectorAll('[data-fix-name]').forEach(btn=>{
+    btn.onclick=()=>{
+      const idx=Number(btn.dataset.fixName), row=list[idx];
+      const name=prompt('Enter patient name:', '');
+      if(!name) return;
+      const store=getOverrideStore();
+      const key=makeKey(row.timestamp||row.created_at||row.datetime||'', row.disease, row.risk);
+      const ov=store[key]||{}; ov.name=name; store[key]=ov; setOverrideStore(store);
+      loadSavedResults();
+    };
+  });
+  savedBody.querySelectorAll('[data-fix-age]').forEach(btn=>{
+    btn.onclick=()=>{
+      const idx=Number(btn.dataset.fixAge), row=list[idx];
+      const age=prompt('Enter age:', '');
+      if(age===null) return;
+      const store=getOverrideStore();
+      const key=makeKey(row.timestamp||row.created_at||row.datetime||'', row.disease, row.risk);
+      const ov=store[key]||{}; ov.age=age; store[key]=ov; setOverrideStore(store);
+      loadSavedResults();
+    };
+  });
+}
+searchSaved.oninput=()=>{ applyFilters(); };
+document.getElementById('searchSymptoms').oninput=()=>{ applyFilters(); };
+document.getElementById('filterDisease').onchange=()=>{ applyFilters(); };
+document.getElementById('filterRisk').onchange=()=>{ applyFilters(); };
+document.getElementById('filterDateFrom').onchange=()=>{ applyFilters(); };
+document.getElementById('filterDateTo').onchange=()=>{ applyFilters(); };
+document.getElementById('filterAge').oninput=()=>{ applyFilters(); };
+document.getElementById('filterPatientId').oninput=()=>{ applyFilters(); };
+document.getElementById('resetFiltersBtn').onclick=()=>{
+  searchSaved.value='';
+  document.getElementById('searchSymptoms').value='';
+  document.getElementById('filterDisease').value='';
+  document.getElementById('filterRisk').value='';
+  document.getElementById('filterDateFrom').value='';
+  document.getElementById('filterDateTo').value='';
+  document.getElementById('filterAge').value='';
+  document.getElementById('filterPatientId').value='';
+  applyFilters();
+};
+
+function applyFilters(){
+  }
+
+  // CSV EXPORT HANDLER
+  document.getElementById('exportCsvBtn').onclick=()=>{
+    if(allResultsCache.length < 1) { alert('No data to export'); return; }
+  
+    let csv = 'Patient ID,Name,Age,Date & Time,Disease,Risk,Confidence\n';
+    allResultsCache.forEach(r => {
+      const patientId = r.patient_id || generatePatientID(r);
+      const name = (r.patient_name||'').replace(/"/g, '""');
+      const age = r.patient_age || '—';
+      const date = r.timestamp || r.created_at || r.datetime || '';
+      const disease = (r.disease||'').replace(/"/g, '""');
+      const risk = r.risk || '—';
+      const confidence = r.confidence || '0';
+      csv += `"${patientId}","${name}",${age},"${date}","${disease}","${risk}",${confidence}\n`;
+    });
+  
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `predictions_${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // PDF EXPORT HANDLER
+  document.getElementById('exportPdfBtn').onclick=()=>{
+    if(allResultsCache.length < 1) { alert('No data to export'); return; }
+  
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    let yPos = 10;
+  
+    // Header
+    doc.setFontSize(16);
+    doc.text('Medical Prediction Report', pageWidth / 2, yPos, { align: 'center' });
+    yPos += 10;
+    doc.setFontSize(10);
+    doc.text(`Generated: ${new Date().toLocaleString()}`, pageWidth / 2, yPos, { align: 'center' });
+    yPos += 8;
+  
+    // Summary stats
+    doc.setFontSize(11);
+    doc.text(`Total Records: ${allResultsCache.length} | High Risk: ${allResultsCache.filter(r => (r.risk||'').toLowerCase() === 'high').length}`, 10, yPos);
+    yPos += 8;
+    doc.line(10, yPos, pageWidth - 10, yPos);
+    yPos += 5;
+  
+    // Table data
+    doc.setFontSize(9);
+    const colW = [20, 35, 15, 35, 30, 15];
+    const headers = ['ID', 'Name', 'Age', 'Date', 'Disease', 'Risk'];
+  
+    headers.forEach((h, i) => {
+      const x = 10 + colW.slice(0, i).reduce((a,b)=>a+b, 0);
+      doc.text(h, x, yPos);
+    });
+    yPos += 6;
+  
+    allResultsCache.slice(0, 50).forEach(r => {
+      if(yPos > pageHeight - 20) {
+        doc.addPage();
+        yPos = 10;
+        headers.forEach((h, i) => {
+          const x = 10 + colW.slice(0, i).reduce((a,b)=>a+b, 0);
+          doc.text(h, x, yPos);
+        });
+        yPos += 6;
+      }
+    
+      const patientId = (r.patient_id || generatePatientID(r)).toString().slice(0, 5);
+      const name = (r.patient_name || '').slice(0, 15);
+      const age = (r.patient_age || '').toString();
+      const date = (r.timestamp || r.created_at || r.datetime || '').slice(0, 12);
+      const disease = (r.disease || '').slice(0, 15);
+      const risk = (r.risk || '').slice(0, 8);
+    
+      doc.text(patientId, 10, yPos);
+      doc.text(name, 30, yPos);
+      doc.text(age, 65, yPos);
+      doc.text(date, 80, yPos);
+      doc.text(disease, 115, yPos);
+      doc.text(risk, 175, yPos);
+      yPos += 5;
+    });
+  
+    doc.save(`predictions_${new Date().toISOString().split('T')[0]}.pdf`);
+  };
+
+  // COMPARE TOOL HANDLER
+  document.getElementById('compareBtn').onclick=()=>{
+    const patients = [...new Set(allResultsCache.map(r => r.patient_name).filter(n => n))];
+    if(patients.length < 2) { alert('Need at least 2 patients to compare'); return; }
+  
+    const p1 = prompt(`Select first patient:\n${patients.map((p,i) => `${i+1}. ${p}`).join('\n')}`, '1');
+    if(!p1 || isNaN(p1)) return;
+  
+    const pat1 = patients[parseInt(p1) - 1];
+    const records1 = allResultsCache.filter(r => r.patient_name === pat1);
+  
+    const p2 = prompt(`Select second patient:\n${patients.map((p,i) => `${i+1}. ${p}`).join('\n')}`, '2');
+    if(!p2 || isNaN(p2)) return;
+  
+    const pat2 = patients[parseInt(p2) - 1];
+    const records2 = allResultsCache.filter(r => r.patient_name === pat2);
+  
+    const comp = `
+  🩺 PATIENT COMPARISON\n\n${pat1}:\n  • Records: ${records1.length}\n  • Diseases: ${[...new Set(records1.map(r => r.disease))].join(', ')}\n  • High Risk Cases: ${records1.filter(r => r.risk === 'high').length}\n\n${pat2}:\n  • Records: ${records2.length}\n  • Diseases: ${[...new Set(records2.map(r => r.disease))].join(', ')}\n  • High Risk Cases: ${records2.filter(r => r.risk === 'high').length}`;
+    alert(comp);
+  };
+
+  function applyFilters(){
+  const nameQuery = searchSaved.value.trim().toLowerCase();
+  const symptomsQuery = document.getElementById('searchSymptoms').value.trim().toLowerCase();
+  const diseaseFilter = document.getElementById('filterDisease').value.toLowerCase();
+  const riskFilter = document.getElementById('filterRisk').value.toLowerCase();
+  const dateFromStr = document.getElementById('filterDateFrom').value;
+  const dateToStr = document.getElementById('filterDateTo').value;
+  const ageFilter = document.getElementById('filterAge').value.trim();
+  const patientIdFilter = document.getElementById('filterPatientId').value.trim();
+  
+  // Debug logging
+  console.log('🔍 Applying filters:', {
+    dateFromStr, dateToStr, 
+    totalRecords: allResultsCache.length,
+    hasDateFilter: !!(dateFromStr || dateToStr),
+    symptoms: symptomsQuery
+  });
+  
+  // Helper to extract date from timestamp - handles DD/MM/YYYY and other formats
+  const parseTimestamp = (ts) => {
+    if (!ts) return null;
+    try {
+      // First try standard Date constructor
+      let d = new Date(ts);
+      if (!isNaN(d.getTime())) return d;
+      
+      // Try parsing DD/MM/YYYY, HH:MM:SS format
+      // Example: "13/11/2025, 06:40:06"
+      const match = ts.match(/(\d{1,2})\/(\d{1,2})\/(\d{4}),?\s*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?/);
+      if(match) {
+        const day = parseInt(match[1]);
+        const month = parseInt(match[2]) - 1; // JS months are 0-indexed
+        const year = parseInt(match[3]);
+        const hour = parseInt(match[4] || 0);
+        const min = parseInt(match[5] || 0);
+        const sec = parseInt(match[6] || 0);
+        d = new Date(year, month, day, hour, min, sec);
+        if (!isNaN(d.getTime())) return d;
+      }
+      
+      return null;
+    } catch(e) {
+      return null;
+    }
+  };
+  
+  // Parse filter dates - expecting YYYY-MM-DD from input[type="date"]
+  const dateFrom = dateFromStr ? new Date(dateFromStr + 'T00:00:00') : null;
+  const dateTo = dateToStr ? new Date(dateToStr + 'T23:59:59') : null;
+  
+  let filtered = allResultsCache.filter(r => {
+    // Name filter
+    if(nameQuery && !(r.patient_name||'').toLowerCase().includes(nameQuery)) return false;
+    
+    // Symptoms filter - searches in disease name and recommendations
+    if(symptomsQuery) {
+      const diseaseMatch = (r.disease||'').toLowerCase().includes(symptomsQuery);
+      const recsMatch = (r.recommendations||[]).some(rec => 
+        (rec || '').toLowerCase().includes(symptomsQuery)
+      );
+      if(!diseaseMatch && !recsMatch) return false;
+    }
+    
+    // Disease filter
+    if(diseaseFilter && (r.disease||'').toLowerCase() !== diseaseFilter) return false;
+    
+    // Risk filter
+    if(riskFilter && (r.risk||'').toLowerCase() !== riskFilter) return false;
+    
+    // Patient ID filter
+    if(patientIdFilter && !(r.patient_id||'').toString().includes(patientIdFilter)) return false;
+    
+    // Age filter
+    if(ageFilter) {
+      const pAge = parseInt(r.patient_age) || 0;
+      if(isNaN(pAge) || pAge.toString() !== ageFilter) return false;
+    }
+    
+    // Date range filter
+    if(dateFrom || dateTo) {
+      const rDate = parseTimestamp(r.timestamp || r.created_at || r.datetime || '');
+      
+      // If we have a date filter but can't parse the record date, exclude it
+      if(!rDate) return false;
+      
+      // Check date range using milliseconds for accuracy
+      if(dateFrom && rDate.getTime() < dateFrom.getTime()) {
+        console.log(`❌ Record date ${rDate} is before ${dateFrom}`);
+        return false;
+      }
+      if(dateTo && rDate.getTime() > dateTo.getTime()) {
+        console.log(`❌ Record date ${rDate} is after ${dateTo}`);
+        return false;
+      }
+    }
+    return true;
+  });
+  
+  console.log(`✅ Filtered results: ${filtered.length} out of ${allResultsCache.length}`);
+  
+  // Update filter status
+  const activeFilters = [];
+  if(nameQuery) activeFilters.push(`👤 Name: "${nameQuery}"`);
+  if(symptomsQuery) activeFilters.push(`🩺 Symptoms: "${symptomsQuery}"`);
+  if(diseaseFilter) activeFilters.push(`🏥 Disease: ${diseaseFilter}`);
+  if(riskFilter) activeFilters.push(`⚠️ Risk: ${riskFilter}`);
+  if(patientIdFilter) activeFilters.push(`🆔 ID: ${patientIdFilter}`);
+  if(ageFilter) activeFilters.push(`📅 Age: ${ageFilter}`);
+  if(dateFromStr) activeFilters.push(`📆 From: ${dateFromStr}`);
+  if(dateToStr) activeFilters.push(`📆 To: ${dateToStr}`);
+  
+  const statusEl = document.getElementById('filterStatus');
+  if(activeFilters.length > 0) {
+    statusEl.innerHTML = `<strong>🔍 Filters Applied (${filtered.length}/${allResultsCache.length} results):</strong> ${activeFilters.join(' • ')}`;
+    statusEl.style.color = 'var(--accent-strong)';
+  } else {
+    statusEl.innerHTML = `<strong>📊 Total Records: ${filtered.length}</strong>`;
+    statusEl.style.color = 'var(--muted)';
+  }
+  
+  renderResultsTable(filtered);
+  // Also update analytics dashboard based on full dataset
+  try{ updateAnalyticsDashboard(); }catch(e){ console.error('Analytics update failed', e); }
+}
+document.getElementById('exportCsvBtn').onclick=()=>{
+  if(!allResultsCache.length){alert('No data to download');return;}
+  
+  // Prepare CSV data
+  const csvHeaders = ['Patient ID', 'Patient Name', 'Age', 'Gender', 'Disease', 'Risk Level', 'Date & Time'];
+  const csvRows = allResultsCache.map(r=>([
+    r.patient_id || '—',
+    r.patient_name || '—',
+    r.patient_age || '—',
+    r.patient_gender || '—',
+    r.disease || '—',
+    r.risk || '—',
+    r.timestamp || r.created_at || r.datetime || '—'
+  ]));
+  
+  // Create CSV content
+  let csvContent = 'data:text/csv;charset=utf-8,' + csvHeaders.map(h => `"${h}"`).join(',') + '\n';
+  csvRows.forEach(row => {
+    csvContent += row.map(cell => `"${cell}"`).join(',') + '\n';
+  });
+  
+  // Download CSV
+  const link = document.createElement('a');
+  link.setAttribute('href', encodeURI(csvContent));
+  link.setAttribute('download', `medical_records_${new Date().toISOString().slice(0,10)}.csv`);
+  link.click();
+};
+
+// Print handler is attached per-render inside renderResultsTable
+
+/* ---------- Admin Panel ---------- */
+let adminToken = null;
+
+// Admin Login Handler
+const adminLoginForm = document.getElementById('admin-login-form');
+if(adminLoginForm){
+  adminLoginForm.onsubmit = async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('admin-email').value.trim();
+    const password = document.getElementById('admin-password').value.trim();
+    
+    if(!email || !password){
+      alert('Enter email and password');
+      return;
+    }
+    
+    try{
+      const r = await fetch('/api/admin-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const d = await r.json();
+      
+      if(d.success){
+        adminToken = d.admin_token;
+        localStorage.setItem('adminToken', adminToken);
+        alert('Admin login successful!');
+        loadAdminUsers();
+        showOnly('admin');
+      } else {
+        alert(d.message || 'Admin login failed');
+      }
+    }catch(err){
+      console.error('Admin login error:', err);
+      alert('Error: ' + err.message);
+    }
+  };
+}
+
+// Admin Logout Handler
+const adminLogoutBtn = document.getElementById('admin-logout-btn');
+if(adminLogoutBtn){
+  adminLogoutBtn.onclick = () => {
+    adminToken = null;
+    localStorage.removeItem('adminToken');
+    document.getElementById('admin-email').value = '';
+    document.getElementById('admin-password').value = '';
+    showOnly('auth');
+  };
+}
+
+// Back to User Login from Admin Login
+const adminBackBtn = document.getElementById('switch-to-user-login');
+if(adminBackBtn){
+  adminBackBtn.onclick = () => {
+    showOnly('auth');
+  };
+}
+
+// Load and display all users in admin dashboard
+async function loadAdminUsers(){
+  if(!adminToken){
+    alert('Not logged in as admin');
+    return;
+  }
+  
+  try{
+    const r = await fetch('/api/admin/users', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ admin_token: adminToken })
+    });
+    const d = await r.json();
+    
+    if(d.success){
+      const users = d.users || [];
+      populateAdminUsersTable(users);
+    } else {
+      alert(d.message || 'Failed to load users');
+    }
+  }catch(err){
+    console.error('Load users error:', err);
+    alert('Error: ' + err.message);
+  }
+}
+
+// Populate users table
+function populateAdminUsersTable(users){
+  const tbody = document.getElementById('admin-users-body');
+  if(!tbody) return;
+  
+  tbody.innerHTML = '';
+  if(users.length === 0){
+    tbody.innerHTML = '<tr><td colspan="6" style="padding:20px; text-align:center; color:var(--muted)">No users found</td></tr>';
+    return;
+  }
+  
+  users.forEach(user => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td style="border:1px solid #ddd;padding:8px"><a href="#" class="admin-user-email" data-email="${user.email || ''}">${user.email || '-'}</a></td>
+      <td style="border:1px solid #ddd;padding:8px">${user.username || '-'}</td>
+      <td style="border:1px solid #ddd;padding:8px">${user.phone || '-'}</td>
+      <td style="border:1px solid #ddd;padding:8px">${user.address || '-'}</td>
+      <td style="border:1px solid #ddd;padding:8px">${user.created_at || '-'}</td>
+      <td style="border:1px solid #ddd;padding:8px">${user.verified ? 'Verified' : 'Pending'}</td>
+    `;
+    tbody.appendChild(row);
+  });
+  
+  document.getElementById('admin-total-users').textContent = users.length;
+}
+
+// Format an ISO or other timestamp string into a local human-friendly string
+function formatDateString(s){
+  if(!s) return '';
+  try{
+    const d = new Date(s);
+    if(isNaN(d)) return s;
+    return d.toLocaleString();
+  }catch(e){ return s; }
+}
+
+// Delegate click on email to show user results
+const adminUsersTbody = document.getElementById('admin-users-body');
+if(adminUsersTbody){
+  adminUsersTbody.addEventListener('click', function(evt){
+    const a = evt.target.closest && evt.target.closest('.admin-user-email');
+    if(!a) return;
+    evt.preventDefault();
+    const email = a.getAttribute('data-email');
+    if(email) showUserResults(email);
+  });
+}
+
+async function showUserResults(email){
+  if(!adminToken){
+    alert('Admin not logged in.');
+    return;
+  }
+  try{
+    const r = await fetch('/api/admin/user-results', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ admin_token: adminToken, email: email })
+    });
+    const d = await r.json();
+    if(!d.success){ alert(d.message || 'Failed to load user results'); return; }
+    const results = d.results || [];
+    renderUserResultsModal(email, results);
+  }catch(err){ console.error('showUserResults err', err); alert('Error: '+err.message); }
+}
+
+function renderUserResultsModal(email, results){
+  const modal = document.getElementById('resultModal');
+  const modalBody = document.getElementById('modalBody');
+  if(!modal || !modalBody) return;
+  let html = `<div style="margin-bottom:8px"><b>User:</b> ${email}</div>`;
+  if(!results || results.length===0){
+    html += '<div class="muted">No saved results for this user.</div>';
+    html += `<div style="margin-top:12px; display:flex; gap:8px; justify-content:flex-end"><button class="btn" id="adminExportPdfBtn">Download PDF</button><button class="btn btn-danger" id="adminDeleteUserBtn">Delete User</button></div>`;
+    modalBody.innerHTML = html; modal.style.display='flex';
+    document.getElementById('adminExportPdfBtn').onclick = ()=>{ exportUserResultsPdf(email, results); };
+    document.getElementById('adminDeleteUserBtn').onclick = async ()=>{
+      if(!confirm('Delete user and all their results? This cannot be undone.')) return;
+      try{
+        const r = await fetch('/api/admin/delete-user', { method: 'POST', headers: { 'Content-Type':'application/json' }, body: JSON.stringify({ admin_token: adminToken, email: email }) });
+        const d = await r.json();
+        if(d.success){ alert('Deleted.'); modal.style.display='none'; loadAdminUsers(); }
+        else alert(d.message||'Delete failed');
+      }catch(err){ console.error('delete err', err); alert('Error: '+err.message); }
+    };
+    return;
+  }
+
+  // Build table similar to user's Saved Results view (show Date & Time in a readable format)
+  html += `<div style="max-height:420px; overflow:auto; margin-top:8px"><table style="width:100%; border-collapse:collapse"><thead><tr><th style="min-width:100px;padding:8px;text-align:left">Patient ID</th><th style="min-width:240px;padding:8px;text-align:left">Patient Name</th><th style="min-width:80px;padding:8px;text-align:left">Age</th><th style="min-width:200px;padding:8px;text-align:left">Date &amp; Time</th><th style="min-width:160px;padding:8px;text-align:left">Result</th></tr></thead><tbody>`;
+  results.forEach((r, idx)=>{
+    const whenRaw = r.timestamp||r.created_at||r.datetime||'';
+    const when = formatDateString(whenRaw);
+    const result = r.disease || '—';
+    const nameCell = r.patient_name || '(not set)';
+    const ageCell = r.patient_age || '—';
+    const patientId = r.patient_id || '—';
+    html += `<tr><td style="border-bottom:1px solid #eee;padding:10px;color:#4169E1;font-weight:600">${patientId}</td><td style="border-bottom:1px solid #eee;padding:10px">${nameCell}</td><td style="border-bottom:1px solid #eee;padding:10px">${ageCell}</td><td style="border-bottom:1px solid #eee;padding:10px">${when}</td><td style="border-bottom:1px solid #eee;padding:10px">
+      <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px">
+        <button class="btn" data-admin-view="${idx}" style="padding:8px 14px;border-radius:20px">${result}</button>
+        <button class="btn btn-ghost" data-admin-print="${idx}" style="height:32px;padding:0 10px;font-size:12px;border-radius:16px">Print</button>
+      </div>
+    </td></tr>`;
+  });
+  html += `</tbody></table></div>`;
+  html += `<div style="margin-top:12px; display:flex; gap:8px; justify-content:flex-end"><button class="btn" id="adminExportPdfBtn">Download PDF</button><button class="btn btn-danger" id="adminDeleteUserBtn">Delete User</button></div>`;
+
+  modalBody.innerHTML = html;
+  modal.style.display = 'flex';
+
+  // Wire view buttons to show detailed report in modal
+  modalBody.querySelectorAll('button[data-admin-view]').forEach(btn=>{
+    btn.onclick = ()=>{
+      const idx = Number(btn.dataset.adminView);
+      const r = results[idx] || {};
+      const recList = (r.recommendations||[]).map(rec=> typeof rec === 'string' ? `<li>${rec}</li>` : `<li>${rec.advice||rec.primary_advice||JSON.stringify(rec)}</li>`).join('');
+      modalBody.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div><b>Patient:</b> ${r.patient_name||''} (${r.patient_age||''})</div><div><button class="btn" id="adminBackToList">← Back</button></div></div>
+        <p><b>Disease:</b> ${r.disease||'—'}</p>
+        ${recList? `<div class="panel" style="background:var(--subtle); border:1px dashed var(--border)"><b>Recommendations</b><ul style="margin:6px 0 0 18px">${recList}</ul></div>` : '<div class="muted">No recommendations attached.</div>'}
+        <div style="margin-top:12px; display:flex; gap:8px; justify-content:flex-end"><button class="btn" id="adminPrintSingle">Print</button></div>
+      `;
+      document.getElementById('adminBackToList').onclick = ()=>{ renderUserResultsModal(email, results); };
+      document.getElementById('adminPrintSingle').onclick = ()=>{
+        const printWindow = window.open('', '', 'width=800,height=600');
+        printWindow.document.write(`<html><head><title>Patient Report - ${r.patient_name||''}</title></head><body style="font-family:Arial;padding:20px;"><h1>Patient Medical Report</h1><hr><p><b>Patient Name:</b> ${r.patient_name||''}</p><p><b>Age:</b> ${r.patient_age||''}</p><p><b>Date:</b> ${formatDateString(r.timestamp||r.created_at||r.datetime||'')}</p><hr><h3>Prediction Result</h3><p><b>Disease:</b> ${r.disease||'N/A'}</p><hr><h3>Recommendations</h3><ul>${recList}</ul><hr><p style="font-size:12px;color:#999;">Generated by MedPredict</p><script>window.print();<\/script></body></html>`);
+        printWindow.document.close();
+      };
+    };
+  });
+
+  // Wire print buttons for each row
+  modalBody.querySelectorAll('button[data-admin-print]').forEach(btn=>{
+    btn.onclick = ()=>{
+      const idx = Number(btn.dataset.adminPrint);
+      const r = results[idx] || {};
+      const recList = (r.recommendations||[]).map(rec=> typeof rec === 'string' ? `<li>${rec}</li>` : `<li>${rec.advice||rec.primary_advice||JSON.stringify(rec)}</li>`).join('');
+      const printWindow = window.open('', '', 'width=800,height=600');
+      printWindow.document.write(`<html><head><title>Patient Report - ${r.patient_name||''}</title></head><body style="font-family:Arial;padding:20px;"><h1>Patient Medical Report</h1><hr><p><b>Patient Name:</b> ${r.patient_name||''}</p><p><b>Age:</b> ${r.patient_age||''}</p><p><b>Date:</b> ${formatDateString(r.timestamp||r.created_at||r.datetime||'')}</p><hr><h3>Prediction Result</h3><p><b>Disease:</b> ${r.disease||'N/A'}</p><hr><h3>Recommendations</h3><ul>${recList}</ul><hr><p style="font-size:12px;color:#999;">Generated by MedPredict</p><script>window.print();<\/script></body></html>`);
+      printWindow.document.close();
+    };
+  });
+
+  // Wire Export PDF and Delete User actions
+  const expBtn = document.getElementById('adminExportPdfBtn');
+  if(expBtn) expBtn.onclick = ()=>{ exportUserResultsPdf(email, results); };
+  const delBtn = document.getElementById('adminDeleteUserBtn');
+  if(delBtn) delBtn.onclick = async ()=>{
+    if(!confirm('Delete user and all their results? This cannot be undone.')) return;
+    try{
+      const r = await fetch('/api/admin/delete-user', { method: 'POST', headers: { 'Content-Type':'application/json' }, body: JSON.stringify({ admin_token: adminToken, email: email }) });
+      const d = await r.json();
+      if(d.success){ alert('Deleted.'); modal.style.display='none'; loadAdminUsers(); }
+      else alert(d.message||'Delete failed');
+    }catch(err){ console.error('delete err', err); alert('Error: '+err.message); }
+  };
+}
+
+function exportUserResultsPdf(email, results){
+  if(!results || results.length===0) { alert('No results to export'); return; }
+  // Try server-side PDF first for consistent, real-time download
+  if(adminToken){
+    try{
+      fetch('/api/admin/user-results-pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ admin_token: adminToken, email: email })
+      }).then(async (res)=>{
+        const ct = res.headers.get('Content-Type') || '';
+        if(ct.includes('application/pdf')){
+          const blob = await res.blob();
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a'); a.href = url; a.download = `user_history_${email.replace(/[@\.]/g,'_')}.pdf`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+        } else {
+          // server returned JSON (likely error)
+          const j = await res.json().catch(()=>({}));
+          alert(j.message || 'Server PDF generation failed. Falling back to client PDF.');
+          // fall back to client-side export
+          clientSidePdfExport(email, results);
+        }
+      }).catch((err)=>{ console.warn('server PDF fetch failed', err); clientSidePdfExport(email, results); });
+      return;
+    }catch(e){ console.warn('server PDF attempt failed', e); }
+  }
+  // If no adminToken or server attempt failed, use client-side export
+  clientSidePdfExport(email, results);
+}
+
+function clientSidePdfExport(email, results){
+  const el = document.createElement('div');
+  el.style.fontFamily = 'Arial, sans-serif';
+  el.style.padding = '16px';
+  let now = new Date().toLocaleString();
+  let html = `<h2>User History for ${email}</h2><div style="margin-bottom:8px;color:#666">Exported: ${now}</div>`;
+  html += `<table style="width:100%; border-collapse:collapse; font-size:12px">`;
+  html += `<thead><tr><th style="border:1px solid #ccc;padding:6px">Date &amp; Time</th><th style="border:1px solid #ccc;padding:6px">Patient</th><th style="border:1px solid #ccc;padding:6px">Age</th><th style="border:1px solid #ccc;padding:6px">Disease</th><th style="border:1px solid #ccc;padding:6px">Risk</th></tr></thead><tbody>`;
+  results.forEach(r=>{
+    html += `<tr><td style="border:1px solid #eee;padding:6px">${formatDateString(r.timestamp||r.created_at||'')}</td><td style="border:1px solid #eee;padding:6px">${r.patient_name||'-'}</td><td style="border:1px solid #eee;padding:6px">${r.patient_age||'-'}</td><td style="border:1px solid #eee;padding:6px">${r.disease||'-'}</td><td style="border:1px solid #eee;padding:6px">${r.risk_level||r.risk_score||'-'}</td></tr>`;
+  });
+  html += `</tbody></table>`;
+  el.innerHTML = html;
+  const filename = `user_history_${email.replace(/[@\.]/g,'_')}.pdf`;
+  if(typeof html2pdf !== 'undefined'){
+    try{ html2pdf().set({margin:10, filename:filename, image:{type:'jpeg',quality:0.98}, html2canvas:{scale:2}, jsPDF:{orientation:'portrait', unit:'mm', format:'a4'}}).from(el).save(); return; }catch(e){ console.warn('html2pdf failed', e); }
+  }
+  if(typeof window.jspdf !== 'undefined' || typeof window.jsPDF !== 'undefined'){
+    try{ const { jsPDF } = window.jspdf || window; const doc = new jsPDF({unit:'mm', format:'a4'}); doc.html(el, { x:10,y:10,width:190,callback:function(doc){ doc.save(filename); }}); return; }catch(e){ console.warn('jsPDF.html failed', e); }
+  }
+  const w = window.open('', '_blank'); w.document.write(`<html><head><title>${filename}</title></head><body>${el.innerHTML}</body></html>`); w.document.close(); w.focus();
+}
+
+// Search/Filter users
+const adminSearchInput = document.getElementById('admin-search');
+if(adminSearchInput){
+  adminSearchInput.oninput = (e) => {
+    const query = e.target.value.toLowerCase();
+    const rows = document.querySelectorAll('#admin-users-body tr');
+    rows.forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.style.display = text.includes(query) ? '' : 'none';
+    });
+  };
+}
+
+// Initialize admin panel
+(function initAdmin(){
+  const savedToken = localStorage.getItem('adminToken');
+  if(savedToken){
+    adminToken = savedToken;
+  }
+  
+  // Switch to admin login from user login
+  const switchAdminLink = document.getElementById('switch-admin');
+  if(switchAdminLink){
+    switchAdminLink.onclick = () => {
+      showOnly('admin-login');
+    };
+  }
+})();
+
+// --- Safety fallback: if a JS error prevented proper view toggling, show the auth page
+window.addEventListener('error', function (ev) {
+  console.error('Global script error caught:', ev.message || ev.error);
+  try{
+    const intro = document.getElementById('page-intro');
+    const auth = document.getElementById('page-auth');
+    if(intro && auth){ intro.classList.add('hidden'); auth.classList.remove('hidden'); }
+  }catch(err){ /* swallow */ }
+});
+// In case script execution aborted before the boot logic, ensure only one of intro/auth is visible
+setTimeout(()=>{
+  try{
+    const intro = document.getElementById('page-intro');
+    const auth = document.getElementById('page-auth');
+    if(intro && auth && !intro.classList.contains('hidden') && !auth.classList.contains('hidden')){
+      intro.classList.add('hidden');
+      auth.classList.remove('hidden');
+    }
+  }catch(e){}
+}, 120);
+</script>
+<!-- jsPDF for client-side PDF generation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</body>
+</html>
+
+

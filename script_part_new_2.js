@@ -1,0 +1,980 @@
+﻿
+/* ---------- State ---------- */
+let isSignup=false, currentUser=null, patientData=null, currentStep=0;
+let userSelections={}, allResultsCache=[];
+
+/* ---------- Elements ---------- */
+const pageIntro=document.getElementById('page-intro');
+const pageAuth=document.getElementById('page-auth');
+const pageOtp=document.getElementById('page-otp');
+const pageApp=document.getElementById('page-app');
+const breadcrumb=document.getElementById('breadcrumb');
+const authForm=document.getElementById('auth-form');
+const authTitle=document.getElementById('auth-title');
+const switchAuth=document.getElementById('switch-auth');
+const forgotPasswordLink=document.getElementById('forgotPasswordLink');
+const avatarBadge=document.getElementById('avatarBadge');
+const userMenu=document.getElementById('userMenu');
+const logoutBtn=document.getElementById('logoutBtn');
+const themeToggle=document.getElementById('themeToggle');
+const navButtons=document.querySelectorAll('.nav button');
+const viewHome=document.getElementById('view-home');
+const viewWorkflow=document.getElementById('view-workflow');
+const viewHistory=document.getElementById('view-history');
+const stepperEl=document.getElementById('stepper');
+const mainDiv=document.getElementById('main');
+const patientBadge=document.getElementById('patientBadge');
+const stepBadge=document.getElementById('stepBadge');
+const signedPill=document.getElementById('signedPill');
+const savedBody=document.getElementById('savedBody');
+const searchSaved=document.getElementById('searchSaved');
+const modal=document.getElementById('resultModal');
+const modalBody=document.getElementById('modalBody');
+document.getElementById('closeModalBtn').onclick=()=> modal.style.display='none';
+document.getElementById('closeModalBtn2').onclick=()=> modal.style.display='none';
+// continueBtn removed with prelogin; no-op fallback
+
+/* ---------- Theme ---------- */
+(function initTheme(){
+  const saved=localStorage.getItem('theme')||'light';
+  document.body.setAttribute('data-theme', saved);
+  themeToggle.textContent = saved==='dark' ? 'â˜€ï¸ Light' : 'ðŸŒ™ Dark';
+})();
+themeToggle.onclick=()=>{
+  const cur=document.body.getAttribute('data-theme');
+  const next=cur==='dark'?'light':'dark';
+  document.body.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  themeToggle.textContent = next==='dark' ? 'â˜€ï¸ Light' : 'ðŸŒ™ Dark';
+};
+
+/* ---------- Navigation ---------- */
+function showView(name){
+  breadcrumb.textContent=name[0].toUpperCase()+name.slice(1).replace('-',' ');
+  navButtons.forEach(b=> b.classList.toggle('active', b.dataset.nav===name));
+  viewHome.classList.toggle('hidden', name!=='home');
+  viewWorkflow.classList.toggle('hidden', name!=='workflow');
+  viewHistory.classList.toggle('hidden', name!=='history');
+  if(name==='history') loadSavedResults();
+}
+navButtons.forEach(b=> b.onclick=()=> showView(b.dataset.nav));
+
+/* ---------- Auth UI ---------- */
+function renderAuthForm(){
+  // If a static fallback form is present in the HTML (added as a resilient backup),
+  // don't overwrite it â€” just update titles and switch text. This prevents the
+  // dynamic renderer from removing the fallback when the app has had a script error.
+  try{
+    const hasStaticInputs = !!document.getElementById('auth-form')?.querySelector('input');
+    if(hasStaticInputs){
+      if(isSignup){ authTitle.textContent='Create Your Account'; switchAuth.textContent='Login'; }
+      else { authTitle.textContent='Login to Your Account'; switchAuth.textContent='Sign Up'; }
+      return;
+    }
+  }catch(e){ /* ignore and proceed to render normally */ }
+  authForm.innerHTML='';
+  if(isSignup){
+    authTitle.textContent='Create Your Account';
+    authForm.innerHTML=`
+      <input type="text" class="input" id="username" placeholder="Username" required />
+      <input type="email" class="input" id="email" placeholder="Email" required />
+      <input type="password" class="input" id="password" placeholder="Password" required />
+      <input type="text" class="input" id="phone" placeholder="Phone (optional)" />
+      <input type="text" class="input" id="address" placeholder="Address (optional)" />
+      <button type="submit" class="btn" style="width:100%">Sign Up</button>`;
+    switchAuth.textContent='Login';
+  }else{
+    authTitle.textContent='Login to Your Account';
+    authForm.innerHTML=`
+      <input type="email" class="input" id="email" placeholder="Email" required />
+      <input type="password" class="input" id="password" placeholder="Password" required />
+      <button type="submit" class="btn" style="width:100%">Login</button>`;
+    switchAuth.textContent='Sign Up';
+  }
+}
+renderAuthForm();
+switchAuth.onclick=async ()=>{
+  // Toggle signup mode; if the dynamic signup form isn't available (we're using
+  // the static resilient form), use simple prompts to create an account.
+  isSignup = !isSignup;
+  const hasFullSignup = !!document.getElementById('auth-form')?.querySelector('#username');
+  if(isSignup && !hasFullSignup){
+    const u = prompt('Choose a username:',''); if(u===null) { isSignup=false; return; }
+    const e = prompt('Email:',''); if(e===null) { isSignup=false; return; }
+    const p = prompt('Password:',''); if(p===null) { isSignup=false; return; }
+    try{
+      const r = await fetch('/api/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,email:e,password:p})});
+      const j = await r.json(); alert(j.message || (j.success? 'Account created':'Signup failed'));
+    }catch(err){ alert('Signup failed â€” server error'); }
+    isSignup=false; renderAuthForm();
+    return;
+  }
+  renderAuthForm();
+};
+authForm.onsubmit=async (e)=>{
+  e.preventDefault();
+  if(isSignup){
+    const payload={
+      username:document.getElementById('username').value.trim(),
+      email:document.getElementById('email').value.trim().toLowerCase(),
+      password:document.getElementById('password').value.trim(),
+      phone:document.getElementById('phone')?.value.trim(),
+      address:document.getElementById('address')?.value.trim()
+    };
+    try{
+      const r=await fetch('/api/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+      const d=await r.json(); alert(d.message); if(d.success){ isSignup=false; renderAuthForm(); }
+    }catch{ alert('Server error.'); }
+  }else{
+    const email=document.getElementById('email').value.trim().toLowerCase();
+    const password=document.getElementById('password').value.trim();
+    try{
+      const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})});
+      const d=await r.json();
+      if(d.success){
+        currentUser=d.user; localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        afterLogin();
+      }else alert(d.message||'Login failed');
+    }catch{ alert('Server error.'); }
+  }
+};
+forgotPasswordLink.onclick=()=>{ showOnly('otp'); showOtpStep(1); };
+function showOnly(which){
+  pageIntro?.classList.toggle('hidden', which!=='intro');
+  pageAuth?.classList.toggle('hidden', which!=='auth');
+  pageOtp?.classList.toggle('hidden', which!=='otp');
+  pageApp?.classList.toggle('hidden', which!=='app');
+}
+
+/* OTP */
+function showOtpStep(n){
+  document.getElementById('otp-step1').classList.toggle('hidden', n!==1);
+  document.getElementById('otp-step2').classList.toggle('hidden', n!==2);
+  document.getElementById('otp-step3').classList.toggle('hidden', n!==3);
+}
+document.getElementById('otpCancelBtn').onclick=()=>showOnly('auth');
+document.getElementById('otpCancelBtn2').onclick=()=>showOnly('auth');
+document.getElementById('otpCancelBtn3').onclick=()=>showOnly('auth');
+document.getElementById('sendOtpBtn').onclick=async ()=>{
+  const email=document.getElementById('otpEmail').value.trim().toLowerCase();
+  if(!email){alert('Enter email'); return;}
+  const r=await fetch('/api/send-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
+  const d=await r.json(); if(d.success) showOtpStep(2); else alert(d.message||'Failed to send OTP');
+};
+document.getElementById('verifyOtpBtn').onclick=async ()=>{
+  const email=document.getElementById('otpEmail').value.trim().toLowerCase();
+  const otp=document.getElementById('userOtp').value.trim();
+  const r=await fetch('/api/verify-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,otp})});
+  const d=await r.json(); if(d.success) showOtpStep(3); else alert(d.message||'Invalid OTP');
+};
+document.getElementById('resetPasswordBtn').onclick=async ()=>{
+  const email=document.getElementById('otpEmail').value.trim().toLowerCase();
+  const new_password=document.getElementById('newPassword').value.trim();
+  const r=await fetch('/api/reset-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,new_password})});
+  const d=await r.json(); if(d.success){ alert('Password reset.'); showOnly('auth'); isSignup=false; renderAuthForm(); } else alert(d.message||'Failed');
+};
+
+/* Boot */
+(function boot(){
+  const saved=localStorage.getItem('currentUser');
+  if(saved){ try{ currentUser=JSON.parse(saved); if(currentUser?.email){ afterLogin(); return; } }catch{} }
+  showOnly('auth');
+})();
+
+/* User menu */
+avatarBadge.onclick=(e)=>{ e.stopPropagation(); userMenu.style.display = userMenu.style.display==='block' ? 'none':'block'; };
+document.addEventListener('click',(e)=>{ if(!userMenu.contains(e.target) && e.target!==avatarBadge) userMenu.style.display='none'; });
+logoutBtn.onclick=()=>{ localStorage.removeItem('currentUser'); currentUser=null; showOnly('auth'); };
+
+/* After login */
+function afterLogin(){
+  showOnly('app'); showView('home');
+  const initial=(currentUser?.username || currentUser?.email || 'U')[0].toUpperCase();
+  avatarBadge.textContent=initial; document.getElementById('menuInitial').textContent=initial;
+  const uname=currentUser?.username||'(no name)', uemail=currentUser?.email||'', uphone=currentUser?.phone||'-', uaddr=currentUser?.address||'-';
+  document.getElementById('menuName').textContent=uname;
+  document.getElementById('menuEmail').textContent=uemail;
+  document.getElementById('ufUsername').textContent=uname;
+  document.getElementById('ufEmail').textContent=uemail;
+  document.getElementById('ufPhone').textContent=uphone;
+  document.getElementById('ufAddress').textContent=uaddr;
+  signedPill.textContent=`Signed in as ${uemail}`; signedPill.classList.remove('hidden');
+  loadSavedResults();
+}
+
+/* Start prediction */
+document.getElementById('startPredictionBtn').onclick=()=>{
+  const name=document.getElementById('patientName').value.trim();
+  const ageStr=document.getElementById('patientAge').value.trim();
+  const gender=document.getElementById('patientGender').value.trim();
+  if(!name||!ageStr||!gender){ alert('Enter patient name, age, and gender.'); return; }
+  const age=parseInt(ageStr,10); if(isNaN(age)||age<0){ alert('Invalid age'); return; }
+  patientData={ name, age, gender, date:new Date().toLocaleString() };
+  patientBadge.textContent=`Patient: ${patientData.name} (${patientData.age}, ${patientData.gender})`;
+  currentStep=0; renderStepper(); showView('workflow'); renderSymptoms();
+};
+document.getElementById('goHistoryBtn').onclick=()=> showView('history');
+
+/* ---- Helper functions ---- */
+function renderStepper(){ const stepLabels=["Symptoms","Details","Tests","Test-Symptoms","Upload Reports","Prediction","Recommendations"]; stepperEl.innerHTML=stepLabels.map((t,i)=>`<span class="step ${i===currentStep?'active':''}">${i+1}. ${t}</span>`).join(''); stepBadge.textContent=`Step ${currentStep+1} of ${stepLabels.length}`; }
+function isLowOrMild(details){ return (details||[]).some(d=>/low|mild/i.test(d)); }
+function isSevereOrHigh(details){ return (details||[]).some(d=>/high|severe|above 38\.3Â°c|radiating/i.test(d)); }
+function parseCsv(text){ const L=text.split(/\r?\n/).filter(Boolean); if(!L.length) return {}; const H=L[0].split(',').map(s=>s.trim().toLowerCase()); const R=(L[1]||'').split(',').map(s=>s.trim()); const o={}; H.forEach((k,i)=>o[k]=R[i]??""); return o; }
+function number(v){ const n=parseFloat(String(v).replace(/[^\d\.\-]/g,'')); return isNaN(n)?null:n; }
+
+/* Catalog */
+const SYMPTOMS=[{key:"fever",label:"Fever",details:["Low (37.2-37.7Â°C)","Medium (37.8-38.3Â°C)","High (Above 38.3Â°C)","Chills Present","Night Sweats","Cold"]},{key:"cough",label:"Cough",details:["Mild","Moderate","Severe","Dry","Productive (with mucus)","Blood Streaked"]},{key:"fatigue",label:"Fatigue",details:["Mild","Moderate","Severe","Sudden Onset"]},{key:"headache",label:"Headache",details:["Mild","Moderate","Severe","Pulsating"]},{key:"joint_pain",label:"Joint Pain",details:["Mild","Moderate","Severe","With Swelling"]},{key:"thirst",label:"Excessive Thirst",details:["Mild","Moderate","Severe"]},{key:"urination",label:"Frequent Urination",details:["Mild","Moderate","Severe"]},{key:"swelling_legs",label:"Swelling in Legs/Feet",details:["Mild","Moderate","Severe"]}];
+const TEST_CATALOG=[{key:"widal",label:"Typhoid (Widal Test)",trigger:["fever"],relatedDetails:["High","Severe","Above 38.3Â°C"],testSymptoms:["High Temperature","Abdominal Pain","Constipation"]},{key:"dengue_ns1",label:"Dengue NS1 Antigen",trigger:["fever","joint_pain"],relatedDetails:["High","Severe","Above 38.3Â°C"],testSymptoms:["Rash","Severe Headache","Bleeding"]},{key:"malaria_test",label:"Malaria Parasite Test",trigger:["fever","headache"],relatedDetails:["High","Severe","Above 38.3Â°C"],testSymptoms:["Sweating","Shivering","Muscle Pain"]},{key:"blood_sugar",label:"Blood Sugar",trigger:["thirst","urination"],relatedDetails:["Severe"],testSymptoms:["Increased Urination","Extreme Thirst","Blurred Vision"]},{key:"kidney_function",label:"Kidney Function Test (KFT)",trigger:["fatigue","swelling_legs"],relatedDetails:["Severe"],testSymptoms:["Swelling Legs","Fatigue","Reduced Urine Output"]},{key:"ecg",label:"Electrocardiogram (ECG)",trigger:["fatigue"],relatedDetails:["Severe","Radiating"],testSymptoms:["Chest Pain","Palpitations","Shortness of Breath"]},{key:"cbc",label:"Complete Blood Count (CBC)",trigger:["fever","fatigue","headache"],relatedDetails:["Low Platelets","Anemia","Elevated WBC"],testSymptoms:["Fatigue","Weakness","Fever"]}];
+const DISEASE_FROM_TEST={widal:"Typhoid", dengue_ns1:"Dengue", malaria_test:"Malaria", blood_sugar:"Diabetes", kidney_function:"Kidney", ecg:"Heart", cbc:"Viral Fever"};
+const DISEASE_RECOMMENDATIONS={Typhoid:["Take prescribed antibiotics.","Stay hydrated.","Avoid outside food; rest."],Dengue:["Plenty of fluids (ORS).","Paracetamol for fever (no NSAIDs).","Monitor platelets; rest."],Malaria:["Seek antimalarial treatment.","Sleep under mosquito nets.","Hydrate well."],Diabetes:["Limit sugar & refined carbs.","Daily walk 30â€“45 mins.","Check fasting blood sugar."],Kidney:["Low-salt diet.","Avoid painkillers without advice.","Track urine output & swelling."],Heart:["If chest pain is radiating/severe, seek ER.","Avoid heavy exertion.","ECG if symptoms persist."],"Viral Fever":["Rest, warm fluids, steam inhalation.","Paracetamol for fever.","If >3 days or worsening, see doctor."]};
+
+/* Scoring */
+function scoreFromReport(testKey, d0){
+  const d={}; Object.keys(d0||{}).forEach(k=>d[k.toLowerCase()]=d0[k]);
+  switch(testKey){
+    case 'cbc':{ const p=number(d.platelets), w=number(d.wbc), h=number(d.hemoglobin); let s=0,n=[]; if(p!==null){ if(p<100000){s+=40;n.push('Very low platelets');} else if(p<150000){s+=25;n.push('Low platelets');} } if(w!==null){ if(w>15000){s+=30;n.push('High WBC');} else if(w>11000){s+=15;n.push('Slightly high WBC');} } if(h!==null){ if(h<10){s+=20;n.push('Low hemoglobin');} else if(h<12){s+=10;n.push('Mild anemia');} } return {score:Math.min(100,s), details:n.join(', ')||'CBC normal'}; }
+    case 'blood_sugar':{ const f=number(d.fasting), pp=number(d.pp); let s=0,n=[]; if(f!==null){ if(f>=126){s+=60;n.push('Fasting â‰¥126');} else if(f>=100){s+=35;n.push('Fasting 100â€“125');} } if(pp!==null){ if(pp>=200){s+=40;n.push('PP â‰¥200');} else if(pp>=140){s+=20;n.push('PP 140â€“199');} } return {score:Math.min(100,s), details:n.join(', ')||'Glucose normal'}; }
+    case 'kidney_function':{ const c=number(d.creatinine), e=number(d.egfr); let s=0,n=[]; if(c!==null){ if(c>1.5){s+=50;n.push('Creatinine >1.5');} else if(c>1.3){s+=30;n.push('Creatinine 1.3â€“1.5');} } if(e!==null){ if(e<60){s+=50;n.push('eGFR <60');} else if(e<90){s+=20;n.push('eGFR 60â€“89');} } return {score:Math.min(100,s), details:n.join(', ')||'Renal normal'}; }
+    case 'dengue_ns1':{ const v=String(d.ns1||'').toLowerCase(); const pos=['pos','positive','detected','yes','reactive'].includes(v); return {score:pos?90:10, details:pos?'NS1 positive':'NS1 negative'}; }
+    case 'malaria_test':{ const p=String(d.parasite||'').toLowerCase(); const pos=['pos','positive','detected','yes'].includes(p); return {score:pos?90:10, details:pos?'Parasite detected':'No parasite'}; }
+    case 'widal':{ const t=String(d.titer||'').toLowerCase(); const r=parseFloat((t.split(':')[1]||'').trim()); let s=10,n=['Low baseline']; if(r){ if(r>=160){s=85;n=['Widal â‰¥1:160'];} else if(r>=80){s=60;n=['Widal 1:80'];} } return {score:s, details:n.join(', ')}; }
+    case 'ecg':{ const a=String(d.abnormal||'').toLowerCase(); const yes=['yes','true','abnormal','y'].includes(a); return {score:yes?80:15, details:yes?'ECG abnormal':'ECG normal'}; }
+    default:return {score:0, details:'No scoring defined'};
+  }
+}
+function riskBucket(s){ if(s>=70) return 'High'; if(s>=40) return 'Moderate'; return 'Low'; }
+function testLabel(k){ const m={widal:"Typhoid (Widal Test)", dengue_ns1:"Dengue NS1 Antigen", malaria_test:"Malaria Parasite Test", blood_sugar:"Blood Sugar", kidney_function:"Kidney Function Test (KFT)", ecg:"Electrocardiogram (ECG)", cbc:"Complete Blood Count (CBC)"}; return m[k]||k; }
+
+/* ---------- Overrides ---------- */
+function getOverrideStore(){ try{ return JSON.parse(localStorage.getItem('patient_overrides')||'{}'); }catch{ return {}; } }
+function setOverrideStore(obj){ localStorage.setItem('patient_overrides', JSON.stringify(obj||{})); }
+function makeKey(t, d, r){ return `${t||''}|${d||''}|${r||''}`; }
+function closestOverride(row){
+  const store=getOverrideStore(), list=Object.entries(store);
+  if(!list.length) return null;
+  const baseTime=new Date(row.timestamp || row.created_at || row.datetime || '').getTime();
+  const target = (row.disease||'') + '|' + (row.risk||'');
+  let best=null, bestDiff=Number.POSITIVE_INFINITY;
+  for(const [k,val] of list){
+    const [ts, dis, risk] = k.split('|');
+    if((dis||'')+'|'+(risk||'') !== target) continue;
+    const t = new Date(ts).getTime();
+    if(isFinite(t) && isFinite(baseTime)){
+      const diff=Math.abs(t-baseTime);
+      if(diff<=5*60*1000 && diff<bestDiff){ best=val; bestDiff=diff; }
+    }
+  }
+  return best;
+}
+function normalizeRecord(r){
+  const store=getOverrideStore();
+  const t = r.timestamp || r.created_at || r.datetime || '';
+  const kExact = makeKey(t, r.disease, r.risk);
+  const exact = store[kExact];
+  const fuzzy = exact || closestOverride(r) || {};
+  const name   = r.patient_name ?? r.name ?? r?.patient?.name ?? r.patientName ?? fuzzy.name ?? '(not set)';
+  const age    = r.patient_age  ?? r.age  ?? r?.patient?.age  ?? r.patientAge  ?? fuzzy.age  ?? 'â€”';
+  const gender = r.patient_gender??r.gender??r?.patient?.gender??r.patientGender??fuzzy.gender??'â€”';
+  return {...r, _client_key: kExact, patient_name:String(name), patient_age:String(age), patient_gender:String(gender)};
+}
+
+/* ---------- Workflow screens ---------- */
+function renderStepper(){ const labels=["Symptoms","Details","Tests","Test-Symptoms","Upload Reports","Prediction","Recommendations"]; stepperEl.innerHTML=labels.map((t,i)=>`<span class="step ${i===currentStep?'active':''}">${i+1}. ${t}</span>`).join(''); stepBadge.textContent=`Step ${currentStep+1} of ${labels.length}`; }
+
+function renderSymptoms(){
+  mainDiv.innerHTML=''; renderStepper();
+  const sec=document.createElement('div'); sec.className='panel'; sec.style.background='var(--card)';
+  sec.innerHTML=`<h3 class="subtitle">Symptoms â€” <b>${patientData.name}</b></h3>`;
+  SYMPTOMS.forEach(sym=>{
+    sec.innerHTML+=`<label style="display:block;margin:6px 0">
+      <input type="checkbox" name="symptom" value="${sym.key}"> ${sym.label}
+    </label>`;
+  });
+  // Add "None" option at the end (mutually exclusive)
+  sec.innerHTML+=`<label style="display:block;margin:6px 0">
+    <input type="checkbox" name="symptom" value="none"> None (no physical symptoms, feeling low / stressed)
+  </label>`;
+  sec.innerHTML+=`<div style="margin-top:10px"><button class="btn" id="symptomNext" disabled>Next</button></div>`;
+  mainDiv.appendChild(sec);
+
+  const cbs=sec.querySelectorAll('input[name="symptom"]');
+  const next=sec.querySelector('#symptomNext');
+  const noneBox=sec.querySelector('input[name="symptom"][value="none"]');
+
+  const upd=()=>{ next.disabled=![...cbs].some(x=>x.checked); };
+
+  cbs.forEach(cb=>{
+    cb.addEventListener('change',()=>{
+      if(cb===noneBox && noneBox.checked){
+        // Uncheck all other symptoms if None is selected
+        cbs.forEach(x=>{ if(x!==noneBox) x.checked=false; });
+      }else if(cb!==noneBox && cb.checked){
+        // If any other symptom is selected, uncheck None
+        if(noneBox) noneBox.checked=false;
+      }
+      upd();
+    });
+  });
+  upd();
+
+  next.onclick=()=>{
+    const selected=[...cbs].filter(x=>x.checked).map(x=>x.value);
+    if(!selected.length) return;
+
+    if(selected.includes('none')){
+      // Option 1: if None is selected, skip tests and directly show recommendations
+      userSelections.baseSymptoms=[];
+      userSelections.symptomDetails={};
+      userSelections.symptomDays={};
+      currentStep=6; // jump to final step in stepper
+      renderRecommendationsOnly();
+      return;
+    }
+
+    userSelections.baseSymptoms=selected;
+    currentStep=1;
+    renderSymptomDetails();
+  };
+}
+
+/* >>> UPDATED: includes â€œNoneâ€ option per symptom and proper logic */
+function renderSymptomDetails(){
+  mainDiv.innerHTML=''; 
+  renderStepper();
+  const sec=document.createElement('div'); 
+  sec.className='panel'; 
+  sec.style.background='var(--card)';
+  sec.innerHTML=`<h3 class="subtitle">Symptom Details</h3>`;
+
+  userSelections.symptomDetails={};
+  userSelections.symptomDays={};
+
+  userSelections.baseSymptoms.forEach(key=>{
+    const s=SYMPTOMS.find(z=>z.key===key); 
+    if(!s) return;
+
+    sec.innerHTML+=`<div style="margin-top:6px;font-weight:800">${s.label}</div>`;
+
+    if(key==='fever'){
+      const deg=["Low (37.2-37.7Â°C)","Medium (37.8-38.3Â°C)","High (Above 38.3Â°C)"];
+      deg.forEach(d=> sec.innerHTML+=`<label style="margin-left:8px"><input type="radio" name="detail_fever_degree" value="${d}"> ${d}</label>`);
+      s.details.filter(x=>!deg.includes(x)).forEach(o=> sec.innerHTML+=`<label style="margin-left:8px"><input type="checkbox" name="detail_fever_other" value="${o}"> ${o}</label>`);
+   
+    } else {
+      const sev=s.details.filter(d=>/mild|moderate|severe/i.test(d));
+      const oth=s.details.filter(d=>!sev.includes(d));
+      sev.forEach(d=> sec.innerHTML+=`<label style="margin-left:8px"><input type="radio" name="detail_${key}_severity" value="${d}"> ${d}</label>`);
+      oth.forEach(o=> sec.innerHTML+=`<label style="margin-left:8px"><input type="checkbox" name="detail_${key}_other" value="${o}"> ${o}</label>`);
+      
+    }
+
+    sec.innerHTML+=`<div class="muted" style="margin:6px 0 4px">How many days?</div>
+    <input type="number" min="0" id="days_${key}" class="input" placeholder="Days" style="max-width:140px">`;
+  });
+
+  sec.innerHTML+=`<div style="margin-top:10px"><button class="btn" id="detailsNext" disabled>Next</button></div>`;
+  mainDiv.appendChild(sec);
+
+  // Make â€œNoneâ€ mutually exclusive with other items for each symptom
+  userSelections.baseSymptoms.forEach(key=>{
+    const noneBox = sec.querySelector(`input[name="detail_${key}_none"], input[name="detail_fever_none"]`);
+    if(!noneBox) return;
+    noneBox.addEventListener("change",()=>{
+      if(noneBox.checked){
+        sec.querySelectorAll(`input[name^="detail_${key}_severity"], input[name^="detail_${key}_other"], input[name="detail_fever_degree"], input[name="detail_fever_other"]`)
+          .forEach(e=> e.checked=false);
+      }
+    });
+    // If any other option is checked, uncheck None
+    sec.querySelectorAll(`input[name^="detail_${key}_severity"], input[name^="detail_${key}_other"], input[name="detail_fever_degree"], input[name="detail_fever_other"]`)
+      .forEach(e=> e.addEventListener('change',()=>{ if(e.checked) noneBox.checked=false; }));
+  });
+
+  function valid(){
+    let ok=true;
+    userSelections.baseSymptoms.forEach(k=>{
+      const d=sec.querySelector(`#days_${k}`);
+      if(!d||d.value===''||Number(d.value)<0) ok=false;
+
+      const noneChecked = sec.querySelector(`input[name="detail_${k}_none"], input[name="detail_fever_none"]`)?.checked;
+
+      if(!noneChecked){
+        if(k==='fever'){
+          if(!sec.querySelector('input[name="detail_fever_degree"]:checked')) ok=false;
+        } else {
+          const r=sec.querySelectorAll(`input[name="detail_${k}_severity"]`);
+          if(r.length && ![...r].some(x=>x.checked)) ok=false;
+        }
+      }
+    });
+    sec.querySelector('#detailsNext').disabled=!ok;
+  }
+
+  sec.querySelectorAll('input').forEach(i=>i.addEventListener('input',valid));
+  sec.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(i=>i.addEventListener('change',valid));
+  valid();
+
+  sec.querySelector('#detailsNext').onclick=()=>{
+    userSelections.baseSymptoms.forEach(k=>{
+      const noneChecked = sec.querySelector(`input[name="detail_${k}_none"], input[name="detail_fever_none"]`)?.checked;
+
+      if(noneChecked){
+        userSelections.symptomDetails[k]=["None"];
+      } else if(k==="fever"){
+        const deg=sec.querySelector('input[name="detail_fever_degree"]:checked');
+        const other=[...sec.querySelectorAll('input[name="detail_fever_other"]:checked')].map(e=>e.value);
+        userSelections.symptomDetails[k]=(deg?[deg.value]:[]).concat(other);
+      } else {
+        const sev=sec.querySelector(`input[name="detail_${k}_severity"]:checked`);
+        const other=[...sec.querySelectorAll(`input[name="detail_${k}_other"]:checked`)].map(e=>e.value);
+        userSelections.symptomDetails[k]=(sev?[sev.value]:[]).concat(other);
+      }
+
+      const el=sec.querySelector(`#days_${k}`);
+      userSelections.symptomDays[k]=el && el.value? parseInt(el.value,10):0;
+    });
+    currentStep=2;
+    renderTestSuggestion();
+  };
+}
+
+function isLowOrMild(details){ return (details||[]).some(d=>/low|mild/i.test(d)); }
+function isSevereOrHigh(details){ return (details||[]).some(d=>/high|severe|above 38\.3Â°c|radiating/i.test(d)); }
+
+function renderTestSuggestion(){
+  mainDiv.innerHTML=''; renderStepper();
+  const vals=Object.values(userSelections.symptomDays); const allLE3=vals.length>0 && vals.every(d=>Number(d)<=3);
+  if(allLE3){ currentStep=6; renderRecommendationsOnly(); return; }
+  let need=false;
+  for(const k of userSelections.baseSymptoms){
+    const d=userSelections.symptomDetails[k]||[]; const days=Number(userSelections.symptomDays[k]||0);
+    if(k==='fever'){ if(isSevereOrHigh(d)||days>3){ need=true; break; } }
+    else{ if(isSevereOrHigh(d)||(days>3 && !isLowOrMild(d))){ need=true; break; } }
+  }
+  if(!need){ currentStep=6; renderRecommendationsOnly(); return; }
+  const needed=new Set();
+  userSelections.baseSymptoms.forEach(s=>{
+    const d=userSelections.symptomDetails[s]||[]; const days=Number(userSelections.symptomDays[s]||0);
+    if(s==='fever'){ if(isSevereOrHigh(d)||days>3) needed.add(s); }
+    else{ if(isSevereOrHigh(d)||(days>3 && !isLowOrMild(d))) needed.add(s); }
+  });
+  let selected=[]; const covered=new Set();
+  while(covered.size<needed.size){
+    let best=null, bestCov=0;
+    TEST_CATALOG.forEach(t=>{
+      if(selected.includes(t.key)) return;
+      const cov=t.trigger.filter(sym=>needed.has(sym) && !covered.has(sym)).length;
+      if(cov>bestCov){bestCov=cov; best=t;}
+    });
+    if(!best) break;
+    selected.push(best.key); best.trigger.forEach(s=>covered.add(s));
+  }
+  if(!selected.length) selected.push('cbc'); userSelections.recommendedTests=selected;
+  const sec=document.createElement('div'); sec.className='panel'; sec.style.background='var(--card)';
+  sec.innerHTML='<h3 class="subtitle">Suggested Tests</h3>';
+  selected.forEach(k=>{ const t=TEST_CATALOG.find(x=>x.key===k); sec.innerHTML+=`<p>â€¢ ${t?t.label:k}</p>`; });
+  sec.innerHTML+=`<div style="margin-top:8px"><button class="btn" id="testNext">Next</button></div>`;
+  mainDiv.appendChild(sec);
+  document.getElementById('testNext').onclick=()=>{ currentStep=3; renderTestRelatedSymptomsNoDuplicates(); };
+}
+
+function renderTestRelatedSymptomsNoDuplicates(){
+  mainDiv.innerHTML=''; renderStepper();
+  const sec=document.createElement('div'); sec.className='panel'; sec.style.background='var(--card)';
+  sec.innerHTML='<h3 class="subtitle">Symptoms related to tests</h3>';
+  const set=new Set();
+  userSelections.recommendedTests.forEach(k=>{ const t=TEST_CATALOG.find(x=>x.key===k); t?.testSymptoms?.forEach(s=>set.add(s)); });
+  const baseLabels=new Set(userSelections.baseSymptoms.map(k=> (SYMPTOMS.find(s=>s.key===k)?.label || k).toLowerCase() ));
+  const list=[...set].filter(s=>!baseLabels.has(s.toLowerCase()));
+  if(!list.length){
+    sec.innerHTML+='<p class="muted">No additional items.</p><div style="margin-top:8px"><button class="btn" id="nextBtn">Next</button></div>';
+    mainDiv.appendChild(sec); document.getElementById('nextBtn').onclick=()=>{ userSelections.selectedTestSymptoms=[]; currentStep=4; renderTestReportUploads(); }; return;
+  }
+  sec.innerHTML+=`<label style="display:block;margin:6px 0"><input type="checkbox" id="noneTR"> None</label>`;
+  list.forEach(s=> sec.innerHTML+=`<label style="display:block;margin:6px 0"><input type="checkbox" name="trs" value="${s}"> ${s}</label>`);
+  sec.innerHTML+=`<div style="margin-top:8px"><button class="btn" id="nextBtn" disabled>Next</button></div>`;
+  mainDiv.appendChild(sec);
+  const none=sec.querySelector('#noneTR'); const cbs=sec.querySelectorAll('input[name="trs"]'); const btn=sec.querySelector('#nextBtn');
+  const val=()=>{ const any=[...cbs].some(x=>x.checked); btn.disabled=!(none.checked || any); };
+  none.onchange=()=>{ if(none.checked) cbs.forEach(x=>x.checked=false); val(); };
+  cbs.forEach(x=> x.onchange=()=>{ if(x.checked) none.checked=false; val(); }); val();
+  btn.onclick=()=>{ userSelections.selectedTestSymptoms = none.checked? [] : [...cbs].filter(x=>x.checked).map(x=>x.value); currentStep=4; renderTestReportUploads(); };
+}
+
+function renderTestReportUploads(){
+  mainDiv.innerHTML=''; renderStepper();
+  const sec=document.createElement('div'); sec.className='panel'; sec.style.background='var(--card)';
+  sec.innerHTML=`<h3 class="subtitle">Upload Reports (PDF)</h3><p class="muted" style="margin-top:-6px">Upload PDF lab reports for the suggested tests. The system will read key values (CBC, Sugar, KFT, NS1, Malaria, Widal, ECG) and calculate risk scores automatically.</p>`;
+  userSelections.testReports={};
+  (userSelections.recommendedTests||[]).forEach(k=>{
+    const t=TEST_CATALOG.find(x=>x.key===k);
+    sec.innerHTML+=`<label style="margin-top:6px"><b>${t?t.label:k}</b></label><input type="file" id="file_${k}" class="input" accept="application/pdf,.pdf">`;
+  });
+  sec.innerHTML+=`<div style="margin-top:8px"><button class="btn" id="predictBtn">Predict</button></div>`;
+  mainDiv.appendChild(sec);
+
+  (userSelections.recommendedTests||[]).forEach(k=>{
+    const el=document.getElementById(`file_${k}`);
+    el?.addEventListener('change',(e)=>{
+      const f=e.target.files?.[0];
+      if(f) userSelections.testReports[k]=f;
+    });
+  });
+
+  document.getElementById('predictBtn').onclick=()=>{ currentStep=5; renderPrediction(); };
+}
+
+async function computeFromReports(){
+  const files = userSelections.testReports || {};
+  const keys  = userSelections.recommendedTests || [];
+
+  if (!keys.length){
+    return {overallScore:0, byTest:{}};
+  }
+
+  const fd = new FormData();
+  fd.append("tests", JSON.stringify(keys));
+
+  // Include entered patient details for validation on server
+  try{ fd.append('patient_data', JSON.stringify(patientData || {})); }catch(e){}
+
+  let any=false;
+  keys.forEach(k=>{
+    const f = files[k];
+    if(f){
+      fd.append(`file_${k}`, f, f.name);
+      any=true;
+    }
+  });
+
+  if(!any){
+    // No report files were uploaded. Offer symptom-based prediction using server dataset.
+    const useSym = confirm("No reports uploaded. Use symptom-based prediction using dataset?");
+    if(!useSym){ alert("Please upload reports."); return null; }
+
+    try{
+      const resp = await fetch('/api/predict', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ symptoms: userSelections.baseSymptoms, symptomDetails: userSelections.symptomDetails, patient: patientData })
+      });
+      const pd = await resp.json();
+      if(!pd || !pd.success){ alert(pd && pd.message ? pd.message : 'Prediction failed'); return null; }
+      const overall = pd.confidence || 0;
+      // return a shape compatible with the report-based flow
+      return { overallScore: overall, byTest: {}, disease: pd.disease, risk: pd.risk, recommendations: [] };
+    }catch(e){ console.error(e); alert('Prediction failed.'); return null; }
+  }
+
+  let payload;
+  try{
+    const resp = await fetch("/api/analyze-reports", {
+      method:"POST",
+      body:fd
+    });
+    payload = await resp.json();
+  }catch(e){
+    alert("Error analyzing report. Try again.");
+    return null;   // stay on same step
+  }
+
+  if(!payload || !payload.success){
+    alert("Wrong report uploaded. Please upload correct reports.");
+    return null;   // STOP FLOW here
+  }
+
+  const raw = payload.data || {};
+  const byTest = {};
+
+  // Use server-computed test scores (MUCH more accurate than client-side)
+  const serverScores = payload.test_scores || {};
+  
+  // ðŸ›‘ CHECK WRONG REPORT FOR EACH TEST
+  for(const k of keys){
+    if(raw[k]){
+
+      // If server flagged the file as a hard error (likely not a report), stop.
+      if(raw[k]._error === "missing_required_fields"){
+        alert(`Wrong report uploaded for ${testLabel(k)}. Please upload the correct PDF.`);
+        return null;   // STAY on this page, DO NOT go next step
+      }
+
+      // If server parsed text but couldn't extract fields, it returns a warning.
+      // Offer the user a chance to enter values manually.
+      if(raw[k]._warning === "no_fields_extracted"){
+        const wantManual = confirm(`${testLabel(k)} uploaded but values were not auto-extracted.\nWould you like to enter values manually for ${testLabel(k)} now? (Cancel to re-upload)`);
+        if(!wantManual) return null; // let user re-upload
+
+        // Map tests to expected fields for manual entry
+        const expected = {
+          cbc: ['platelets','wbc','hemoglobin'],
+          blood_sugar: ['fasting','pp'],
+          kidney_function: ['creatinine','egfr'],
+          dengue_ns1: ['ns1'],
+          malaria_test: ['parasite'],
+          widal: ['titer'],
+          ecg: ['abnormal']
+        };
+
+        const fields = expected[k] || [];
+        const manual = {};
+        for(const f of fields){
+          const val = prompt(`Enter value for ${f} (leave blank if unknown):`, '');
+          if(val === null) return null; // user cancelled input â†’ abort flow
+          manual[f] = val.trim();
+        }
+        // If server returned some parsed fields (partial), merge them
+        const merged = Object.assign({}, raw[k], manual);
+        byTest[k] = scoreFromReport(k, merged);
+        continue;
+      }
+
+      // Use server score if available, otherwise fallback to client-side calculation
+      if(serverScores[k] !== undefined){
+        byTest[k] = {score: serverScores[k], details: "Score from server analysis"};
+      } else {
+        byTest[k] = scoreFromReport(k, raw[k]);
+      }
+    }
+  }
+
+  const scores = Object.values(byTest).map(x=>x.score);
+  const overall = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : 0;
+
+  // Get inferred disease from server if available
+  const inferredDisease = payload.inferred_disease || null;
+  const inferredConfidence = payload.inferred_confidence || 0;
+
+  return {overallScore:overall, byTest, disease: inferredDisease, confidence: inferredConfidence, serverPayload: payload};
+}
+
+
+function renderPrediction(){
+  mainDiv.innerHTML=''; renderStepper();
+  const sec=document.createElement('div'); sec.className='panel'; sec.style.background='var(--card)'; sec.innerHTML='<h3 class="subtitle">Prediction</h3><p class="muted">Processing uploaded reportsâ€¦</p>'; mainDiv.appendChild(sec);
+  (async ()=>{
+    const res = await computeFromReports();
+    if(!res){
+      // stay on upload reports page if computeFromReports returned null (user cancelled / error)
+      currentStep=4; renderTestReportUploads(); return;
+    }
+
+    let overallScore = res.overallScore || 0;
+    let byTest = res.byTest || {};
+    // Prefer server-side inferred disease from reports
+    let disease = res.disease || null;
+    let confidence = res.confidence || overallScore;
+    
+    if(!disease){
+      // Fallback: pick top-scoring test's disease
+      let top=null, topS=-1; Object.entries(byTest).forEach(([k,v])=>{ if(v.score>topS){topS=v.score; top=k;} });
+      disease = top ? (DISEASE_FROM_TEST[top]||'Viral Fever') : 'Viral Fever';
+      confidence = overallScore;
+    }
+    
+    // Determine risk level based on confidence/score
+    let risk = 'Low';
+    if(confidence >= 70) risk = 'High';
+    else if(confidence >= 50) risk = 'Moderate';
+    
+    const serverPayload = res.serverPayload || {};
+    // Show patient-data validation if available
+    const extracted = serverPayload.extracted_patient_data || {};
+    const validation = serverPayload.patient_data_validation || null;
+
+    // Fetch server recommendations (age-specific) if possible
+    let recs = (DISEASE_RECOMMENDATIONS[disease]||res.recommendations||[]);
+    try{
+      const prefAge = (patientData?.age) || extracted.age || null;
+      const r = await fetch('/api/get-recommendations',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({disease, age: prefAge, test_scores: serverPayload.test_scores || {}, lab_values: serverPayload.data || {}})});
+      const jr = await r.json(); if(jr && jr.success && jr.recommendations){ recs = jr.recommendations; }
+    }catch(e){ /* ignore */ }
+    const now=new Date().toLocaleString();
+    const k = makeKey(now, disease, risk);
+    const patientDisplayName = (patientData && patientData.name) ? patientData.name : '(not set)';
+    const patientDisplayAge = (patientData && patientData.age) ? patientData.age : '-';
+    const patientDisplayGender = (patientData && patientData.gender) ? patientData.gender : '-';
+    let html = '<p><b>Patient:</b> ' + patientDisplayName + ' (' + patientDisplayAge + ', ' + patientDisplayGender + ')</p>';
+    html += '<p><b>Disease (inferred):</b> <strong>' + disease + '</strong></p>';
+    html += '<p><b>Confidence:</b> ' + confidence + '% | <b>Risk Level:</b> <strong>' + risk + '</strong></p>';
+    sec.innerHTML = html;
+
+    // (Removed patient-data mismatch UI) â€” we will use age-based recommendations instead.
+    const details=Object.entries(byTest).map(([k,v])=>`<li><b>${testLabel(k)}:</b> ${v.score}/100 <span class="muted">(${v.details})</span></li>`).join('');
+    sec.innerHTML += '<div class="panel" style="background:var(--subtle); border:1px dashed var(--border)"><b>Report Scores</b><ul style="margin:6px 0 0 18px">' + (details || '<li>No reports uploaded.</li>') + '</ul></div>';
+    // Render recommendations using the server-provided structured object when available
+    function flattenRecommendations(obj){
+      const out = [];
+      if(!obj) return out;
+      if(typeof obj === 'string') { out.push(obj); return out; }
+      // Primary advice
+      if(obj.primary_advice) out.push('Advice: ' + obj.primary_advice);
+      if(obj.immediate_actions && Array.isArray(obj.immediate_actions)) obj.immediate_actions.forEach(x=> out.push('Immediate: ' + x));
+      // Medicines
+      if(obj.medicines && Array.isArray(obj.medicines) && obj.medicines.length){
+        out.push('Medicines:');
+        obj.medicines.forEach(m=>{
+          if(typeof m === 'string') out.push(' â€¢ '+m);
+          else if(m.name) out.push(' â€¢ '+(m.name + (m.dosage? (' â€” '+m.dosage):'')));
+          else out.push(' â€¢ ' + JSON.stringify(m));
+        });
+      }
+      if(obj.medicine_timing) out.push('Medicine timing: ' + obj.medicine_timing);
+      // Diet & lifestyle
+      if(obj.diet_recommendations && obj.diet_recommendations.length) out.push('Diet: ' + obj.diet_recommendations.join(', '));
+      if(obj.lifestyle_tips && obj.lifestyle_tips.length) out.push('Lifestyle: ' + obj.lifestyle_tips.join(', '));
+      // Emergency signs
+      if(obj.emergency_signs && obj.emergency_signs.length) out.push('Emergency signs: ' + obj.emergency_signs.join(', '));
+      if(obj.follow_up_schedule) out.push('Follow-up: ' + obj.follow_up_schedule);
+      if(obj.tests_recommended && obj.tests_recommended.length) out.push('Recommended tests: ' + obj.tests_recommended.join(', '));
+      if(obj.special_warnings) out.push('Notes: ' + obj.special_warnings);
+      return out;
+    }
+
+    let recItems = [];
+    if(typeof recs === 'object' && !Array.isArray(recs)){
+      recItems = flattenRecommendations(recs);
+    } else if(Array.isArray(recs)){
+      recItems = recs.map(r=> typeof r === 'string' ? r : (r.advice || JSON.stringify(r)) );
+    }
+    if(recItems.length===0) recItems = ['No specific recommendations available.'];
+    sec.innerHTML += '<div class="panel" style="background:var(--subtle); border:1px dashed var(--border)"><b>Recommendations</b><ul style="margin:6px 0 0 18px">' + recItems.map(x=>`<li>${x}</li>`).join('') + '</ul></div>';
+    const btn=document.createElement('button'); btn.className='btn'; btn.textContent='Save & Finish';
+    sec.appendChild(btn);
+    // wire up the patient data override buttons if present (use rAF to ensure DOM updated)
+    requestAnimationFrame(()=>{
+      try{
+        const useBtn = document.getElementById('usePdf');
+        const keepBtn = document.getElementById('keepEntered');
+        if(useBtn){
+          useBtn.addEventListener('click', ()=>{
+            patientData = {
+              name: extracted.name || (patientData && patientData.name),
+              age: extracted.age || (patientData && patientData.age),
+              gender: extracted.gender || (patientData && patientData.gender)
+            };
+            patientBadge.textContent = `Patient: ${patientData.name || ''} (${patientData.age || ''}, ${patientData.gender || ''})`;
+          });
+        }
+        if(keepBtn){ keepBtn.addEventListener('click', ()=>{/* keep entered */}); }
+      }catch(e){ /* ignore */ }
+    });
+
+    btn.onclick=async ()=>{
+      // Prepare a normalized payload matching backend expectations
+      const payload = {
+        email: currentUser?.email || '',
+        timestamp: now,
+        client_key: k,
+        patient_name: (patientData && patientData.name) || '',
+        patient_age: (patientData && patientData.age) || '',
+        patient_gender: (patientData && patientData.gender) || '',
+        disease: disease || '',
+        risk_level: risk || '',
+        risk_score: confidence || 0,
+        confidence: confidence || 0,
+        recommendations: recList || [],
+        report_scores: byTest || {}
+      };
+
+      let savedLocally = false;
+      // If logged in, save to server; otherwise save locally in overrides store
+      if(currentUser && currentUser.email){
+        try{
+          const resp = await saveResultToServer(payload);
+          if(!(resp && resp.success)){
+            alert('Save failed on server. Data will be stored locally.');
+            savedLocally = true;
+          }
+        }catch(e){ savedLocally = true; }
+      } else {
+        savedLocally = true;
+      }
+
+      if(savedLocally){
+        const store=getOverrideStore();
+        store[k] = { name: payload.patient_name, age: payload.patient_age, gender: payload.patient_gender, disease: payload.disease, risk: payload.risk_level, confidence: payload.confidence, report_scores: payload.report_scores, recommendations: payload.recommendations };
+        setOverrideStore(store);
+      }
+
+      await loadSavedResults();
+
+      // Offer download of a PDF report after saving
+      const downloadBtn = document.createElement('button'); downloadBtn.className='btn'; downloadBtn.style.marginLeft='8px'; downloadBtn.textContent='Download PDF Report';
+      sec.appendChild(downloadBtn);
+      downloadBtn.onclick = ()=>{
+        try{
+          const { jsPDF } = window.jspdf || {};
+          if(!jsPDF){
+            alert('PDF generation library not loaded.');
+            return;
+          }
+          const doc = new jsPDF();
+          let y = 12;
+          doc.setFontSize(16); doc.text('Patient Report', 14, y); y+=8;
+          doc.setFontSize(11);
+          doc.text(`Name: ${payload.patient_name}`, 14, y); y+=6;
+          doc.text(`Age: ${payload.patient_age}`, 14, y); y+=6;
+          doc.text(`Gender: ${payload.patient_gender}`, 14, y); y+=8;
+          doc.text(`Disease (inferred): ${payload.disease}    Confidence: ${payload.confidence}%`, 14, y); y+=8;
+          doc.text('Recommendations:', 14, y); y+=6;
+          const recsForPdf = Array.isArray(payload.recommendations) ? payload.recommendations : (payload.recommendations && payload.recommendations.recommendations ? payload.recommendations.recommendations : []);
+          if(recsForPdf.length===0) { doc.text('- No recommendations available', 16, y); y+=6; }
+          else {
+            recsForPdf.forEach(r=>{ const lines = doc.splitTextToSize(typeof r==='string'? r : (r.advice||JSON.stringify(r)), 180); doc.text(lines, 16, y); y += (lines.length*6); if(y>270){ doc.addPage(); y=14; } });
+          }
+          y+=6; doc.text('Report Scores:', 14, y); y+=6;
+          for(const [tk, val] of Object.entries(payload.report_scores||{})){
+            const label = testLabel(tk);
+            const line = `${label}: ${val && typeof val.score!=='undefined' ? val.score + '/100' : JSON.stringify(val)}`;
+            const lines = doc.splitTextToSize(line, 180);
+            doc.text(lines, 16, y); y += (lines.length*6);
+            if(y>270){ doc.addPage(); y=14; }
+          }
+          doc.save((payload.patient_name||'patient_report') + '_' + (new Date()).toISOString().replace(/[:\.]/g,'-') + '.pdf');
+        }catch(err){ console.error(err); alert('Failed to generate PDF.'); }
+      };
+
+      // Reset patient form
+      showView('home');
+      document.getElementById('patientName').value=''; document.getElementById('patientAge').value=''; document.getElementById('patientGender').value='';
+    };
+  })();
+}
+
+function renderRecommendationsOnly(){
+  mainDiv.innerHTML=''; renderStepper();
+  const sec=document.createElement('div'); sec.className='panel'; sec.style.background='var(--card)';
+  const recs=["Rest and hydrate well.","Paracetamol for fever/pain if needed.","Monitor symptoms for any worsening.","If symptoms persist or worsen, consult a doctor."];
+  const now=new Date().toLocaleString();
+  const disease="Recommendations Only"; const risk="Low";
+  const k = makeKey(now, disease, risk);
+  sec.innerHTML=`<h3 class="subtitle">Recommendations</h3><p class="muted">Based on your inputs, lab tests are not needed right now.</p><div class="panel" style="background:var(--subtle); border:1px dashed var(--border)"><ul style="margin:6px 0 0 18px">${recs.map(r=>`<li>${r}</li>`).join('')}</ul></div><div><button class="btn" id="finishR">Save & Finish</button></div>`;
+  mainDiv.appendChild(sec);
+  document.getElementById('finishR').onclick=async ()=>{
+    if(currentUser){
+      await saveResultToServer({ email:currentUser.email, timestamp:now, client_key:k, patient_name:patientData?.name||'', patient_age:patientData?.age||0, patient_gender:patientData?.gender||'', disease, risk, recommendations:recs, report_scores:{} });
+    }
+    const store=getOverrideStore(); store[k]={name:patientData?.name, age:patientData?.age, gender:patientData?.gender}; setOverrideStore(store);
+    await loadSavedResults(); showView('home'); document.getElementById('patientName').value=''; document.getElementById('patientAge').value=''; document.getElementById('patientGender').value='';
+  };
+}
+
+/* ---------- Server I/O & History ---------- */
+async function saveResultToServer(payload){
+  try{ const r=await fetch('/api/save-result',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); return await r.json(); }catch{ return {success:false}; }
+}
+async function fetchResults(){
+  try{
+    const r = await fetch('/api/get-results',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email: currentUser.email})});
+    const d = await r.json();
+    if(d.success){ return (d.results || []).map(normalizeRecord); }
+  }catch(e){}
+  return [];
+}
+async function loadSavedResults(){
+  const res=await fetchResults(); allResultsCache=res.slice(); renderResultsTable(res);
+}
+function renderResultsTable(list){
+  if(!list.length){
+    savedBody.innerHTML=`<tr><td colspan="4" class="muted" style="padding:16px">No saved prediction results available.</td></tr>`;
+    return;
+  }
+  savedBody.innerHTML = list.map((r,idx)=>{
+    const when   = r.timestamp || r.created_at || r.datetime || '';
+    const result = r.disease || 'â€”';
+    const risk   = (r.risk||'').toLowerCase();
+    const riskClass = risk==='high' ? 'high' : risk==='moderate' ? 'mod' : 'low';
+    const nameCell = (r.patient_name && r.patient_name!=='(not set)') ? r.patient_name : `<button class="linklike" data-fix-name="${idx}">(not set) â€” set</button>`;
+    const ageCell  = (r.patient_age && r.patient_age!=='â€”') ? r.patient_age : `<button class="linklike" data-fix-age="${idx}">â€” set</button>`;
+    return `
+      <tr>
+        <td>${nameCell}</td>
+        <td>${ageCell}</td>
+        <td>${when}</td>
+        <td>
+          <button class="btn" style="height:32px;padding:0 12px" data-view="${idx}">${result}</button>
+          <span class="risk ${riskClass}">${r.risk||'â€”'} risk</span>
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  // View modal
+  savedBody.querySelectorAll('button[data-view]').forEach(btn=>{
+    btn.onclick=()=>{
+      const r=list[Number(btn.dataset.view)];
+      const scoreItems=Object.entries(r.report_scores||{}).map(([k,v])=>{
+        const sc=(v && typeof v.score!=='undefined')? `${v.score}/100`:'-'; const det=(v&&v.details)? v.details:'';
+        return `<li><b>${testLabel(k)}:</b> ${sc} <span class="muted">${det? '('+det+')':''}</span></li>`;
+      }).join('');
+      modalBody.innerHTML=`
+        <p><b>Patient:</b> ${r.patient_name} (${r.patient_age}, ${r.patient_gender})</p>
+        <p><b>Disease:</b> ${r.disease||'â€”'} <span class="risk ${(r.risk||'').toLowerCase()==='high'?'high':(r.risk||'').toLowerCase()==='moderate'?'mod':'low'}">${r.risk||'â€”'} risk</span></p>
+        ${scoreItems? `<div class="panel" style="background:var(--subtle); border:1px dashed var(--border)"><b>Report Scores</b><ul style="margin:6px 0 0 18px">${scoreItems}</ul></div>` : '<div class="muted">No report scores attached.</div>'}
+        ${(r.recommendations||[]).length? `<div class="panel" style="background:var(--subtle); border:1px dashed var(--border); margin-top:8px"><b>Recommendations</b><ul style="margin:6px 0 0 18px">${(r.recommendations||[]).map(x=>`<li>${x}</li>`).join('')}</ul></div>`:''}
+      `;
+      modal.style.display='flex';
+    };
+  });
+
+  // Manual fixers â€” persist override for that row (uses fuzzy key too)
+  savedBody.querySelectorAll('[data-fix-name]').forEach(btn=>{
+    btn.onclick=()=>{
+      const idx=Number(btn.dataset.fixName), row=list[idx];
+      const name=prompt('Enter patient name:', '');
+      if(!name) return;
+      const store=getOverrideStore();
+      const key=makeKey(row.timestamp||row.created_at||row.datetime||'', row.disease, row.risk);
+      const ov=store[key]||{}; ov.name=name; store[key]=ov; setOverrideStore(store);
+      loadSavedResults();
+    };
+  });
+  savedBody.querySelectorAll('[data-fix-age]').forEach(btn=>{
+    btn.onclick=()=>{
+      const idx=Number(btn.dataset.fixAge), row=list[idx];
+      const age=prompt('Enter age:', '');
+      if(age===null) return;
+      const store=getOverrideStore();
+      const key=makeKey(row.timestamp||row.created_at||row.datetime||'', row.disease, row.risk);
+      const ov=store[key]||{}; ov.age=age; store[key]=ov; setOverrideStore(store);
+      loadSavedResults();
+    };
+  });
+}
+searchSaved.oninput=()=>{
+  const q=searchSaved.value.trim().toLowerCase();
+  const filtered=allResultsCache.filter(r => (r.patient_name||'').toLowerCase().includes(q));
+  renderResultsTable(filtered);
+};
+document.getElementById('exportCsvBtn').onclick=()=>{
+  if(!allResultsCache.length){alert('No data to export');return;}
+  const head=['Patient Name','Age','DateTime','Disease','Risk'];
+  const rows=allResultsCache.map(r=>[
+    r.patient_name, r.patient_age, r.timestamp||r.created_at||r.datetime||'', r.disease||'', r.risk||''
+  ]);
+  const csv=[head.join(','), ...rows.map(x=>x.map(v=>String(v).replace(/,/g,';')).join(','))].join('\n');
+  const blob=new Blob([csv],{type:'text/csv'}); const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='saved_results.csv'; a.click(); URL.revokeObjectURL(url);
+};
+// --- Safety fallback: if a JS error prevented proper view toggling, show the auth page
+window.addEventListener('error', function (ev) {
+  console.error('Global script error caught:', ev.message || ev.error);
+  try{
+    const intro = document.getElementById('page-intro');
+    const auth = document.getElementById('page-auth');
+    if(intro && auth){ intro.classList.add('hidden'); auth.classList.remove('hidden'); }
+  }catch(err){ /* swallow */ }
+});
+// In case script execution aborted before the boot logic, ensure only one of intro/auth is visible
+setTimeout(()=>{
+  try{
+    const intro = document.getElementById('page-intro');
+    const auth = document.getElementById('page-auth');
+    if(intro && auth && !intro.classList.contains('hidden') && !auth.classList.contains('hidden')){
+      intro.classList.add('hidden');
+      auth.classList.remove('hidden');
+    }
+  }catch(e){}
+}, 120);
+
