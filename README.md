@@ -541,8 +541,9 @@ Your MedPredict system is **production-ready** with:
 
 ## 📧 Support
 
-For questions or issues: d900327@gmail.com
+For questions or issues: arathihm0@gmail.com
 
 ---
 
 **Disclaimer**: This is a demonstration system for educational purposes. Always consult qualified healthcare professionals for medical decisions.
+
